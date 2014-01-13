@@ -7,12 +7,12 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Neo4jConnect
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
-public class ServiceAction extends AbstractCyAction {
+public class ServiceMenuAction extends AbstractCyAction {
 
 	private static final String MENU_LOC = "Apps.CyNetLibSync.Services";
 	private String name;
 	
-	public ServiceAction(CyApplicationManager cyApplicationManager, String name) {
+	public ServiceMenuAction(CyApplicationManager cyApplicationManager, String name) {
 		super(name, cyApplicationManager,null,null);
 		this.name = name;
 		setPreferredMenu(MENU_LOC);
