@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+
 public class Neo4jConnectionHandler {
 
 	private String instanceLocation = null;
-//	private GraphDatabaseService instance = null;
+	private GraphDatabaseService instance = null;
 	
 	public void connect(String location) {
 		instanceLocation = location;
 		
 //		instance = new RestGraphDatabase(location);
-//		instance = new GraphDatabaseFactory().newEmbeddedDatabase("/home/gsu/random/cynetlibtest");
+		instance = new GraphDatabaseFactory().newEmbeddedDatabase("/home/gsu/random/cynetlibtest");
 		
 		
 	}
