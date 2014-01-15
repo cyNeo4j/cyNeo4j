@@ -2,22 +2,20 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import java.util.Properties;
 
-public class Neo4jConnectionHandler extends Observable {
+public class Neo4jConnectionHandler {
 
-	
-	String instanceLocation = null;
+	private String instanceLocation = null;
+//	private GraphDatabaseService instance = null;
 	
 	public void connect(String location) {
 		instanceLocation = location;
 		
-		if(pingServer()){
-			notifyObservers();
-		} else {
-			// TODO log: connection failed
-		}
+//		instance = new RestGraphDatabase(location);
+//		instance = new GraphDatabaseFactory().newEmbeddedDatabase("/home/gsu/random/cynetlibtest");
+		
+		
 	}
 
 	public boolean isConnected() {
@@ -26,6 +24,7 @@ public class Neo4jConnectionHandler extends Observable {
 	
 	private boolean pingServer(){
 		// TODO dummy fix
+//		return instance.isAvailable(1);
 		return true;
 	}
 	

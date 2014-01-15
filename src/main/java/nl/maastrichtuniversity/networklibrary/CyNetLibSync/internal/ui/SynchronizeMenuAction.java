@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.controls;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui;
 
 import java.awt.event.ActionEvent;
 
