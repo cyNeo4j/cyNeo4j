@@ -21,7 +21,7 @@ public class CyActivator extends AbstractCyActivator {
 		
 		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,context,this);
 		
-		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin.getNeo4jConnectionHandler());
+		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
 		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
 		ServiceMenuAction serviceAction = new ServiceMenuAction(cyApplicationManager, plugin);
 			

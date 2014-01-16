@@ -1,5 +1,7 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
+import java.util.List;
+
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.osgi.framework.BundleContext;
@@ -37,6 +39,20 @@ public class Plugin{
 
 	public CySwingApplication getCySwingApplication() {
 		return cySwingApplication;
+	}
+
+	public List<String> getAvailableExtensions() {
+		
+		return null;
+	}
+
+	public boolean connectToInstance(String instanceLocation) {
+		return false;
+	}
+
+	public boolean isConnected() {
+		
+		return false;
 	}
 
 

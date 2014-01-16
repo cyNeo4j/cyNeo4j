@@ -1,6 +1,8 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui;
 
 import java.awt.event.ActionEvent;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -24,21 +26,35 @@ public class ServiceMenuAction extends AbstractCyAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
-		Object[] options = {"Yes, please",
-				"No, thanks",
-		"No eggs, no ham!"};
+		List<String> extensions = plugin.getAvailableExtensions();
+		
+		if(extensions == null || extensions.isEmpty()){
+			if(plugin.isConnected())
+				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "No extensions available at the connected Instance");
+			else
+				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Not connected to an Instance");
+			
+		} else {
+		Object[] extensionArray = extensions.toArray();
+		
 		int n = JOptionPane.showOptionDialog(plugin.getCySwingApplication().getJFrame(),
-				"Would you like some green eggs to go "
-						+ "with that ham?",
-						"A Silly Question",
+				null,
+						"Extension to Execute",
 						JOptionPane.YES_NO_CANCEL_OPTION,
 						JOptionPane.QUESTION_MESSAGE,
 						null,
-						options,
-						options[2]);
+						extensionArray,
+						null);
 
-		System.out.println("picked: " + n);
+		if(n > 0){
+			System.out.println("picked: " + extensionArray[n]);
+				
+			// TODO: 1. make Cytoscape TASK for Extension Invocation
+			// TODO: 2. start invocation and exit here
+		}
+		}
 
+		
 	}
 
 }
