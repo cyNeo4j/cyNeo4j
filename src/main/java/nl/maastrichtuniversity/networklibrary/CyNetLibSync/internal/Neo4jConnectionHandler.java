@@ -7,15 +7,9 @@ import java.util.Properties;
 public class Neo4jConnectionHandler {
 
 	private String instanceLocation = null;
-//	private GraphDatabaseService instance = null;
 	
 	public void connect(String location) {
 		instanceLocation = location;
-		
-//		instance = new RestGraphDatabase(location);
-//		instance = new GraphDatabaseFactory().newEmbeddedDatabase("/home/gsu/random/cynetlibtest");
-		
-		
 	}
 
 	public boolean isConnected() {
