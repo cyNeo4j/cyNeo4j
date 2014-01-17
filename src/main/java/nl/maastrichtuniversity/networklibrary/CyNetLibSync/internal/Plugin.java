@@ -7,11 +7,11 @@ import org.cytoscape.application.swing.CySwingApplication;
 import org.osgi.framework.BundleContext;
 
 public class Plugin{
-	private CyApplicationManager cyApplicationManager;
+	private CyApplicationManager cyApplicationManager = null;
 	private BundleContext context;
 	
-	private Neo4jConnectionHandler connHandler;
-	private CySwingApplication cySwingApplication;
+	private Neo4jConnectionHandler connHandler = null;
+	private CySwingApplication cySwingApplication = null;
 
 	public Plugin(CyApplicationManager cyApplicationManager, CySwingApplication cySwingApplication, BundleContext context, CyActivator cyActivator) {
 		super();
@@ -28,7 +28,6 @@ public class Plugin{
 		return connHandler;
 	}
 	
-	
 	public BundleContext getContext() {
 		return context;
 	}
@@ -43,16 +42,26 @@ public class Plugin{
 
 	public List<String> getAvailableExtensions() {
 		
-		return null;
+		return getNeo4jConnectionHandler().getExtensions();
 	}
 
 	public boolean connectToInstance(String instanceLocation) {
-		return false;
+		return getNeo4jConnectionHandler().connect(instanceLocation);
 	}
 
 	public boolean isConnected() {
+		return getNeo4jConnectionHandler().isConnected();
+	}
+
+	public void syncUp() {
+		// TODO Auto-generated method stub
 		
-		return false;
+	}
+
+	public void syncDown() {
+		
+		getNeo4jConnectionHandler().syncDown();
+		
 	}
 
 

@@ -72,18 +72,13 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<!-- <Import-Package>!com.sun.*,!sun.*,scala.*;resolution:="optional",org.codehaus.*;resolution:="optional",groovy.*;resolution:="optional",javax.servlet.*;resolution:="optional",javax.jms.*;resolution:="optional",javax.mail.*;resolution:="optional",org.osgi.service.blueprint.*;version="[1.0.0,2.0.0)";resolution:="optional",org.apache.avalon.framework.logge -->
-						<!-- r;resolution:="optional",org.apache.commons.codec.*;resolution:="optional",org.apache.commons.jxpath.*;resolution:="optional",org.apache.log.*;resolution:="optional",org.apache.log4j.*;resolution:="optional",org.apache.tools.ant.*;resolution:="optional",*</Import-Package> -->
-						<!-- <_exportcontents>org.neo4j.*;version="2.0.0";-split-package:=merge-first,javax.*,org.apache.*</_exportcontents> -->
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>${bundle.namespace}</Export-Package>
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-						<!-- <Embed-Dependency>*;scope=compile|runtime;type=!pom</Embed-Dependency> -->
-						<!-- <Embed-Transitive>true</Embed-Transitive> -->
-						<!-- <Embed-Dependency>ant,ant-nodeps,janino,javax.servlet-api,geronimo-jms_1.1_spec,mail,sorcerer-javac,logback-core,logback-classic,lucene-core,geronimo-jta_1.1_spec,scala-library,neo4j*,parboiled-scala_2.10,parboiled-core,concurrentlinkedhashmap-lru;scope=compile|runtime</Embed-Dependency> -->
-						<!-- <Embed-Transitive>true</Embed-Transitive> -->
+						<Embed-Dependency>joda-time,jackson-mapper-asl,jackson-core-asl,fluent-hc,commons-codec,httpclient;scope=compile|runtime</Embed-Dependency>
+						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -137,6 +132,45 @@
 			<artifactId>session-api</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-core-asl</artifactId>
+	<version>1.9.13</version>
+</dependency>
+
+<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-mapper-asl</artifactId>
+	<version>1.9.13</version>
+</dependency>
+            
+            <dependency>
+	<groupId>joda-time</groupId>
+	<artifactId>joda-time</artifactId>
+	<version>1.5.2</version>
+</dependency>
+            
+            
+
 
 		<!-- Logging -->
 		<dependency>

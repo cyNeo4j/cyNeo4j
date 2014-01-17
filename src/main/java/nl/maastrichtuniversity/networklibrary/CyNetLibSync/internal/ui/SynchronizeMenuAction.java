@@ -36,9 +36,15 @@ public class SynchronizeMenuAction extends AbstractCyAction {
 				directions,
 				null);
 
-		if(n > 0){
-			// TODO: 1. make Cytoscape TASK for Extension Invocation
-			// TODO: 2. start invocation and exit here
+		switch(n){
+		case 0:
+			plugin.syncUp();
+			break;
+		case 1:
+			plugin.syncDown();
+			break;
+		default:
+			break;
 		}
 	}
 
