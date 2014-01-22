@@ -28,7 +28,7 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		
 		// TODO add URL validation to menu
 		while(instanceLocation == null || instanceLocation.isEmpty())
-			instanceLocation = JOptionPane.showInputDialog("Provide the URL of the Neo4j instance:","http://");
+			instanceLocation = JOptionPane.showInputDialog("Provide the URL of the Neo4j instance:","http://localhost:7474");
 		
 		boolean status = plugin.connectToInstance(instanceLocation);
 		

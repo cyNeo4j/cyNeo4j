@@ -8,6 +8,9 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui.Synchroni
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
+import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyNetworkManager;
+import org.cytoscape.model.CyTableFactory;
 import org.cytoscape.service.util.AbstractCyActivator;
 import org.osgi.framework.BundleContext;
 
@@ -18,8 +21,11 @@ public class CyActivator extends AbstractCyActivator {
 		
 		CyApplicationManager cyApplicationManager = getService(context, CyApplicationManager.class);
 		CySwingApplication cySwingApplication = getService(context, CySwingApplication.class);
-		
-		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,context,this);
+		CyNetworkFactory cyNetworkFactory = getService(context, CyNetworkFactory.class);
+		CyNetworkManager cyNetMgr = getService(context,CyNetworkManager.class);
+		CyTableFactory tableFactory = getService(context, CyTableFactory.class);
+				
+		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr);
 		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
 		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
