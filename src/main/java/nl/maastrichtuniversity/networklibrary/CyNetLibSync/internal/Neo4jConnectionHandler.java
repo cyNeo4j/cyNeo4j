@@ -113,6 +113,13 @@ public class Neo4jConnectionHandler {
 		}
 
 	}
+	
+	public void syncUp() {
+		// case 1: create new network -> requires purge of existing if anything is there
+		// case 2: make updates. (merge or create unique)
+		
+		
+	}
 
 	
 }

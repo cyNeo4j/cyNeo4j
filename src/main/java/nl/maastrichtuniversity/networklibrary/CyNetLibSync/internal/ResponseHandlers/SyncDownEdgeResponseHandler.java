@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.CyUtils;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.NeoUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;

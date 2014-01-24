@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
 
 public class NeoUtils {
 	public static Long extractID(String objUrl){

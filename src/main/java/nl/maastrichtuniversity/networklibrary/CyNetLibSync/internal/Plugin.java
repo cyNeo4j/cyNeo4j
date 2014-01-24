@@ -74,8 +74,7 @@ public class Plugin{
 	}
 
 	public void syncUp() {
-		// TODO Auto-generated method stub
-		
+		getNeo4jConnectionHandler().syncUp();		
 	}
 
 	public void syncDown() {

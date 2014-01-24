@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
 
 import java.util.Collection;
 import java.util.HashSet;
