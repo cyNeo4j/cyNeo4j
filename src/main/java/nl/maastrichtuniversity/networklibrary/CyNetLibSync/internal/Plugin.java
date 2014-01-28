@@ -10,10 +10,10 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
 
-public class Plugin{
+public class Plugin implements Neo4jInteractor{
 	private CyApplicationManager cyApplicationManager = null;
 	
-	private Neo4jConnectionHandler connHandler = null;
+	private SimpleNeo4jConnectionHandler connHandler = null;
 	private CySwingApplication cySwingApplication = null;
 	private CyNetworkFactory cyNetworkFactory = null;
 	private CyTableFactory cyTableFactory = null;
@@ -45,9 +45,9 @@ public class Plugin{
 		return cyNetMgr;
 	}
 
-	public Neo4jConnectionHandler getNeo4jConnectionHandler() {
+	public SimpleNeo4jConnectionHandler getNeo4jConnectionHandler() {
 		if(connHandler == null)
-			connHandler = new Neo4jConnectionHandler(this);
+			connHandler = new SimpleNeo4jConnectionHandler(this);
 		
 		return connHandler;
 	}
@@ -66,20 +66,20 @@ public class Plugin{
 	}
 
 	public boolean connectToInstance(String instanceLocation) {
-		return getNeo4jConnectionHandler().connect(instanceLocation);
+		return getNeo4jConnectionHandler().connectToInstance(instanceLocation);
 	}
 
 	public boolean isConnected() {
 		return getNeo4jConnectionHandler().isConnected();
 	}
 
-	public void syncUp() {
-		getNeo4jConnectionHandler().syncUp();		
+	public void syncUp(boolean wipeRemote) {
+		getNeo4jConnectionHandler().syncUp(wipeRemote);		
 	}
 
-	public void syncDown() {
+	public void syncDown(boolean mergeInCurrent) {
 		
-		getNeo4jConnectionHandler().syncDown();
+		getNeo4jConnectionHandler().syncDown(mergeInCurrent);
 		
 	}
 

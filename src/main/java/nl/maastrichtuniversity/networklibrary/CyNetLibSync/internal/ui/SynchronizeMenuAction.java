@@ -38,10 +38,10 @@ public class SynchronizeMenuAction extends AbstractCyAction {
 
 		switch(n){
 		case 0:
-			plugin.syncUp();
+			plugin.syncUp(true);
 			break;
 		case 1:
-			plugin.syncDown();
+			plugin.syncDown(false);
 			break;
 		default:
 			break;
