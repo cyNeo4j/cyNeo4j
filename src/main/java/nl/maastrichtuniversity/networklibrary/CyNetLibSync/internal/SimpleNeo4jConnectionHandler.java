@@ -157,7 +157,7 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 					
 					String params = CyUtils.convertCyAttributesToJson(node, defNodeTab);
 					String cypher = "{ \"query\" : \"CREATE (n { props })\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
-					System.out.println(cypher);
+//					System.out.println(cypher);
 					try {
 						Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
 					} catch (ClientProtocolException e) {
@@ -172,7 +172,6 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 				
 				System.out.println("uploaded nodes");
 				
-				
 				CyTable defEdgeTab = currNet.getDefaultEdgeTable();
 				
 				for(CyEdge edge : currNet.getEdgeList()){
@@ -181,8 +180,10 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 					
 					String rparams = CyUtils.convertCyAttributesToJson(edge, defEdgeTab);
 					
-					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:narf { rprops } ]->(to) return r\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
-					System.out.println(cypher);
+					String rtype = defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class);
+					
+					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return r\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
+//					System.out.println(cypher);
 					try {
 						Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
 					} catch (ClientProtocolException e) {
