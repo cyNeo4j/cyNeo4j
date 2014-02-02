@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jExtension;
+
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.model.CyNetworkFactory;
@@ -60,7 +62,7 @@ public class Plugin implements Neo4jInteractor{
 		return cySwingApplication;
 	}
 
-	public List<String> getAvailableExtensions() {
+	public List<Neo4jExtension> getAvailableExtensions() {
 		
 		return getNeo4jConnectionHandler().getExtensions();
 	}

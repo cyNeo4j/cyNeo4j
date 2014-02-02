@@ -3,13 +3,16 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.GetExtensionHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionParametersResponseHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionLocationsHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.Neo4jPingHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownEdgeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownNodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jExtension;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
@@ -18,6 +21,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
+
 public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 	private String instanceLocation = null;
@@ -58,12 +62,17 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		return false;
 	}
 
-	public List<String> getExtensions(){
+	public List<Neo4jExtension> getExtensions(){
 
-		List<String> res = null;
+		List<Neo4jExtension> res = null;
 
 		try {
-			res = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new GetExtensionHandler());
+			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
+			
+			for(String extName : extNames){
+				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
+			}
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
