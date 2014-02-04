@@ -11,6 +11,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jE
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
+
 public class ServiceMenuAction extends AbstractCyAction {
 
 	private static final String MENU_LOC = "Apps.CyNetLibSync";
@@ -26,35 +27,34 @@ public class ServiceMenuAction extends AbstractCyAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
-		List<Neo4jExtension> extensions = plugin.getAvailableExtensions();
-
-		if(extensions == null || extensions.isEmpty()){
-			if(plugin.isConnected())
-				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "No extensions available at the connected Instance");
-			else
-				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Not connected to an Instance");
-
-		} else {
-			Object[] extensionArray = extensions.toArray();
-
-			int n = JOptionPane.showOptionDialog(plugin.getCySwingApplication().getJFrame(),
-					null,
-					"Extension to Execute",
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					extensionArray,
-					null);
-
-			if(n > 0){
-				System.out.println("picked: " + extensionArray[n]);
-
-				// TODO: 1. make Cytoscape TASK for Extension Invocation
-				// TODO: 2. start invocation and exit here
-			}
-		}
-
-
+//		List<Neo4jExtension> extensions = plugin.getAvailableExtensions();
+//
+//		if(extensions == null || extensions.isEmpty()){
+//			if(plugin.isConnected())
+//				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "No extensions available at the connected Instance");
+//			else
+//				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Not connected to an Instance");
+//
+//		} else {
+//			Object[] extensionArray = new Object[extensions.size()];
+//			for(int i = 0; i < extensions.size(); ++i){
+//				extensionArray[i] = extensions.get(i).getName();
+//			}
+//
+//			int n = JOptionPane.showOptionDialog(plugin.getCySwingApplication().getJFrame(),
+//					null,
+//					"Extension to Execute",
+//					JOptionPane.YES_NO_CANCEL_OPTION,
+//					JOptionPane.QUESTION_MESSAGE,
+//					null,
+//					extensionArray,
+//					null);
+//
+//			if(n > 0){
+//				System.out.println(extensions.get(n).toString());
+//				
+//				
+//			}
+//		}
 	}
-
 }

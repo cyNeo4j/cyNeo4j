@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,8 +28,6 @@ public class ExtensionParametersResponseHandler implements
 		System.out.println("responseCode: " + responseCode);
 		if(responseCode >= 200 && responseCode < 300){
 			ObjectMapper mapper = new ObjectMapper();
-			
-			
 			Map<String,Object> targets = mapper.readValue(response.getEntity().getContent(),Map.class);
 			
 			for(Entry<String,Object> target : targets.entrySet()){
@@ -49,21 +48,12 @@ public class ExtensionParametersResponseHandler implements
 					List<Map<String,Object>> parameters = (List<Map<String,Object>>)extensionDesc.get("parameters");
 					
 					for(Map<String,Object> parameter : parameters){
-						String pName = (String)parameter.get("name");
-						Object pType = (String)parameter.get("type");
-						
-						if((Boolean)parameter.get("optional"))
-							currExt.setOptionalParameter(pName,pType);
-						else
-							currExt.setRequiredParameter(pName, pType);
+						currExt.addParameter(NeoUtils.parseExtParameter(parameter));
 					}
 					
 					res.add(currExt);
 				}
 			}
-			
-			
-			
 		} else {
 			System.out.println("ERROR " + responseCode);
 			ObjectMapper mapper = new ObjectMapper();
@@ -73,20 +63,6 @@ public class ExtensionParametersResponseHandler implements
 		}
 
 		return res;
-	}
-	
-	protected Object decideParameterType(String typeStr){
-		if(typeStr.equals("string")){
-			return new String();
-		} else if(typeStr.equals("integer")){
-			return new Integer(0);
-		} else if(typeStr.equals("strings")){
-			return new String[2];
-		} else if(typeStr.equals("node")){
-			return Neo4jExtension.ExtensionTarget.NODE;
-		} else {
-			return null;
-		}
 	}
 	
 	protected Neo4jExtension.ExtensionTarget decideExtensionType(String target){
@@ -100,5 +76,4 @@ public class ExtensionParametersResponseHandler implements
 			return null;
 		}
 	}
-
 }

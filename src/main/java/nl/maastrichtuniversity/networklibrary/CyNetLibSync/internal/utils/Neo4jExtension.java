@@ -1,8 +1,8 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class Neo4jExtension {
 
@@ -12,75 +12,63 @@ public class Neo4jExtension {
 	private String name;
 	private String location;
 	
-	private Map<String,Object> requiredParameters;
-	private Map<String,Object> optionalParameters;
-	
-	
-	
+	private List<Neo4jExtParam> parameters;
+		
 	public Neo4jExtension() {
 		super();
-		requiredParameters = new HashMap<String, Object>();
-		optionalParameters = new HashMap<String, Object>();
+		parameters = new ArrayList<Neo4jExtParam>();
 	}
-
-
-	public String buildCall(String from, Map<String,Object> reqParameters, Map<String,Object> optParameters){
+	
+	public String buildCall(String from, Map<String,Object> parameters){
 		
-		return null;
+		String callURL = null;
+		
+		switch(getType()){
+		case GRAPH:
+//			callURL = buildGraphCall(parameters);
+			break;
+			
+		case NODE: case RELATIONSHIP:
+//			callURL = buildObjectCall(from, parameters);
+			break;
+		}
+		
+		return callURL;
 	}
-
 
 	public String getName() {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	public String getLocation() {
 		return location;
 	}
 
-
 	public void setLocation(String location) {
 		this.location = location;
 	}
-
-
-	public Map<String, Object> getRequiredParameters() {
-		return requiredParameters;
-	}
-
-	public Map<String, Object> getOptionalParameters() {
-		return optionalParameters;
-	}
-
-	public void setRequiredParameter(String key, Object value){
-		getRequiredParameters().put(key, value);
+	
+	public List<Neo4jExtParam> getParameters() {
+		return parameters;
 	}
 	
-	public void setOptionalParameter(String key, Object value){
-		getOptionalParameters().put(key, value);
+	public void addParameter(Neo4jExtParam param) {
+		getParameters().add(param);
 	}
-	
+
 	public String toString(){
 		StringBuffer strbuff = new StringBuffer();
 		strbuff.append("name: " + getName() + " location: " + getLocation() + " of type: "+ getType() + "\n");
 		strbuff.append("\nrequired parameters: \n");
 		
-		for(Entry<String,Object> reqP : getRequiredParameters().entrySet()){
-			strbuff.append("\tparameter: " + reqP.getKey() + " of type : " + reqP.getValue().getClass().toString() + "\n");
+		for(Neo4jExtParam param : getParameters()){
+			strbuff.append("\tparameter: " + param.getName() + " of type : " + param.getType() + " is optional? " + param.isOptional() + "\n");
 		}
-		
-		strbuff.append("\noptional parameters: \n");
-		for(Entry<String,Object> reqP : getOptionalParameters().entrySet()){
-			strbuff.append("\tparameter: " + reqP.getKey() + " of type : " + reqP.getValue().getClass().toString() + "\n");
-		}
-		
-		
+			
 		return strbuff.toString();
 	}
 
@@ -93,6 +81,5 @@ public class Neo4jExtension {
 	public ExtensionTarget getType() {
 		return type;
 	}
-	
 	
 }

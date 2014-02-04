@@ -62,10 +62,10 @@ public class Plugin implements Neo4jInteractor{
 		return cySwingApplication;
 	}
 
-	public List<Neo4jExtension> getAvailableExtensions() {
-		
-		return getNeo4jConnectionHandler().getExtensions();
-	}
+//	public List<Neo4jExtension> getAvailableExtensions() {
+//		
+//		return getNeo4jConnectionHandler().getExtensions();
+//	}
 
 	public boolean connectToInstance(String instanceLocation) {
 		return getNeo4jConnectionHandler().connectToInstance(instanceLocation);
