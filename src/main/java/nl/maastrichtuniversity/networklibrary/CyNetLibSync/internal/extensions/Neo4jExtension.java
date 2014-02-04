@@ -1,10 +1,11 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Neo4jExtension {
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
+
+public class Neo4jExtension implements Extension {
 
 	public enum ExtensionTarget { NODE, RELATIONSHIP, GRAPH }
 	
@@ -19,23 +20,6 @@ public class Neo4jExtension {
 		parameters = new ArrayList<Neo4jExtParam>();
 	}
 	
-	public String buildCall(String from, Map<String,Object> parameters){
-		
-		String callURL = null;
-		
-		switch(getType()){
-		case GRAPH:
-//			callURL = buildGraphCall(parameters);
-			break;
-			
-		case NODE: case RELATIONSHIP:
-//			callURL = buildObjectCall(from, parameters);
-			break;
-		}
-		
-		return callURL;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -72,11 +56,9 @@ public class Neo4jExtension {
 		return strbuff.toString();
 	}
 
-
 	public void setType(ExtensionTarget type) {
 		this.type = type;
 	}
-
 
 	public ExtensionTarget getType() {
 		return type;

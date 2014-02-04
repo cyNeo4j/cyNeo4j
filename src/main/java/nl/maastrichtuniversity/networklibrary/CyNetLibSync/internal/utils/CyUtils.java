@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.cytoscape.model.CyColumn;
+import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -32,6 +33,26 @@ public class CyUtils {
         return nodes;
     }
 	
+	public static Set<CyEdge> getEdgeWithValue(
+            final CyNetwork net, final CyTable table,
+            final String colname, final Object value)
+    {
+        final Collection<CyRow> matchingRows = table.getMatchingRows(colname, value);
+        final Set<CyEdge> edges = new HashSet<CyEdge>();
+        final String primaryKeyColname = table.getPrimaryKey().getName();
+        for (final CyRow row : matchingRows)
+        {
+            final Long edgeId = row.get(primaryKeyColname, Long.class);
+            if (edgeId == null)
+                continue;
+            final CyEdge edge = net.getEdge(edgeId);
+            if (edge == null)
+                continue;
+            edges.add(edge);
+        }
+        return edges;
+    }
+	
 	public static String convertCyAttributesToJson(CyIdentifiable item, CyTable tab){
 		String params = "{";
 		for(CyColumn cyCol : tab.getColumns()){
@@ -50,7 +71,17 @@ public class CyUtils {
 		
 		params = params.substring(0,params.length()-1);
 		params = params + "}";
-		
+
 		return params;
+	}
+	
+	public static Integer getNeoID(CyNode n){
+		CyNetwork net = n.getNetworkPointer();
+		return net.getDefaultNodeTable().getRow(n.getSUID()).get("neoid", Integer.class);
+	}
+	
+	public static Integer getNeoID(CyEdge e){
+		CyNetwork net = e.getSource().getNetworkPointer();
+		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Integer.class);
 	}
 }

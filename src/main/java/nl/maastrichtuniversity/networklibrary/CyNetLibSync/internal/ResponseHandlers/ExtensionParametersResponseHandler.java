@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Neo4jExtension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
 import org.apache.http.HttpResponse;

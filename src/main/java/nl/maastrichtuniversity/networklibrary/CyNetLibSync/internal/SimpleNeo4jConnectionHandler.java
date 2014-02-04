@@ -3,17 +3,18 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionLocationsHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionParametersResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.Neo4jPingHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.PassThroughResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownEdgeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownNodeResponseHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
@@ -47,7 +48,7 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 		return pingServer(getInstanceLocation());
 	}
-
+	
 	public boolean isConnected() {
 		return pingServer(getInstanceLocation());
 	}
@@ -63,30 +64,25 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		return false;
 	}
 
-//	public List<Neo4jExtension> getExtensions(){
-//
-//		List<Neo4jExtension> res = new ArrayList<Neo4jExtension>();
-//
-//		try {
-//			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
-//			
-//			for(String extName : extNames){
-//				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
-//			}
-//			
-//		} catch (ClientProtocolException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return res;
-//	}
-//
-//	// TODO identify proper parameters necessary for the call
-//	public void invokeExtension(Neo4jExtension ext, Map<String,Object> paramData){
-//
-//	}
+	public List<Extension> getExtensions(){
+
+		List<Extension> res = new ArrayList<Extension>();
+
+		try {
+			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
+			
+			for(String extName : extNames){
+				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
+			}
+			
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return res;
+	}
 
 	private boolean sanityCheckUrl(String url){
 		// TODO implement me
@@ -99,6 +95,10 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 	public void setInstanceLocation(String instanceLocation) {
 		this.instanceLocation = instanceLocation;
+	}
+	
+	public String getInstanceDataLocation() {
+		return instanceLocation + DATA_URL;
 	}
 
 	public void syncDown(boolean mergeInCurrent) {
@@ -205,5 +205,19 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 	}
 
+	@Override
+	public Object executeExtensionCall(Neo4jCall call) {
+		Object retVal = null;
+		try {
+			retVal = Request.Post(getInstanceLocation() + call.getUrlFragment()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
+			
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return retVal;
+	}
 
 }

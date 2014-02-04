@@ -27,10 +27,12 @@ public class CyActivator extends AbstractCyActivator {
 				
 		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr);
 		
+		
+		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
 		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
 		ServiceMenuAction serviceAction = new ServiceMenuAction(cyApplicationManager, plugin);
-			
+
 		registerAllServices(context, connectAction, new Properties());
 		registerAllServices(context, synchAction, new Properties());
 		registerAllServices(context, serviceAction, new Properties());
