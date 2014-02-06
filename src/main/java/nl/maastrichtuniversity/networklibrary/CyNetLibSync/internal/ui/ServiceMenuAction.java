@@ -55,7 +55,8 @@ public class ServiceMenuAction extends AbstractCyAction {
 					extensionArray,
 					null);
 
-			if(n > 0){
+			if(n >= 0){
+				System.out.println("narf!!");
 				System.out.println(extensions.get(n).toString());
 				getPlugin().executeExtension(extensions.get(n));
 				

@@ -20,6 +20,11 @@ public class Neo4jCall {
 		this.urlFragment = urlFragment;
 		this.payload = payload;
 	}
+	@Override
+	public String toString() {
+		return "Neo4jCall [urlFragment=" + urlFragment + ", payload=" + payload
+				+ "]";
+	}
 	
 	
 }

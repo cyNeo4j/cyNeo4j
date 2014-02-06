@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -43,13 +44,16 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
 				if(data.size() > 0){
 					CyNetwork myNet = plugin.getCyNetworkFactory().createNetwork();
 
-					Set<String> attributeCols = new HashSet<String>();
-					attributeCols.add("name");
+//					Set<String> attributeCols = new HashSet<String>();
+//					attributeCols.add("name");
+					
 
 					myNet.getRow(myNet).set(CyNetwork.NAME, getPlugin().getInstanceLocation());
 					
 					CyTable defNodeTab = myNet.getDefaultNodeTable();
-					defNodeTab.createColumn("neoid", Long.class, false);
+					if(defNodeTab.getColumn("neoid") == null){
+						defNodeTab.createColumn("neoid", Long.class, false);
+					}
 
 					for(Object nodeObj : data){
 						
@@ -66,16 +70,22 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
 						Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
 
 						for(Entry<String,Object> obj : nodeProps.entrySet()){
-							if(!attributeCols.contains(obj.getKey())){
+//							if(!attributeCols.contains(obj.getKey())){
+							if(defNodeTab.getColumn(obj.getKey()) == null){
 								if(obj.getValue().getClass() == ArrayList.class){
 									defNodeTab.createListColumn(obj.getKey(), String.class, true);
 								} else {
-								defNodeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
+									defNodeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
 								}
-								attributeCols.add(obj.getKey());
+//								attributeCols.add(obj.getKey());
+							} else {
+								System.out.println("col: " + obj.getKey() + " type: " + defNodeTab.getColumn(obj.getKey()).getType().toString());
+								System.out.println("value: " + obj.getValue() + " type: " + obj.getValue().getClass().toString());
+								
 							}
 
-							defNodeTab.getRow(cyNode.getSUID()).set(obj.getKey(), obj.getValue());
+							Object value = CyUtils.fixSpecialTypes(obj.getValue(), defNodeTab.getColumn(obj.getKey()).getType());
+							defNodeTab.getRow(cyNode.getSUID()).set(obj.getKey(), value);
 
 						}
 					}

@@ -49,10 +49,12 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 				CyNetwork myNet = getPlugin().getCyNetworkManager().getNetwork(getNetSUID());
 				resNet = myNet.getSUID();
 
-				Set<String> attributeCols = new HashSet<String>();
-				attributeCols.add("name");
+//				Set<String> attributeCols = new HashSet<String>();
+//				attributeCols.add("name");
 				CyTable defEdgeTab = myNet.getDefaultEdgeTable();
-				defEdgeTab.createColumn("neoid", Long.class, false);
+				if(defEdgeTab.getColumn("neoid") == null){
+					defEdgeTab.createColumn("neoid", Long.class, false);
+				}
 
 				for(Object nodeObj : data){
 					
@@ -90,17 +92,19 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 					Map<String,Object> nodeProps = (Map<String,Object>) edge.get("data");
 
 					for(Entry<String,Object> obj : nodeProps.entrySet()){
-						
-						if(!attributeCols.contains(obj.getKey())){
+//						if(!attributeCols.contains(obj.getKey())){
+						if(defEdgeTab.getColumn(obj.getKey()) == null){
 							if(obj.getValue().getClass() == ArrayList.class){
 								defEdgeTab.createListColumn(obj.getKey(), String.class, true);
 							} else {
 								defEdgeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
 							}
 							
-							attributeCols.add(obj.getKey());
+//							attributeCols.add(obj.getKey());
 						}
-						defEdgeTab.getRow(cyEdge.getSUID()).set(obj.getKey(), obj.getValue());
+						
+						Object value = CyUtils.fixSpecialTypes(obj.getValue(), defEdgeTab.getColumn(obj.getKey()).getType());
+						defEdgeTab.getRow(cyEdge.getSUID()).set(obj.getKey(), value);
 
 					}
 				}

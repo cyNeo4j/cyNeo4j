@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.specialized.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.specialized.ShortestPathExtExec;
@@ -17,15 +19,12 @@ import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
+import org.cytoscape.view.model.CyNetworkViewManager;
 
 public class Plugin {
 	
 	// THIS IS HORRIBLE!!!!
-	private static final Map<String,Class> SUPPORTED_EXTENSIONS;
-	static {
-		SUPPORTED_EXTENSIONS = new HashMap<String,Class>();
-		SUPPORTED_EXTENSIONS.put("shortestPath",ShortestPathExtExec.class);
-	}
+	private Map<String,Class> supportedExtensions;
 	
 	private CyApplicationManager cyApplicationManager = null;
 	
@@ -34,19 +33,25 @@ public class Plugin {
 	private CyNetworkFactory cyNetworkFactory = null;
 	private CyTableFactory cyTableFactory = null;
 	private CyNetworkManager cyNetMgr = null;
+	private CyNetworkViewManager cyNetViewMgr = null;
 	
 	private Set<Long> myNetworks = new HashSet<Long>();
 
 	public Plugin(CyApplicationManager cyApplicationManager, 
 			CySwingApplication cySwingApplication,
-			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory, CyNetworkManager cyNetMgr
+			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory, CyNetworkManager cyNetMgr, CyNetworkViewManager cyNetViewMgr
 			) {
 		super();
+		
+		supportedExtensions = new HashMap<String,Class>();
+		supportedExtensions.put("shortestPath",ShortestPathExtExec.class);
+		
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
 		this.cyNetworkFactory = cyNetworkFactory;
 		this.cyTableFactory = cyTableFactory;
 		this.cyNetMgr = cyNetMgr;
+		this.cyNetViewMgr = cyNetViewMgr;
 	}
 	
 	public CyNetworkFactory getCyNetworkFactory() {
@@ -59,6 +64,14 @@ public class Plugin {
 	
 	public CyNetworkManager getCyNetworkManager() {
 		return cyNetMgr;
+	}
+
+	public CyNetworkViewManager getCyNetViewMgr() {
+		return cyNetViewMgr;
+	}
+
+	public void setCyNetViewMgr(CyNetworkViewManager cyNetViewMgr) {
+		this.cyNetViewMgr = cyNetViewMgr;
 	}
 
 	public SimpleNeo4jConnectionHandler getNeo4jConnectionHandler() {
@@ -114,7 +127,7 @@ public class Plugin {
 		
 		// OMG OMG OMG
 		for(Extension ext : exts){
-			if(SUPPORTED_EXTENSIONS.containsKey(ext.getName())){
+			if(getSupportedExtensions().containsKey(ext.getName())){
 				supported.add(ext);
 			}
 		}
@@ -125,15 +138,25 @@ public class Plugin {
 	public void executeExtension(Extension extension) {
 		// Stage 1: Parameter aquicistion
 		try {
-			ExtensionExecutor exec = (ExtensionExecutor)SUPPORTED_EXTENSIONS.get(extension.getName()).newInstance();
+			ExtensionExecutor exec = (ExtensionExecutor)supportedExtensions.get(extension.getName()).newInstance();
+			exec.setPlugin(this);
 			exec.setExtension(extension);
-			exec.collectParameters();
 			
-			Neo4jCall call = exec.buildNeo4jCall(getNeo4jConnectionHandler().getInstanceDataLocation());
+			if(!exec.collectParameters()){
+				JOptionPane.showMessageDialog(getCySwingApplication().getJFrame(), "Failed to collect parameters for " + extension.getName());
+				return;
+			}
 			
-			Object callRetValue = getNeo4jConnectionHandler().executeExtensionCall(call);
 			
-			exec.processRetValue(callRetValue);
+			System.out.println(exec);
+			
+			List<Neo4jCall> calls = exec.buildNeo4jCalls(getNeo4jConnectionHandler().getInstanceDataLocation());
+			
+			for(Neo4jCall call : calls){
+				System.out.println(call);
+				Object callRetValue = getNeo4jConnectionHandler().executeExtensionCall(call);
+				exec.processCallResponse(call,callRetValue);
+			}
 			
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
@@ -142,6 +165,10 @@ public class Plugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	protected Map<String, Class> getSupportedExtensions() {
+		return supportedExtensions;
 	}
 	
 }

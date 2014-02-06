@@ -60,12 +60,18 @@ public class CyUtils {
 			Object paramValue = tab.getRow(item.getSUID()).get(cyCol.getName(),cyCol.getType());
 			
 			String paramValueStr = null;
-			if(paramValue == null)
-				paramValueStr = "";
-			else
-				paramValueStr = paramValue.toString();
+			if(paramValue == null){
+				continue;
+			}
+			else{
+				if(cyCol.getType() == String.class){
+					paramValueStr = "\"" + paramValue.toString() + "\"";
+				} else {
+					paramValueStr = paramValue.toString();
+				}
+			}
 			
-			String jsonParam = "\"" + paramName + "\" : \"" + paramValueStr + "\",";
+			String jsonParam = "\"" + paramName + "\" : " + paramValueStr + ",";
 			params = params + jsonParam;
 		}
 		
@@ -75,13 +81,28 @@ public class CyUtils {
 		return params;
 	}
 	
-	public static Integer getNeoID(CyNode n){
-		CyNetwork net = n.getNetworkPointer();
-		return net.getDefaultNodeTable().getRow(n.getSUID()).get("neoid", Integer.class);
+	public static Long getNeoID(CyNetwork net, CyNode n){
+		return net.getDefaultNodeTable().getRow(n.getSUID()).get("neoid", Long.class);
 	}
 	
-	public static Integer getNeoID(CyEdge e){
-		CyNetwork net = e.getSource().getNetworkPointer();
-		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Integer.class);
+	public static Long getNeoID(CyNetwork net, CyEdge e){
+		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Long.class);
+	}
+
+	
+	public static Object fixSpecialTypes(Object val, Class req){
+		
+		Object retV = null;
+		
+		if(val.getClass() != req){
+			if(val.getClass() == Integer.class && req == Long.class){
+				retV = Long.valueOf(((Integer)val).longValue());
+			}
+			
+		} else {
+			return val;
+		}
+		
+		return retV;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.CreateIdReturnResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionLocationsHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionParametersResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.Neo4jPingHandler;
@@ -153,14 +154,18 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 				System.out.println("got a network");
 				//TODO get all tables; check if node is in table; upload everything!
 				CyTable defNodeTab = currNet.getDefaultNodeTable();
+				if(defNodeTab.getColumn("neoid") == null){
+					defNodeTab.createColumn("neoid", Long.class, false);
+				}
 				
 				for(CyNode node : currNet.getNodeList()){
 					
 					String params = CyUtils.convertCyAttributesToJson(node, defNodeTab);
-					String cypher = "{ \"query\" : \"CREATE (n { props })\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
-//					System.out.println(cypher);
+					String cypher = "{ \"query\" : \"CREATE (n { props }) return id(n)\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
+					System.out.println(cypher);
 					try {
-						Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
+						Long neoid = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
+						defNodeTab.getRow(node.getSUID()).set("neoid", neoid);
 					} catch (ClientProtocolException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -174,6 +179,9 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 				System.out.println("uploaded nodes");
 				
 				CyTable defEdgeTab = currNet.getDefaultEdgeTable();
+				if(defEdgeTab.getColumn("neoid") == null){
+					defEdgeTab.createColumn("neoid", Long.class, false);
+				}
 				
 				for(CyEdge edge : currNet.getEdgeList()){
 					String from = defNodeTab.getRow(edge.getSource().getSUID()).get(CyNetwork.NAME, String.class);
@@ -183,10 +191,11 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 					
 					String rtype = defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class);
 					
-					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return r\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
+					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
 //					System.out.println(cypher);
 					try {
-						Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
+						Long neoid = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
+						defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
 					} catch (ClientProtocolException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -209,7 +218,10 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 	public Object executeExtensionCall(Neo4jCall call) {
 		Object retVal = null;
 		try {
-			retVal = Request.Post(getInstanceLocation() + call.getUrlFragment()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
+			
+			String url = getInstanceLocation() + EXT_URL + call.getUrlFragment();
+			System.out.println("invoking extension at: "+ getInstanceLocation() + call.getUrlFragment());
+			retVal = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
 			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

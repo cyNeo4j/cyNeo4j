@@ -12,6 +12,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.osgi.framework.BundleContext;
 
 public class CyActivator extends AbstractCyActivator {
@@ -24,9 +25,9 @@ public class CyActivator extends AbstractCyActivator {
 		CyNetworkFactory cyNetworkFactory = getService(context, CyNetworkFactory.class);
 		CyNetworkManager cyNetMgr = getService(context,CyNetworkManager.class);
 		CyTableFactory tableFactory = getService(context, CyTableFactory.class);
-				
-		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr);
+		CyNetworkViewManager cyNetViewMgr = getService(context, CyNetworkViewManager.class);
 		
+		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr);
 		
 		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
