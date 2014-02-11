@@ -132,6 +132,18 @@
 			<artifactId>session-api</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>work-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>work-swing-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

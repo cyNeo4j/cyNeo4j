@@ -2,10 +2,8 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHan
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
@@ -16,23 +14,45 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNetworkFactory;
+import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
 
-public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
+public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 
-		private Plugin plugin = null;
+		private String instanceLocation;
+		private CyNetworkFactory cyNetworkFactory;
+		private CyNetworkManager cyNetworkMgr;
 
-		public SyncDownNodeResponseHandler(Plugin plugin){
-			this.plugin = plugin;
+		
+
+		public SyncDownNodeResponseHandler(String instanceLocation,
+				CyNetworkFactory cyNetworkFactory, CyNetworkManager cyNetworkMgr) {
+			super();
+			this.instanceLocation = instanceLocation;
+			this.cyNetworkFactory = cyNetworkFactory;
+			this.cyNetworkMgr = cyNetworkMgr;
+		}
+
+		protected String getInstanceLocation() {
+			return instanceLocation;
+		}
+
+		protected CyNetworkFactory getCyNetworkFactory() {
+			return cyNetworkFactory;
+		}
+
+		protected CyNetworkManager getCyNetworkMgr() {
+			return cyNetworkMgr;
 		}
 
 		@Override
-		public Long handleResponse(HttpResponse response)
+		public CyNetwork handleResponse(HttpResponse response)
 				throws ClientProtocolException, IOException {
 			int responseCode = response.getStatusLine().getStatusCode();
 
-			Long resNet = null;
+			CyNetwork resNet = null;
 			
 			System.out.println("responseCode: " + responseCode);
 			if(responseCode >= 200 && responseCode < 300){
@@ -42,13 +62,13 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
 				List<Object> data = (ArrayList<Object>)nodes.get("data");
 
 				if(data.size() > 0){
-					CyNetwork myNet = plugin.getCyNetworkFactory().createNetwork();
+					CyNetwork myNet = getCyNetworkFactory().createNetwork();
 
 //					Set<String> attributeCols = new HashSet<String>();
 //					attributeCols.add("name");
 					
 
-					myNet.getRow(myNet).set(CyNetwork.NAME, getPlugin().getInstanceLocation());
+					myNet.getRow(myNet).set(CyNetwork.NAME,getInstanceLocation());
 					
 					CyTable defNodeTab = myNet.getDefaultNodeTable();
 					if(defNodeTab.getColumn("neoid") == null){
@@ -90,8 +110,8 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
 						}
 					}
 					
-					getPlugin().getCyNetworkManager().addNetwork(myNet);
-					resNet = myNet.getSUID();
+					getCyNetworkMgr().addNetwork(myNet);
+					resNet = myNet;
 				}
 
 			} else {
@@ -105,11 +125,4 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<Long> {
 
 			return resNet;
 		}
-
-		protected Plugin getPlugin() {
-			return plugin;
-		}
-		
-		
-
 	}

@@ -14,6 +14,8 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHand
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownEdgeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownNodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncDownTaskFactory;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncUpTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
 
@@ -24,6 +26,7 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.work.TaskIterator;
 
 public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
@@ -103,114 +106,26 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 	}
 
 	public void syncDown(boolean mergeInCurrent) {
-		if(mergeInCurrent){
-
-		} else {
-			try {
-				String query = "{ \"query\" : \"MATCH (n) RETURN n\",\"params\" : {}}";
-				System.out.println("loc: " + getInstanceLocation() + CYPHER_URL + " query: " + query);
-
-				Long resNetSUID = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(new SyncDownNodeResponseHandler(getPlugin()));
-
-				query = "{ \"query\" : \"MATCH (n)-[r]->(m) RETURN r\",\"params\" : {}}";
-				System.out.println("loc: " + getInstanceLocation() + CYPHER_URL + " query: " + query);
-				Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(new SyncDownEdgeResponseHandler(getPlugin(),resNetSUID));
-
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		TaskIterator it = new SyncDownTaskFactory(getPlugin().getCyNetworkManager(), 
+				mergeInCurrent, 
+				getPlugin().getCyNetworkFactory(), 
+				getInstanceLocation(), 
+				getCypherURL()).createTaskIterator();
+		
+		plugin.getDialogTaskManager().execute(it);
 	}
 
 	public void syncUp(boolean wipeRemote) {
-		// case 1: create new network -> requires purge of existing if anything is there
-		// case 2: make updates. (merge or create unique)
-		boolean wiped = false;
-		if(wipeRemote){
-			String wipeQuery = "{ \"query\" : \"MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r\",\"params\" : {}}";
-			System.out.println(wipeQuery);
-			try {
-				wiped = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(wipeQuery, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		
-		System.out.println("remote network wipe done");
+		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
+		plugin.getDialogTaskManager().execute(it);
 		
-		if(wiped == wipeRemote){
-			CyNetwork currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
-			
-			if(currNet == null){
-				System.out.println("no network selected!");
-				
-			} else {
-					
-				System.out.println("got a network");
-				//TODO get all tables; check if node is in table; upload everything!
-				CyTable defNodeTab = currNet.getDefaultNodeTable();
-				if(defNodeTab.getColumn("neoid") == null){
-					defNodeTab.createColumn("neoid", Long.class, false);
-				}
-				
-				for(CyNode node : currNet.getNodeList()){
-					
-					String params = CyUtils.convertCyAttributesToJson(node, defNodeTab);
-					String cypher = "{ \"query\" : \"CREATE (n { props }) return id(n)\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
-					System.out.println(cypher);
-					try {
-						Long neoid = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
-						defNodeTab.getRow(node.getSUID()).set("neoid", neoid);
-					} catch (ClientProtocolException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				// */
-				
-				System.out.println("uploaded nodes");
-				
-				CyTable defEdgeTab = currNet.getDefaultEdgeTable();
-				if(defEdgeTab.getColumn("neoid") == null){
-					defEdgeTab.createColumn("neoid", Long.class, false);
-				}
-				
-				for(CyEdge edge : currNet.getEdgeList()){
-					String from = defNodeTab.getRow(edge.getSource().getSUID()).get(CyNetwork.NAME, String.class);
-					String to = defNodeTab.getRow(edge.getTarget().getSUID()).get(CyNetwork.NAME, String.class);
-					
-					String rparams = CyUtils.convertCyAttributesToJson(edge, defEdgeTab);
-					
-					String rtype = defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class);
-					
-					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
-//					System.out.println(cypher);
-					try {
-						Long neoid = Request.Post(getInstanceLocation() + CYPHER_URL).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
-						defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
-					} catch (ClientProtocolException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				// */
-				
-				System.out.println("uploaded edges");
-			}
-			
-		} else {
-			System.out.println("could not wipe the instance! aborting syncUp");
-		}
 		// */
 
+	}
+
+	private String getCypherURL() {
+		return getInstanceLocation() + CYPHER_URL;
 	}
 
 	@Override

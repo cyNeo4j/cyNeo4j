@@ -20,6 +20,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.work.swing.DialogTaskManager;
 
 public class Plugin {
 	
@@ -34,13 +35,14 @@ public class Plugin {
 	private CyTableFactory cyTableFactory = null;
 	private CyNetworkManager cyNetMgr = null;
 	private CyNetworkViewManager cyNetViewMgr = null;
+	private DialogTaskManager diagTaskManager = null;
 	
 	private Set<Long> myNetworks = new HashSet<Long>();
 
 	public Plugin(CyApplicationManager cyApplicationManager, 
 			CySwingApplication cySwingApplication,
-			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory, CyNetworkManager cyNetMgr, CyNetworkViewManager cyNetViewMgr
-			) {
+			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory, CyNetworkManager cyNetMgr, CyNetworkViewManager cyNetViewMgr,
+			DialogTaskManager diagTaskManager) {
 		super();
 		
 		supportedExtensions = new HashMap<String,Class>();
@@ -52,6 +54,7 @@ public class Plugin {
 		this.cyTableFactory = cyTableFactory;
 		this.cyNetMgr = cyNetMgr;
 		this.cyNetViewMgr = cyNetViewMgr;
+		this.diagTaskManager = diagTaskManager;
 	}
 	
 	public CyNetworkFactory getCyNetworkFactory() {
@@ -147,7 +150,6 @@ public class Plugin {
 				return;
 			}
 			
-			
 			System.out.println(exec);
 			
 			List<Neo4jCall> calls = exec.buildNeo4jCalls(getNeo4jConnectionHandler().getInstanceDataLocation());
@@ -165,6 +167,10 @@ public class Plugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public DialogTaskManager getDialogTaskManager() {
+		return diagTaskManager;
 	}
 
 	protected Map<String, Class> getSupportedExtensions() {
