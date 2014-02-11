@@ -138,7 +138,6 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		
 		System.out.println("remote network wipe done");
