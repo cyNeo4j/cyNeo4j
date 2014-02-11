@@ -57,6 +57,9 @@ public class CyUtils {
 		String params = "{";
 		for(CyColumn cyCol : tab.getColumns()){
 			String paramName = cyCol.getName();
+			if(paramName.equals("neoid"))
+				continue;
+			
 			Object paramValue = tab.getRow(item.getSUID()).get(cyCol.getName(),cyCol.getType());
 			
 			String paramValueStr = null;

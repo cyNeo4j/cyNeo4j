@@ -75,11 +75,20 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 					if(res.size() > 1){
 						throw new IllegalArgumentException("more than one start node found! " + res.toString());
 					}
+					
+					if(res.size() == 0){
+						throw new IllegalArgumentException("could not find the appropriate cynode! neoid: " + start);
+					}
+					
 					CyNode startNode = res.iterator().next();
 					
 					res = CyUtils.getNodesWithValue(myNet, myNet.getDefaultNodeTable(), "neoid", end);
 					if(res.size() > 1){
 						throw new IllegalArgumentException("more than one end node found! " + res.toString());
+					}
+					
+					if(res.size() == 0){
+						throw new IllegalArgumentException("could not find the appropriate cynode! neoid: " + start);
 					}
 					
 					CyNode endNode = res.iterator().next();
