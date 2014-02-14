@@ -2,13 +2,11 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHan
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
@@ -23,12 +21,15 @@ import org.cytoscape.model.CyTable;
 
 public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 
-	private Plugin plugin = null;
-	private Long netSUID = null;
+	private CyNetwork network;
 
-	public SyncDownEdgeResponseHandler(Plugin plugin, Long netSUID){
-		this.plugin = plugin;
-		this.netSUID = netSUID;
+	public SyncDownEdgeResponseHandler(CyNetwork network) {
+		super();
+		this.network = network;
+	}
+
+	protected CyNetwork getNetwork() {
+		return network;
 	}
 
 	@Override
@@ -46,8 +47,7 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 
 			if(data.size() > 0){
 				
-				CyNetwork myNet = getPlugin().getCyNetworkManager().getNetwork(getNetSUID());
-				resNet = myNet.getSUID();
+				CyNetwork myNet = getNetwork();
 
 //				Set<String> attributeCols = new HashSet<String>();
 //				attributeCols.add("name");
@@ -130,13 +130,4 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 
 		return resNet;
 	}
-
-	protected Plugin getPlugin() {
-		return plugin;
-	}
-
-	protected Long getNetSUID() {
-		return netSUID;
-	}
-
 }

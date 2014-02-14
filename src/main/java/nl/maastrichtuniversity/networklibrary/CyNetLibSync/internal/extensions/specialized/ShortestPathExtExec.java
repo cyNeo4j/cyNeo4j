@@ -29,7 +29,7 @@ public class ShortestPathExtExec implements ExtensionExecutor {
 	private CyNode from;
 	private CyNode to;
 	private CyNetwork net;
-	private Integer depth = 10;
+	private Integer depth = 10000;
 	
 	@Override
 	public boolean collectParameters() {

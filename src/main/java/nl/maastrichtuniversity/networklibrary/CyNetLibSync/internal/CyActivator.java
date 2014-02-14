@@ -12,7 +12,11 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
 import org.cytoscape.service.util.AbstractCyActivator;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
 public class CyActivator extends AbstractCyActivator {
@@ -26,8 +30,14 @@ public class CyActivator extends AbstractCyActivator {
 		CyNetworkManager cyNetMgr = getService(context,CyNetworkManager.class);
 		CyTableFactory tableFactory = getService(context, CyTableFactory.class);
 		CyNetworkViewManager cyNetViewMgr = getService(context, CyNetworkViewManager.class);
+		DialogTaskManager diagTaskManager = getService(context, DialogTaskManager.class);
+		CyNetworkViewManager cyNetworkViewMgr = getService(context, CyNetworkViewManager.class);
+		CyNetworkViewFactory cyNetworkViewFactory = getService(context, CyNetworkViewFactory.class);
+		CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = getService(context,CyLayoutAlgorithmManager.class);
+		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
 		
-		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr);
+		
+		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
 		
 		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
