@@ -26,6 +26,9 @@ import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
+import org.cytoscape.view.model.CyNetworkViewFactory;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.work.TaskIterator;
 
 public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
@@ -110,11 +113,15 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 				mergeInCurrent, 
 				getPlugin().getCyNetworkFactory(), 
 				getInstanceLocation(), 
-				getCypherURL()).createTaskIterator();
+				getCypherURL(),
+				getPlugin().getCyNetViewMgr(),
+				getPlugin().getCyNetworkViewFactory(),
+				getPlugin().getCyLayoutAlgorithmManager(),
+				getPlugin().getVisualMappingManager()).createTaskIterator();
 		
 		plugin.getDialogTaskManager().execute(it);
 	}
-
+	
 	public void syncUp(boolean wipeRemote) {
 		
 		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();

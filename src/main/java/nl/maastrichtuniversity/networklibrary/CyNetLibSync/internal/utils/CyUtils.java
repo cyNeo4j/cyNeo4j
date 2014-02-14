@@ -11,6 +11,9 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
+import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyle;
 
 public class CyUtils {
 	public static Set<CyNode> getNodesWithValue(
@@ -107,5 +110,12 @@ public class CyUtils {
 		}
 		
 		return retV;
+	}
+	
+	public static void updateVisualStyle(VisualMappingManager visualMappingMgr, CyNetworkView view, CyNetwork network) {
+		VisualStyle vs = visualMappingMgr.getDefaultVisualStyle();
+		visualMappingMgr.setVisualStyle(vs, view);
+		vs.apply(view);
+		view.updateView();
 	}
 }

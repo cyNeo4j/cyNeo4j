@@ -19,7 +19,10 @@ import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyTableFactory;
+import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.swing.DialogTaskManager;
 
 public class Plugin {
@@ -36,13 +39,18 @@ public class Plugin {
 	private CyNetworkManager cyNetMgr = null;
 	private CyNetworkViewManager cyNetViewMgr = null;
 	private DialogTaskManager diagTaskManager = null;
-	
-	private Set<Long> myNetworks = new HashSet<Long>();
-
-	public Plugin(CyApplicationManager cyApplicationManager, 
+	private CyNetworkViewFactory cyNetworkViewFactory = null;
+	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = null;
+	private VisualMappingManager visualMappingMgr = null;
+		
+	public Plugin(CyApplicationManager cyApplicationManager,
 			CySwingApplication cySwingApplication,
-			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory, CyNetworkManager cyNetMgr, CyNetworkViewManager cyNetViewMgr,
-			DialogTaskManager diagTaskManager) {
+			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory,
+			CyNetworkManager cyNetMgr, CyNetworkViewManager cyNetViewMgr,
+			DialogTaskManager diagTaskManager,
+			CyNetworkViewFactory cyNetworkViewFactory,
+			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
+			VisualMappingManager visualMappingMgr) {
 		super();
 		
 		supportedExtensions = new HashMap<String,Class>();
@@ -55,8 +63,13 @@ public class Plugin {
 		this.cyNetMgr = cyNetMgr;
 		this.cyNetViewMgr = cyNetViewMgr;
 		this.diagTaskManager = diagTaskManager;
+		this.cyNetworkViewFactory = cyNetworkViewFactory;
+		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
+		this.visualMappingMgr = visualMappingMgr;
 	}
-	
+
+
+
 	public CyNetworkFactory getCyNetworkFactory() {
 		return cyNetworkFactory;
 	}
@@ -112,10 +125,6 @@ public class Plugin {
 
 	public String getInstanceLocation() {
 		return getNeo4jConnectionHandler().getInstanceLocation();
-	}
-
-	public void addNetwork(Long SUID) {
-		myNetworks.add(SUID);
 	}
 
 	protected List<Extension> getAvailableExtensions() {
@@ -175,6 +184,20 @@ public class Plugin {
 
 	protected Map<String, Class> getSupportedExtensions() {
 		return supportedExtensions;
+	}
+
+	public CyNetworkViewFactory getCyNetworkViewFactory() {
+		// TODO Auto-generated method stub
+		return cyNetworkViewFactory;
+	}
+
+	public CyLayoutAlgorithmManager getCyLayoutAlgorithmManager() {
+		// TODO Auto-generated method stub
+		return cyLayoutAlgorithmMgr;
+	}
+
+	public VisualMappingManager getVisualMappingManager() {
+		return visualMappingMgr;
 	}
 	
 }
