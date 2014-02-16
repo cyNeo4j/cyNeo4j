@@ -16,6 +16,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHand
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncDownTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncUpTaskFactory;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.TransSyncUpTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
 
@@ -124,7 +125,8 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 	
 	public void syncUp(boolean wipeRemote) {
 		
-		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
+//		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
+		TaskIterator it = new TransSyncUpTaskFactory(wipeRemote,getTransURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
 		plugin.getDialogTaskManager().execute(it);
 		
 		// */
@@ -133,6 +135,10 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 	private String getCypherURL() {
 		return getInstanceLocation() + CYPHER_URL;
+	}
+	
+	private String getTransURL() {
+		return getInstanceLocation() + TRANSACTION_URL;
 	}
 
 	@Override
