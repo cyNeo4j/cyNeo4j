@@ -95,7 +95,11 @@ public class TransSyncUpTask extends AbstractTask {
 					String cypher = "CREATE (n { props }) return id(n)";
 					String paramStr = "{\"props\" : [ "+ params +" ] }";
 					
-					String payload = "{ \"statements\" : [ { \"statement\" : \""+cypher+"\",\"parameters\":\""+paramStr+"\"} ]}";
+					String payload = "{ \"statements\" : [ { \"statement\" : \""+cypher+"\",\"parameters\":"+paramStr+"} ]}";
+					
+					System.out.println(cypher);
+					System.out.println(paramStr);
+					System.out.println(payload);
 					
 					try {
 						Long neoid = Request.Post(currTransaction).bodyString(payload, ContentType.APPLICATION_JSON).execute().handleResponse(new TransCreateIdRetRespHandler());
