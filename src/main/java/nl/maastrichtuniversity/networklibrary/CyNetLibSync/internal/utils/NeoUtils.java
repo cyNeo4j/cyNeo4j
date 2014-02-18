@@ -1,6 +1,8 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
 
 import java.io.IOException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.Map;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
@@ -67,5 +69,9 @@ public class NeoUtils {
 		return commitURL.substring(0,commitURL.lastIndexOf('/'));
 	}
 	
+	public static String convertToNeo4jRelType(String edgeType){
+		String normalized = Normalizer.normalize(edgeType, Form.NFD);
+		return normalized.replaceAll("[^A-Za-z0-9]", ""); 
+	}
 	
 }

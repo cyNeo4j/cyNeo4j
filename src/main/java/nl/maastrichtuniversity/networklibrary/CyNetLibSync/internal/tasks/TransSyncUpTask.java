@@ -80,6 +80,7 @@ public class TransSyncUpTask extends AbstractTask {
 				}
 				
 				String commitURL = NeoUtils.beginTransaction(getTransURL());
+				System.out.println(commitURL);
 				if(commitURL == null){
 					JOptionPane.showMessageDialog(null, "Creating the transaction (nodes) in Neo4j failed!");
 					return;
@@ -121,38 +122,61 @@ public class TransSyncUpTask extends AbstractTask {
 					return;
 				}
 				
+				
+				commitURL = NeoUtils.beginTransaction(getTransURL());
+				System.out.println(commitURL);
+				if(commitURL == null){
+					JOptionPane.showMessageDialog(null, "Creating the transaction (edges) in Neo4j failed!");
+					return;
+				}
+				currTransaction = NeoUtils.extractTransactionURL(commitURL);
 				// */
 				
 //				System.out.println("uploaded nodes");
 				
-//				CyTable defEdgeTab = currNet.getDefaultEdgeTable();
-//				if(defEdgeTab.getColumn("neoid") == null){
-//					defEdgeTab.createColumn("neoid", Long.class, false);
-//				}
-//				
-//				for(CyEdge edge : currNet.getEdgeList()){
-//					taskMonitor.setStatusMessage("uploading edges");
-//					String from = defNodeTab.getRow(edge.getSource().getSUID()).get(CyNetwork.NAME, String.class);
-//					String to = defNodeTab.getRow(edge.getTarget().getSUID()).get(CyNetwork.NAME, String.class);
-//					
-//					String rparams = CyUtils.convertCyAttributesToJson(edge, defEdgeTab);
-//					
-//					String rtype = defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class);
-//					
-//					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
-////					System.out.println(cypher);
-//					try {
-//						Long neoid = Request.Post(getCypherURL()).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
-//						defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
-//					} catch (ClientProtocolException e) {
-//						e.printStackTrace();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//					progress = progress + stepSize;
-//					taskMonitor.setProgress(progress);
-//				}
+				CyTable defEdgeTab = currNet.getDefaultEdgeTable();
+				if(defEdgeTab.getColumn("neoid") == null){
+					defEdgeTab.createColumn("neoid", Long.class, false);
+				}
+				
+				for(CyEdge edge : currNet.getEdgeList()){
+					taskMonitor.setStatusMessage("uploading edges");
+					String from = defNodeTab.getRow(edge.getSource().getSUID()).get(CyNetwork.NAME, String.class);
+					String to = defNodeTab.getRow(edge.getTarget().getSUID()).get(CyNetwork.NAME, String.class);
+					
+					String rparams = CyUtils.convertCyAttributesToJson(edge, defEdgeTab);
+					
+					String rtype = NeoUtils.convertToNeo4jRelType(defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class));
+					
+					String cypher = "MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)";
+					String paramStr = "{ \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }";
+					
+					String payload = "{ \"statements\" : [ { \"statement\" : \""+cypher+"\",\"parameters\":"+paramStr+"} ]}";
+					
+					System.out.println(cypher);
+					System.out.println(paramStr);
+					System.out.println(payload);
+					
+					try {
+						Long neoid = Request.Post(currTransaction).bodyString(payload, ContentType.APPLICATION_JSON).execute().handleResponse(new TransCreateIdRetRespHandler());
+						defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
+					} catch (ClientProtocolException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					progress = progress + stepSize;
+					taskMonitor.setProgress(progress);
+				}
 				// */
+				
+				boolean edgesCommited = NeoUtils.commitTransaction(commitURL);
+				
+				if(edgesCommited == false){
+					JOptionPane.showMessageDialog(null, "Commiting the transaction (nodes) failed!");
+					// orphaning the transaction currently!
+					return;
+				}
 				
 //				System.out.println("uploaded edges");
 			}

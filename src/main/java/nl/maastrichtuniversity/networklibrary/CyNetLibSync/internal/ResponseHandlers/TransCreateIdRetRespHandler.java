@@ -23,8 +23,10 @@ public class TransCreateIdRetRespHandler implements ResponseHandler<Long> {
 
 			ObjectMapper mapper = new ObjectMapper();
 			Map<String,Object> transactionResponse = mapper.readValue(response.getEntity().getContent(), Map.class);
+			System.out.println(transactionResponse.toString());
 
 			List<Object> results = (List<Object>)transactionResponse.get("results");
+			System.out.println(results.toString());
 //			
 			Map<String,Object> result = (Map<String,Object>)results.get(0);
 			
