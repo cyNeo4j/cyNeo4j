@@ -1,10 +1,9 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.specialized;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
 
 import java.util.List;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
 public interface ExtensionExecutor {
 	

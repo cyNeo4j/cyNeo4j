@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync;
 
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -16,35 +16,33 @@ public class SyncDownTaskFactory extends AbstractTaskFactory {
 	private CyNetworkFactory cyNetworkFactory;
 	private String instanceLocation;
 	private String cypherURL;
-	private CyNetworkViewManager cyNetworkViewMgr;
-	private CyNetworkViewFactory cyNetworkViewFactory;
-	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
-	private VisualMappingManager visualMappingMgr;
+//	private CyNetworkViewManager cyNetworkViewMgr;
+//	private CyNetworkViewFactory cyNetworkViewFactory;
+//	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
+//	private VisualMappingManager visualMappingMgr;
 
 	public SyncDownTaskFactory(CyNetworkManager cyNetworkMgr,
 			boolean mergeInCurrent, CyNetworkFactory cyNetworkFactory,
-			String instanceLocation, String cypherURL,
+			String instanceLocation, String cypherURL/*,
 			CyNetworkViewManager cyNetworkViewMgr,
 			CyNetworkViewFactory cyNetworkViewFactory,
 			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
-			VisualMappingManager visualMappingMgr) {
+			VisualMappingManager visualMappingMgr*/) {
 		super();
 		this.cyNetworkMgr = cyNetworkMgr;
 		this.mergeInCurrent = mergeInCurrent;
 		this.cyNetworkFactory = cyNetworkFactory;
 		this.instanceLocation = instanceLocation;
 		this.cypherURL = cypherURL;
-		this.cyNetworkViewMgr = cyNetworkViewMgr;
-		this.cyNetworkViewFactory = cyNetworkViewFactory;
-		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
-		this.visualMappingMgr = visualMappingMgr;
+//		this.cyNetworkViewMgr = cyNetworkViewMgr;
+//		this.cyNetworkViewFactory = cyNetworkViewFactory;
+//		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
+//		this.visualMappingMgr = visualMappingMgr;
 	}
-
-
 
 	@Override
 	public TaskIterator createTaskIterator() {
-		return new TaskIterator(new SyncDownTask(mergeInCurrent, cypherURL, instanceLocation, cyNetworkFactory, cyNetworkMgr,cyNetworkViewMgr,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr));
+		return new TaskIterator(new SyncDownTask(mergeInCurrent, cypherURL, instanceLocation, cyNetworkFactory, cyNetworkMgr/*,cyNetworkViewMgr,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr*/));
 	}
 
 }

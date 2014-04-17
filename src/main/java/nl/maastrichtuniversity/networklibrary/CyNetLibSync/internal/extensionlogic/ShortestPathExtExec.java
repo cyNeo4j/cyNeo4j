@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.specialized;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,9 +10,8 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
 import org.cytoscape.model.CyEdge;

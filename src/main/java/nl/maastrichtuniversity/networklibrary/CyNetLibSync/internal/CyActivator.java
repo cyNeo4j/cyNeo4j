@@ -2,9 +2,9 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
 import java.util.Properties;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui.ConnectInstanceMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui.ServiceMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui.SynchronizeMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ServiceMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SynchronizeMenuAction;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;

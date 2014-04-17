@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,13 +1,16 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
+import org.cytoscape.work.TaskIterator;
 
 public class SynchronizeMenuAction extends AbstractCyAction {
 
@@ -23,9 +26,18 @@ public class SynchronizeMenuAction extends AbstractCyAction {
 		this.plugin = plugin;
 	}
 
+	protected Plugin getPlugin() {
+		return plugin;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		
+		if(!plugin.getInteractor().isConnected()){
+			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
+			return;
+		}
+		
 		Object[] directions = {"Up","Down"};
 		int n = JOptionPane.showOptionDialog(plugin.getCySwingApplication().getJFrame(),
 				null,
@@ -35,17 +47,20 @@ public class SynchronizeMenuAction extends AbstractCyAction {
 				null,
 				directions,
 				null);
-
+	
 		switch(n){
 		case 0:
-			plugin.syncUp(true);
+			getPlugin().getInteractor().syncUp(true,getPlugin().getCyApplicationManager().getCurrentNetwork());
+			
 			break;
 		case 1:
-			plugin.syncDown(false);
+			getPlugin().getInteractor().syncDown(false);
+			// take care of the view and layout! not the interactors job
 			break;
 		default:
 			break;
 		}
+
 	}
 
 }

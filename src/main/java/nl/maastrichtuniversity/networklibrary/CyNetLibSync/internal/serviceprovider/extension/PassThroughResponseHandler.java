@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Neo4jExtension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
