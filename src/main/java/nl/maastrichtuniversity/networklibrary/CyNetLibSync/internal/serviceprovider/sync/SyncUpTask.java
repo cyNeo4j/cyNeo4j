@@ -1,8 +1,7 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync;
 
 import java.io.IOException;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.CreateIdReturnResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 

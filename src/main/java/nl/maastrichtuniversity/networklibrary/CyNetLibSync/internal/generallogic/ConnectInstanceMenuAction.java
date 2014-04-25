@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ui;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic;
 
 import java.awt.event.ActionEvent;
 
@@ -30,7 +30,7 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		while(instanceLocation == null || instanceLocation.isEmpty())
 			instanceLocation = JOptionPane.showInputDialog("Provide the URL of the Neo4j instance:","http://localhost:7474");
 		
-		boolean status = plugin.connectToInstance(instanceLocation);
+		boolean status = plugin.getInteractor().connect(instanceLocation);
 		
 		if(status)
 			JOptionPane.showMessageDialog(null, "Connected to Instance at "+ instanceLocation);

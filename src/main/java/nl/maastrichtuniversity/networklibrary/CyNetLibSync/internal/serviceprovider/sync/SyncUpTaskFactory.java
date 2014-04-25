@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync;
 
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.AbstractTaskFactory;

@@ -5,32 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.CreateIdReturnResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionLocationsHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ExtensionParametersResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.Neo4jPingHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.PassThroughResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownEdgeResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.SyncDownNodeResponseHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensions.Extension;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncDownTaskFactory;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.tasks.SyncUpTaskFactory;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.Neo4jCall;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.ExtensionLocationsHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.ExtensionParametersResponseHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.PassThroughResponseHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.general.Neo4jPingHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.cytoscape.model.CyEdge;
-import org.cytoscape.model.CyNetwork;
-import org.cytoscape.model.CyNode;
-import org.cytoscape.model.CyTable;
-import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
-import org.cytoscape.view.model.CyNetworkViewFactory;
-import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.work.TaskIterator;
 
+@Deprecated
 public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 
 	private String instanceLocation = null;
@@ -135,7 +125,6 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		return getInstanceLocation() + CYPHER_URL;
 	}
 
-	@Override
 	public Object executeExtensionCall(Neo4jCall call) {
 		Object retVal = null;
 		try {
@@ -151,6 +140,36 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		}
 		
 		return retVal;
+	}
+
+	@Override
+	public boolean connect(String instanceLocation) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void disconnect() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void subset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void query() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void executeExtensionCall() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,8 +1,9 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
 public class Neo4jCall {
 	private String urlFragment;
 	private String payload;
+	
 	public String getUrlFragment() {
 		return urlFragment;
 	}

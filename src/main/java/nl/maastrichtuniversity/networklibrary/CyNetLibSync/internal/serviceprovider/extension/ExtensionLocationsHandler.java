@@ -1,28 +1,29 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class Neo4jPingHandler implements ResponseHandler<Boolean> {
+public class ExtensionLocationsHandler implements ResponseHandler<Set<String>>{
 
 	@Override
-	public Boolean handleResponse(HttpResponse response)
+	public Set<String> handleResponse(HttpResponse response)
 			throws ClientProtocolException, IOException {
-
+		Set<String> res = null;
 		int responseCode = response.getStatusLine().getStatusCode();
 		if(responseCode >= 200 && responseCode < 300){
 			ObjectMapper mapper = new ObjectMapper();
 			Map<String,String> instanceResp = mapper.readValue(response.getEntity().getContent(),Map.class);
-			if(instanceResp.containsKey("data"))
-				return true;
+
+			res = instanceResp.keySet();
 		}
 
-		return false;
+		return res;
 	}
 
 }
