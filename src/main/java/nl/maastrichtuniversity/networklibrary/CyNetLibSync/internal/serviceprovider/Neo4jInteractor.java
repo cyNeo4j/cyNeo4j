@@ -10,6 +10,7 @@ public interface Neo4jInteractor {
 
 	// general house keeping
 	public boolean 	connect(String instanceLocation);
+	public boolean	validateConnection(String instanceLocation);
 	public void		disconnect();
 	public boolean 	isConnected();
 	public String	getInstanceLocation();

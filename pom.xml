@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
 	<artifactId>CyNetLibSync</artifactId>
-	<version>0.0.1</version>
+	<version>0.4</version>
 
 	<name>CyNetLibSync</name>
 
@@ -175,6 +175,11 @@
 			<version>1.9</version>
 		</dependency>
 
+	<dependency>
+	<groupId>commons-validator</groupId>
+	<artifactId>commons-validator</artifactId>
+	<version>1.4.0</version>
+</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

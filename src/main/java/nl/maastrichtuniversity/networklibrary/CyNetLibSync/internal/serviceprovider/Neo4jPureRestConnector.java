@@ -8,10 +8,14 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 
 public class Neo4jPureRestConnector implements Neo4jInteractor {
 
+	protected String instanceLocation = null;
+	
 	@Override
 	public boolean connect(String instanceLocation) {
-		// TODO Auto-generated method stub
-		return false;
+		if(validateConnection(instanceLocation)){
+			setInstanceLocation(instanceLocation);
+		}
+		return isConnected();
 	}
 
 	@Override
@@ -22,14 +26,16 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public boolean isConnected() {
-		// TODO Auto-generated method stub
-		return false;
+		return validateConnection(getInstanceLocation());
 	}
 
 	@Override
 	public String getInstanceLocation() {
-		// TODO Auto-generated method stub
-		return null;
+		return instanceLocation;
+	}
+	
+	protected void setInstanceLocation(String instanceLocation) {
+		this.instanceLocation = instanceLocation;
 	}
 
 	@Override
@@ -67,6 +73,12 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	public Object executeExtensionCall(Neo4jCall call) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean validateConnection(String instanceLocation) {
+		System.out.println("validating url: " + instanceLocation);
+		return "http://localhost:7474".equals(instanceLocation);
 	}
 
 }
