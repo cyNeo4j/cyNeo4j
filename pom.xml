@@ -77,7 +77,7 @@
 						<Export-Package>${bundle.namespace}</Export-Package>
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-						<Embed-Dependency>joda-time,jackson-mapper-asl,jackson-core-asl,fluent-hc,commons-codec,httpclient;scope=compile|runtime</Embed-Dependency>
+						<Embed-Dependency>joda-time,jackson-mapper-asl,jackson-core-asl,fluent-hc,commons-codec,commons-validator,commons-beanutils,commons-digester,httpclient;scope=compile|runtime</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
 				</configuration>
@@ -175,11 +175,24 @@
 			<version>1.9</version>
 		</dependency>
 
-	<dependency>
-	<groupId>commons-validator</groupId>
-	<artifactId>commons-validator</artifactId>
-	<version>1.4.0</version>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		
+		<dependency>
+	<groupId>commons-beanutils</groupId>
+	<artifactId>commons-beanutils</artifactId>
+	<version>1.8.3</version>
 </dependency>
+
+<dependency>
+	<groupId>commons-digester</groupId>
+	<artifactId>commons-digester</artifactId>
+	<version>1.8.1</version>
+</dependency>
+            
 
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

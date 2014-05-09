@@ -62,7 +62,7 @@ public class Plugin {
 		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
 		this.visualMappingMgr = visualMappingMgr;
 		
-		interactor = new Neo4jPureRestConnector();
+		interactor = new Neo4jPureRestConnector(this);
 	}
 
 

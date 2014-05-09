@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ServiceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncUpMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SynchronizeMenuAction;
 
 import org.cytoscape.application.CyApplicationManager;
@@ -31,7 +33,6 @@ public class CyActivator extends AbstractCyActivator {
 		CyTableFactory tableFactory = getService(context, CyTableFactory.class);
 		CyNetworkViewManager cyNetViewMgr = getService(context, CyNetworkViewManager.class);
 		DialogTaskManager diagTaskManager = getService(context, DialogTaskManager.class);
-		CyNetworkViewManager cyNetworkViewMgr = getService(context, CyNetworkViewManager.class);
 		CyNetworkViewFactory cyNetworkViewFactory = getService(context, CyNetworkViewFactory.class);
 		CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = getService(context,CyLayoutAlgorithmManager.class);
 		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
@@ -41,11 +42,17 @@ public class CyActivator extends AbstractCyActivator {
 		
 		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
-		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
+//		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
+		
+		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
+		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
+		
 		ServiceMenuAction serviceAction = new ServiceMenuAction(cyApplicationManager, plugin);
 
 		registerAllServices(context, connectAction, new Properties());
-		registerAllServices(context, synchAction, new Properties());
+//		registerAllServices(context, synchAction, new Properties());
+		registerAllServices(context, syncUpAction, new Properties());
+		registerAllServices(context, syncDownAction, new Properties());
 		registerAllServices(context, serviceAction, new Properties());
 	}
 }

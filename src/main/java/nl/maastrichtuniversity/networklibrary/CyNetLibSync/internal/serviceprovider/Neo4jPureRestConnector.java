@@ -2,13 +2,26 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 
 import java.util.List;
 
-import org.cytoscape.model.CyNetwork;
-
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
+
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.work.TaskIterator;
 
 public class Neo4jPureRestConnector implements Neo4jInteractor {
 
+	private static final String DATA_URL = "/db/data/";
+	private static final String CYPHER_URL = DATA_URL + "cypher";
+	
 	protected String instanceLocation = null;
+	
+	private Plugin plugin;
+	
+	public Neo4jPureRestConnector(Plugin plugin){
+		this.plugin = plugin;
+	}
 	
 	@Override
 	public boolean connect(String instanceLocation) {
@@ -40,7 +53,18 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public void syncDown(boolean mergeInCurrent) {
-		// TODO Auto-generated method stub
+		
+		TaskIterator it = new SyncDownTaskFactory(getPlugin().getCyNetworkManager(), 
+				mergeInCurrent, 
+				getPlugin().getCyNetworkFactory(), 
+				getInstanceLocation(), 
+				getCypherURL()/*,
+				getPlugin().getCyNetViewMgr(),
+				getPlugin().getCyNetworkViewFactory(),
+				getPlugin().getCyLayoutAlgorithmManager(),
+				getPlugin().getVisualMappingManager()*/).createTaskIterator();
+		
+		plugin.getDialogTaskManager().execute(it);
 
 	}
 
@@ -51,9 +75,8 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	}
 
 	@Override
-	public void query() {
-		// TODO Auto-generated method stub
-
+	public void query(String cypherQuery) {
+		
 	}
 
 	@Override
@@ -65,8 +88,13 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public void syncUp(boolean wipeRemote, CyNetwork curr) {
-		// TODO Auto-generated method stub
+		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
+		plugin.getDialogTaskManager().execute(it);
 		
+	}
+
+	private String getCypherURL() {
+		return getInstanceLocation() + CYPHER_URL;
 	}
 
 	@Override
@@ -79,6 +107,10 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	public boolean validateConnection(String instanceLocation) {
 		System.out.println("validating url: " + instanceLocation);
 		return "http://localhost:7474".equals(instanceLocation);
+	}
+	
+	protected Plugin getPlugin() {
+		return plugin;
 	}
 
 }

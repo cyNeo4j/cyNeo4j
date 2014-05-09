@@ -12,6 +12,7 @@ import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.work.TaskIterator;
 
+@Deprecated
 public class SynchronizeMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Synchronize";

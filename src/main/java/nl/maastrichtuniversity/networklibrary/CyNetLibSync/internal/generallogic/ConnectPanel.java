@@ -91,19 +91,17 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 		}
 		
 		if(e.getActionCommand().equals(OK_CMD)){
-			
-			
 			if(validURL()){
 				System.out.println("oking with: " + servURL.getText());
 				interactor.connect(servURL.getText());
 			}
 			closeUp();
 		}
-		
 	}
 
 	private boolean validURL() {
-		return UrlValidator.getInstance().isValid(servURL.getText()) && interactor.validateConnection(servURL.getText());
+		UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
+		return validator.isValid(servURL.getText()) && interactor.validateConnection(servURL.getText());
 	}
 
 	protected JDialog getDialog() {
@@ -130,6 +128,7 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 	}
 	
 	protected void checkURLChange(){
+		System.out.println("checking URL change");
 		if(validURL()){
 			status.setText("green");
 			okButton.setEnabled(true);
