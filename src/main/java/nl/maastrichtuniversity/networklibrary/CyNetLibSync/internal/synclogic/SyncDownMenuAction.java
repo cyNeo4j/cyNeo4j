@@ -2,7 +2,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;

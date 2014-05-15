@@ -21,7 +21,7 @@ public interface Neo4jInteractor {
 	
 	// subset interface
 	public void subset(/* parameters, targetNetwork */);
-	public void query(/* cypher?, targetNetwork */);
+	public void query(String cypherQuery);
 	
 	// extension interface
 	public List<Extension> 	getExtensions();

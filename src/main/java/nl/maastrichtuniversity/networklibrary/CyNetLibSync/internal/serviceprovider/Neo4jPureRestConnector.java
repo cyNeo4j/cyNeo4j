@@ -1,9 +1,13 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionParameter;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtParam;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
@@ -81,8 +85,36 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public List<Extension> getExtensions() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Extension> res = new ArrayList<Extension>();
+		
+		Extension cypherExt = new Neo4jExtension();
+		cypherExt.setName("cypher");
+		cypherExt.setEndpoint(getCypherURL());
+		
+		List<ExtensionParameter> params = new ArrayList<ExtensionParameter>();
+		
+		ExtensionParameter queryParam = new Neo4jExtParam("cypherQuery", "Cypher Endpoint", false,String.class);
+		params.add(queryParam);
+		
+		cypherExt.setParameters(params);
+
+		res.add(cypherExt);
+
+//		try {
+//			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
+//			
+//			for(String extName : extNames){
+//				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
+//			}
+//			
+//		} catch (ClientProtocolException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		
+		return res;
 	}
 
 

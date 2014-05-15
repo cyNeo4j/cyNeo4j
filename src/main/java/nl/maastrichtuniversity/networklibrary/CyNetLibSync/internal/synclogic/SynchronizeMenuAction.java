@@ -5,12 +5,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
-import org.cytoscape.work.TaskIterator;
 
 @Deprecated
 public class SynchronizeMenuAction extends AbstractCyAction {
