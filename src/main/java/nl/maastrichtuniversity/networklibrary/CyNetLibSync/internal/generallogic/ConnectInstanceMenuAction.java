@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 
@@ -43,17 +42,6 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		
 		
 		System.out.println("am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
-		
-//		// TODO add URL validation to menu
-//		while(instanceLocation == null || instanceLocation.isEmpty())
-//			instanceLocation = JOptionPane.showInputDialog("Provide the URL of the Neo4j instance:","http://localhost:7474");
-//		
-//		boolean status = plugin.getInteractor().connect(instanceLocation);
-//		
-//		if(status)
-//			JOptionPane.showMessageDialog(null, "Connected to Instance at "+ instanceLocation);
-//		else
-//			JOptionPane.showMessageDialog(null, "Failed to connect to Instance at " + instanceLocation);
 	}
 
 }

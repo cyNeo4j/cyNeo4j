@@ -13,9 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.commons.validator.routines.UrlValidator;
-
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
+
+import org.apache.commons.validator.routines.UrlValidator;
 
 
 public class ConnectPanel extends JPanel implements ActionListener, DocumentListener{
