@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
@@ -22,13 +24,16 @@ import org.cytoscape.model.CyTableUtil;
 import org.cytoscape.view.model.CyNetworkView;
 
 public class ShortestPathExtExec implements ExtensionExecutor {
-
+	
 	private Plugin plugin;
 	private Extension extension;
 	private CyNode from;
 	private CyNode to;
 	private CyNetwork net;
 	private Integer depth = 10000;
+	
+	public ShortestPathExtExec(){
+	}
 	
 	@Override
 	public boolean collectParameters() {
@@ -47,7 +52,8 @@ public class ShortestPathExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public List<Neo4jCall> buildNeo4jCalls(String instanceLocation) {
+	public List<Neo4jCall> buildNeo4jCalls() {
+		String instanceLocation = getExtension().getEndpoint();
 //		curl -X POST http://localhost:7474/db/data/ext/ShortestPath/node/1311/shortestPath -H "Content-Type: application/json" -d '{"target":"http://localhost:7474/db/data/node/1315","depth":5}'
 		String urlFragment = "ShortestPath/node/" +CyUtils.getNeoID(getNet(), from)+ "/shortestPath";
 		String payload = "{\"target\":\""+instanceLocation+"node/"+CyUtils.getNeoID(getNet(), to)+"\",\"depth\":"+getDepth()+"}";
@@ -162,5 +168,4 @@ public class ShortestPathExtExec implements ExtensionExecutor {
 	protected void setNet(CyNetwork net) {
 		this.net = net;
 	}
-	
 }

@@ -3,7 +3,8 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ShortestPathExtExec;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtExec;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jPureRestConnector;
 
@@ -21,7 +22,7 @@ import org.cytoscape.work.swing.DialogTaskManager;
 public class Plugin {
 	
 	// THIS IS HORRIBLE!!!!
-	private Map<String,Class> supportedExtensions;
+	private Map<String,Class<? extends ExtensionExecutor>> supportedExtensions;
 	
 	private CyApplicationManager cyApplicationManager = null;
 	
@@ -48,8 +49,8 @@ public class Plugin {
 			VisualMappingManager visualMappingMgr) {
 		super();
 		
-		supportedExtensions = new HashMap<String,Class>();
-		supportedExtensions.put("shortestPath",ShortestPathExtExec.class);
+//		supportedExtensions = new HashMap<String,Class<? extends ExtensionExecutor>>();
+//		supportedExtensions.put("shortestPath",ShortestPathExtExec.class);
 			
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
@@ -64,8 +65,6 @@ public class Plugin {
 		
 		interactor = new Neo4jPureRestConnector(this);
 	}
-
-
 
 	public CyNetworkFactory getCyNetworkFactory() {
 		return cyNetworkFactory;
@@ -87,7 +86,6 @@ public class Plugin {
 		this.cyNetViewMgr = cyNetViewMgr;
 	}
 
-	
 	public CyApplicationManager getCyApplicationManager() {
 		return cyApplicationManager;
 	}
@@ -96,8 +94,6 @@ public class Plugin {
 		return cySwingApplication;
 	}
 	
-	
-
 //	public List<Extension> getExtensions() {
 //		List<Extension> exts = getAvailableExtensions();
 //		List<Extension> supported = new ArrayList<Extension>();
@@ -151,7 +147,7 @@ public class Plugin {
 		return diagTaskManager;
 	}
 
-	public Map<String, Class> getSupportedExtensions() {
+	public Map<String, Class<? extends ExtensionExecutor>> getSupportedExtensions() {
 		return supportedExtensions;
 	}
 

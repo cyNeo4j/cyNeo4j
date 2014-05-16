@@ -14,6 +14,6 @@ public interface ExtensionExecutor {
 	void setPlugin(Plugin plugin);
 	void setExtension(Extension extension);
 
-	List<Neo4jCall> buildNeo4jCalls(String instanceLocation);
+	List<Neo4jCall> buildNeo4jCalls();
 
 }

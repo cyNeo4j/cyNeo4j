@@ -19,11 +19,12 @@ public interface Neo4jInteractor {
 	public void syncUp(boolean wipeRemote, CyNetwork curr);
 	public void syncDown(boolean mergeInCurrent);
 	
-	// subset interface
-	public void subset(/* parameters, targetNetwork */);
-	public void query(String cypherQuery);
+//	// subset interface
+//	public void subset(/* parameters, targetNetwork */);
+//	public void query(String cypherQuery);
 	
 	// extension interface
 	public List<Extension> 	getExtensions();
+	public Extension		supportsExtension(String name);
 	public Object			executeExtensionCall(Neo4jCall call);
 }

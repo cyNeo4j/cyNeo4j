@@ -1,5 +1,6 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,13 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionParameter;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtParam;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.PassThroughResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskIterator;
 
@@ -37,7 +42,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public void disconnect() {
-		// TODO Auto-generated method stub
+		instanceLocation = null;
 
 	}
 
@@ -72,16 +77,16 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	}
 
-	@Override
-	public void subset() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void query(String cypherQuery) {
-		
-	}
+//	@Override
+//	public void subset() {
+//		// TODO Auto-generated method stub
+//
+//	}
+//
+//	@Override
+//	public void query(String cypherQuery) {
+//		
+//	}
 
 	@Override
 	public List<Extension> getExtensions() {
@@ -131,8 +136,19 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public Object executeExtensionCall(Neo4jCall call) {
-		// TODO Auto-generated method stub
-		return null;
+		Object retVal = null;
+		try {
+			String url = call.getUrlFragment();
+			System.out.println("invoking extension at: "+ getInstanceLocation() + call.getUrlFragment());
+			retVal = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
+			
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return retVal;
 	}
 
 	@Override
@@ -143,6 +159,19 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	
 	protected Plugin getPlugin() {
 		return plugin;
+	}
+
+	@Override
+	public Extension supportsExtension(String name) {
+		List<Extension> extensions = getExtensions();
+
+		for(Extension extension : extensions){
+			if(extension.getName().equals(name)){
+				return extension;
+			}
+		}
+
+		return null;
 	}
 
 }

@@ -2,11 +2,11 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
 import java.util.Properties;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ServiceMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncUpMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SynchronizeMenuAction;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
@@ -37,22 +37,22 @@ public class CyActivator extends AbstractCyActivator {
 		CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = getService(context,CyLayoutAlgorithmManager.class);
 		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
 		
-		
 		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
 		
-		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
-//		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
 		
 		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
 		
-		ServiceMenuAction serviceAction = new ServiceMenuAction(cyApplicationManager, plugin);
-
 		registerAllServices(context, connectAction, new Properties());
-//		registerAllServices(context, synchAction, new Properties());
 		registerAllServices(context, syncUpAction, new Properties());
 		registerAllServices(context, syncDownAction, new Properties());
-		registerAllServices(context, serviceAction, new Properties());
+		
+		// automate me!
+		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context, spMenuAction, new Properties());
+		
+		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context, cypherMenuAction, new Properties());
 	}
 }
