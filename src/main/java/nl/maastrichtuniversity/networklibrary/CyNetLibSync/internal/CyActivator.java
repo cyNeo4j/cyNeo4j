@@ -3,6 +3,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 import java.util.Properties;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
@@ -54,5 +55,8 @@ public class CyActivator extends AbstractCyActivator {
 		
 		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context, cypherMenuAction, new Properties());
+		
+		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context,gridlayoutMenuAction,new Properties());
 	}
 }

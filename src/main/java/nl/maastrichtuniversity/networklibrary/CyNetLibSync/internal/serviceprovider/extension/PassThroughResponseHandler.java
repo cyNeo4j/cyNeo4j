@@ -3,6 +3,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
@@ -22,6 +23,8 @@ public class PassThroughResponseHandler implements ResponseHandler<Object> {
 
 			ObjectMapper mapper = new ObjectMapper();
 			retVal = mapper.readValue(response.getEntity().getContent(), Object.class);
+			
+//			retVal = IOUtils.toString(response.getEntity().getContent());
 
 		} else {
 			System.out.println("ERROR " + responseCode);

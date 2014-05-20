@@ -102,8 +102,18 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		params.add(queryParam);
 		
 		cypherExt.setParameters(params);
-
+		
 		res.add(cypherExt);
+		
+		Extension gridLayoutExt = new Neo4jExtension();
+		gridLayoutExt.setName("gridlayout");
+		gridLayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/GridLayoutExtension/graphdb/gridlayout");
+		gridLayoutExt.setParameters(new ArrayList<ExtensionParameter>());
+
+		gridLayoutExt.setDescription("grid layout! handcoded extension!");
+
+		res.add(gridLayoutExt);
+		
 
 //		try {
 //			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
