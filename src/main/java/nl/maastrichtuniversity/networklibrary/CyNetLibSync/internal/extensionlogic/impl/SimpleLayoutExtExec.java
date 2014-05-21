@@ -17,13 +17,13 @@ import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
-public class GridLayoutExtExec implements ExtensionExecutor {
+public class SimpleLayoutExtExec implements ExtensionExecutor {
 
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
 	
-	public GridLayoutExtExec() {
+	public SimpleLayoutExtExec() {
 	}
 
 	@Override
@@ -39,23 +39,23 @@ public class GridLayoutExtExec implements ExtensionExecutor {
 	@Override
 	public void processCallResponse(Neo4jCall call, Object callRetValue) {
 		
-		List<Integer> values = (List<Integer>)callRetValue;
+		List<Double> values = (List<Double>)callRetValue;
 		
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
 		CyNetworkView networkView = getPlugin().getCyNetViewMgr().getNetworkViews(currNet).iterator().next();
 		
 		for(int i = 0; i < (values.size() / 3); ++i){
 			Long neoid = values.get(i*3).longValue();
-			Long x = values.get(i*3+1).longValue();
-			Long y = values.get(i*3+2).longValue();
+			Double x = values.get(i*3+1);
+			Double y = values.get(i*3+2);
 			
 			
 			Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 			CyNode n = nodeSet.iterator().next();
 			
 			View<CyNode> nodeView = networkView.getNodeView(n);
-			nodeView.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, x.doubleValue());
-			nodeView.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, y.doubleValue());
+			nodeView.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, x);
+			nodeView.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, y);
 			
 			CyUtils.updateVisualStyle(getPlugin().getVisualMappingManager(), networkView, currNet);
 		}

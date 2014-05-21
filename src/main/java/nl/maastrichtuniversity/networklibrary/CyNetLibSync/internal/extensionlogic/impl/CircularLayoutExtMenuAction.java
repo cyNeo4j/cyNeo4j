@@ -13,14 +13,14 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovi
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
-public class GridLayoutExtMenuAction extends AbstractCyAction {
+public class CircularLayoutExtMenuAction extends AbstractCyAction {
 
-	public final static String MENU_TITLE = "Grid Layout";
+	public final static String MENU_TITLE = "Circle Layout";
 	public final static String MENU_LOC = "Apps.CyNetLibSync";
 
 	private Plugin plugin;
 
-	public GridLayoutExtMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
+	public CircularLayoutExtMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
@@ -35,15 +35,15 @@ public class GridLayoutExtMenuAction extends AbstractCyAction {
 		
 		// make a niceish UI
 		
-		Extension gridLayoutExt = getPlugin().getInteractor().supportsExtension("gridlayout");
+		Extension layoutExt = getPlugin().getInteractor().supportsExtension("circlelayout");
 		
 		ExtensionExecutor exec = new SimpleLayoutExtExec();
 		
 		exec.setPlugin(plugin);
-		exec.setExtension(gridLayoutExt);
+		exec.setExtension(layoutExt);
 		
 		if(!exec.collectParameters()){
-			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + gridLayoutExt.getName());
+			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + layoutExt.getName());
 			return;
 		}
 		
