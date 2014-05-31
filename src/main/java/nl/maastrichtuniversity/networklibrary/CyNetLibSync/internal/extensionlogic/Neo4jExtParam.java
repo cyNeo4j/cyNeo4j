@@ -1,6 +1,6 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
 
-public class Neo4jExtParam {
+public class Neo4jExtParam implements ExtensionParameter{
 
 	private String name;
 	private String description;

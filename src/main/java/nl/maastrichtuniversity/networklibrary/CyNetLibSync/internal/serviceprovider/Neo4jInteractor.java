@@ -10,6 +10,7 @@ public interface Neo4jInteractor {
 
 	// general house keeping
 	public boolean 	connect(String instanceLocation);
+	public boolean	validateConnection(String instanceLocation);
 	public void		disconnect();
 	public boolean 	isConnected();
 	public String	getInstanceLocation();
@@ -18,11 +19,12 @@ public interface Neo4jInteractor {
 	public void syncUp(boolean wipeRemote, CyNetwork curr);
 	public void syncDown(boolean mergeInCurrent);
 	
-	// subset interface
-	public void subset(/* parameters, targetNetwork */);
-	public void query(/* cypher?, targetNetwork */);
+//	// subset interface
+//	public void subset(/* parameters, targetNetwork */);
+//	public void query(String cypherQuery);
 	
 	// extension interface
 	public List<Extension> 	getExtensions();
+	public Extension		supportsExtension(String name);
 	public Object			executeExtensionCall(Neo4jCall call);
 }

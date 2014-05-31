@@ -9,19 +9,21 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
-@Deprecated
-public class SynchronizeMenuAction extends AbstractCyAction {
+public class SyncDownMenuAction extends AbstractCyAction {
 
-	public final static String MENU_TITLE = "Synchronize";
+	public final static String MENU_TITLE = "Sync Down";
 	public final static String MENU_LOC = "Apps.CyNetLibSync";
 
 	private Plugin plugin;
 
-	public SynchronizeMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
+	public SyncDownMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		this.plugin = plugin;
+		
+//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
+//		putValue(LARGE_ICON_KEY, icon);
 	}
 
 	protected Plugin getPlugin() {
@@ -30,35 +32,14 @@ public class SynchronizeMenuAction extends AbstractCyAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		if(!plugin.getInteractor().isConnected()){
 			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
 			return;
 		}
-		
-		Object[] directions = {"Up","Down"};
-		int n = JOptionPane.showOptionDialog(plugin.getCySwingApplication().getJFrame(),
-				null,
-				"Synchronization direction",
-				JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				directions,
-				null);
-	
-		switch(n){
-		case 0:
-			getPlugin().getInteractor().syncUp(true,getPlugin().getCyApplicationManager().getCurrentNetwork());
-			
-			break;
-		case 1:
-			getPlugin().getInteractor().syncDown(false);
-			// take care of the view and layout! not the interactors job
-			break;
-		default:
-			break;
-		}
-
+		getPlugin().getInteractor().syncDown(false);
 	}
 
+//	public boolean isInToolBar() {
+//		return true;
+//	}
 }

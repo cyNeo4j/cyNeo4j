@@ -2,9 +2,13 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
 import java.util.Properties;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ServiceMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SynchronizeMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncUpMenuAction;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
@@ -31,21 +35,31 @@ public class CyActivator extends AbstractCyActivator {
 		CyTableFactory tableFactory = getService(context, CyTableFactory.class);
 		CyNetworkViewManager cyNetViewMgr = getService(context, CyNetworkViewManager.class);
 		DialogTaskManager diagTaskManager = getService(context, DialogTaskManager.class);
-		CyNetworkViewManager cyNetworkViewMgr = getService(context, CyNetworkViewManager.class);
 		CyNetworkViewFactory cyNetworkViewFactory = getService(context, CyNetworkViewFactory.class);
 		CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = getService(context,CyLayoutAlgorithmManager.class);
 		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
 		
-		
 		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
 		
-		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
-		SynchronizeMenuAction synchAction = new SynchronizeMenuAction(cyApplicationManager,plugin);
-		ServiceMenuAction serviceAction = new ServiceMenuAction(cyApplicationManager, plugin);
-
+		
+		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
+		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
+		
 		registerAllServices(context, connectAction, new Properties());
-		registerAllServices(context, synchAction, new Properties());
-		registerAllServices(context, serviceAction, new Properties());
+		registerAllServices(context, syncUpAction, new Properties());
+		registerAllServices(context, syncDownAction, new Properties());
+		
+		// automate me!
+		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context, spMenuAction, new Properties());
+		
+		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context, cypherMenuAction, new Properties());
+		
+		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context,gridlayoutMenuAction,new Properties());
+		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context,circlayoutMenuAction,new Properties());
 	}
 }

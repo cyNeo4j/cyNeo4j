@@ -3,8 +3,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
-
 public class Neo4jExtension implements Extension {
 
 	public enum ExtensionTarget { NODE, RELATIONSHIP, GRAPH }
@@ -12,12 +10,13 @@ public class Neo4jExtension implements Extension {
 	private ExtensionTarget type;
 	private String name;
 	private String location;
+	private String description;
 	
-	private List<Neo4jExtParam> parameters;
+	private List<ExtensionParameter> parameters;
 		
 	public Neo4jExtension() {
 		super();
-		parameters = new ArrayList<Neo4jExtParam>();
+		parameters = new ArrayList<ExtensionParameter>();
 	}
 	
 	public String getName() {
@@ -28,15 +27,11 @@ public class Neo4jExtension implements Extension {
 		this.name = name;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
+	public void setEndpoint(String endpoint) {
+		this.location = endpoint;
 	}
 	
-	public List<Neo4jExtParam> getParameters() {
+	public List<ExtensionParameter> getParameters() {
 		return parameters;
 	}
 	
@@ -46,11 +41,11 @@ public class Neo4jExtension implements Extension {
 
 	public String toString(){
 		StringBuffer strbuff = new StringBuffer();
-		strbuff.append("name: " + getName() + " location: " + getLocation() + " of type: "+ getType() + "\n");
+		strbuff.append("name: " + getName() + " endpoint: " + getEndpoint() + " of type: "+ getType() + "\n");
 		strbuff.append("\nrequired parameters: \n");
 		
-		for(Neo4jExtParam param : getParameters()){
-			strbuff.append("\tparameter: " + param.getName() + " of type : " + param.getType() + " is optional? " + param.isOptional() + "\n");
+		for(ExtensionParameter param : getParameters()){
+			strbuff.append("\tparameter: " + param.getName() + " is optional? " + param.isOptional() + "\n");
 		}
 			
 		return strbuff.toString();
@@ -63,7 +58,26 @@ public class Neo4jExtension implements Extension {
 	public ExtensionTarget getType() {
 		return type;
 	}
-	
-	
-	
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getEndpoint() {
+		return location;
+	}
+
+	@Override
+	public void setDescription(String desc) {
+		this.description = desc;
+		
+	}
+
+	@Override
+	public void setParameters(List<ExtensionParameter> params) {
+		this.parameters = params;
+		
+	}
 }
