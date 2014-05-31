@@ -21,7 +21,7 @@ import org.apache.http.entity.ContentType;
 import org.cytoscape.work.TaskIterator;
 
 @Deprecated
-public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
+public class SimpleNeo4jConnectionHandler {
 
 	private String instanceLocation = null;
 	private Plugin plugin = null;
@@ -98,19 +98,19 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		return instanceLocation + DATA_URL;
 	}
 
-	public void syncDown(boolean mergeInCurrent) {
-		TaskIterator it = new SyncDownTaskFactory(getPlugin().getCyNetworkManager(), 
-				mergeInCurrent, 
-				getPlugin().getCyNetworkFactory(), 
-				getInstanceLocation(), 
-				getCypherURL(),
-				getPlugin().getCyNetViewMgr(),
-				getPlugin().getCyNetworkViewFactory(),
-				getPlugin().getCyLayoutAlgorithmManager(),
-				getPlugin().getVisualMappingManager()).createTaskIterator();
-		
-		plugin.getDialogTaskManager().execute(it);
-	}
+//	public void syncDown(boolean mergeInCurrent) {
+//		TaskIterator it = new SyncDownTaskFactory(getPlugin().getCyNetworkManager(), 
+//				mergeInCurrent, 
+//				getPlugin().getCyNetworkFactory(), 
+//				getInstanceLocation(), 
+//				getCypherURL(),
+//				getPlugin().getCyNetViewMgr(),
+//				getPlugin().getCyNetworkViewFactory(),
+//				getPlugin().getCyLayoutAlgorithmManager(),
+//				getPlugin().getVisualMappingManager()).createTaskIterator();
+//		
+//		plugin.getDialogTaskManager().execute(it);
+//	}
 	
 	public void syncUp(boolean wipeRemote) {
 		
@@ -142,34 +142,34 @@ public class SimpleNeo4jConnectionHandler implements Neo4jInteractor {
 		return retVal;
 	}
 
-	@Override
-	public boolean connect(String instanceLocation) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void disconnect() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void subset() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void query() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void executeExtensionCall() {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public boolean connect(String instanceLocation) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void disconnect() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void subset() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void query() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void executeExtensionCall() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 }
