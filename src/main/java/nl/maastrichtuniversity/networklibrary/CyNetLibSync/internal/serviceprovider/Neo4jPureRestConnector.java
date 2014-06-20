@@ -123,6 +123,14 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		
 		res.add(circLayoutExt);
 
+		Extension neoAnalyzerExt = new Neo4jExtension();
+		neoAnalyzerExt.setName("NeoAnalyzerExt");
+		neoAnalyzerExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/NeoAnalyzerExt/graphdb/analyze");
+		neoAnalyzerExt.setParameters(new ArrayList<ExtensionParameter>());
+		neoAnalyzerExt.setDescription("neo network analyzer!");
+		
+		res.add(neoAnalyzerExt);
+		
 //		try {
 //			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
 //			

@@ -5,6 +5,7 @@ import java.util.Properties;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
@@ -51,8 +52,8 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(context, syncDownAction, new Properties());
 		
 		// automate me!
-		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
-		registerAllServices(context, spMenuAction, new Properties());
+//		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
+//		registerAllServices(context, spMenuAction, new Properties());
 		
 		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context, cypherMenuAction, new Properties());
@@ -61,5 +62,9 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(context,gridlayoutMenuAction,new Properties());
 		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context,circlayoutMenuAction,new Properties());
+		
+		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
+		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
+		
 	}
 }
