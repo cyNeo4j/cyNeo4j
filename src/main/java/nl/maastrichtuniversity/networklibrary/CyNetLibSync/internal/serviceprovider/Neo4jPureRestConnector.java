@@ -114,6 +114,15 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		
 		res.add(gridLayoutExt);
 		
+		Extension forceAtlas2LayoutExt = new Neo4jExtension();
+		forceAtlas2LayoutExt.setName("forceatlas2");
+		forceAtlas2LayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/ForceAtlas2LayoutExtension/graphdb/forceatlas2");
+		forceAtlas2LayoutExt.setParameters(new ArrayList<ExtensionParameter>());
+
+		forceAtlas2LayoutExt.setDescription("grid layout! handcoded extension!");
+		
+		res.add(forceAtlas2LayoutExt);
+		
 		Extension circLayoutExt = new Neo4jExtension();
 		circLayoutExt.setName("circlelayout");
 		circLayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/CircleLayoutExtension/graphdb/circlelayout");

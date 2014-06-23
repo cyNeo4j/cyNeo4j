@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ForceAtlas2LayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
@@ -60,8 +61,12 @@ public class CyActivator extends AbstractCyActivator {
 		
 		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context,gridlayoutMenuAction,new Properties());
+		
 		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context,circlayoutMenuAction,new Properties());
+		
+		ForceAtlas2LayoutExtMenuAction forceAtlasMenuAction = new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, plugin);
+		registerAllServices(context, forceAtlasMenuAction, new Properties());
 		
 		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
 		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
