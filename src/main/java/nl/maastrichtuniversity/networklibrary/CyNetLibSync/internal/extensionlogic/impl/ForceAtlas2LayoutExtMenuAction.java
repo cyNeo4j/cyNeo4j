@@ -37,7 +37,7 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		
 		Extension forceAtlas2LayoutExt = getPlugin().getInteractor().supportsExtension("forceatlas2");
 		
-		ExtensionExecutor exec = new SimpleLayoutExtExec();
+		ExtensionExecutor exec = new ForceAtlas2LayoutExtExec();
 		
 		exec.setPlugin(plugin);
 		exec.setExtension(forceAtlas2LayoutExt);
