@@ -80,7 +80,7 @@ public class ForceAtlas2LayoutExtExec implements ExtensionExecutor {
 		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
 		
 		String urlFragment = extension.getEndpoint();
-		String payload = "{\"numIterations\":\"1000\"}";
+		String payload = "{\"numIterations\":\"10\",\"saveInGraph\":false,\"pickup\":false}";
 		
 		calls.add(new Neo4jCall(urlFragment,payload));
 		

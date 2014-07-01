@@ -80,7 +80,7 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
 		
 		String urlFragment = extension.getEndpoint();
-		String payload = "{}";
+		String payload = "{\"saveInGraph\":false}";
 		
 		calls.add(new Neo4jCall(urlFragment,payload));
 		

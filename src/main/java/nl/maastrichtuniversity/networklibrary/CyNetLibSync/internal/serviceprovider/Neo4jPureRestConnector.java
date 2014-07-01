@@ -98,7 +98,11 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		gridLayoutExt.setName("gridlayout");
 		gridLayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/GridLayoutExtension/graphdb/gridlayout");
 		
-		gridLayoutExt.setParameters(new ArrayList<ExtensionParameter>());
+		List<ExtensionParameter> paramsGrid = new ArrayList<ExtensionParameter>();
+		ExtensionParameter saveInGraphGrid = new Neo4jExtParam("saveInGraph","save result in the db",true,Boolean.class);
+		paramsGrid.add(saveInGraphGrid);
+		
+		gridLayoutExt.setParameters(paramsGrid);
 
 		gridLayoutExt.setDescription("grid layout! handcoded extension!");
 		
@@ -107,26 +111,29 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		Extension forceAtlas2LayoutExt = new Neo4jExtension();
 		forceAtlas2LayoutExt.setName("forceatlas2");
 		forceAtlas2LayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/ForceAtlas2LayoutExtension/graphdb/forceatlas2");
-<<<<<<< HEAD
-		forceAtlas2LayoutExt.setParameters(new ArrayList<ExtensionParameter>());
-
-		forceAtlas2LayoutExt.setDescription("force atlas 2 layout! handcoded extension!");
-=======
 		List<ExtensionParameter> paramsForceAtlas2 = new ArrayList<ExtensionParameter>();
 		
 		ExtensionParameter numItersParam = new Neo4jExtParam("numIterations", "Number of iterations", true,Integer.class);
 		params.add(numItersParam);
+		ExtensionParameter saveInGraphFA = new Neo4jExtParam("saveInGraph","save result in the db",true,Boolean.class);
+		params.add(saveInGraphFA);
+		ExtensionParameter pickup = new Neo4jExtParam("pickup","use in db saved layout as starting point",true,Boolean.class);
+		params.add(pickup);
 		
 		forceAtlas2LayoutExt.setParameters(paramsForceAtlas2);
 		forceAtlas2LayoutExt.setDescription("force atlas 2! adjusted gephi impl!");
->>>>>>> 92d82cb34fb2561baad6ec386ffe17f535864fe3
 		
 		res.add(forceAtlas2LayoutExt);
 		
 		Extension circLayoutExt = new Neo4jExtension();
 		circLayoutExt.setName("circlelayout");
 		circLayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/CircleLayoutExtension/graphdb/circlelayout");
-		circLayoutExt.setParameters(new ArrayList<ExtensionParameter>());
+		
+		List<ExtensionParameter> paramsCirc = new ArrayList<ExtensionParameter>();
+		ExtensionParameter saveInGraphCirc = new Neo4jExtParam("saveInGraph","save result in the db",true,Boolean.class);
+		paramsCirc.add(saveInGraphCirc);
+		
+		circLayoutExt.setParameters(paramsCirc);
 
 		circLayoutExt.setDescription("circle layout! handcoded extension!");
 		
