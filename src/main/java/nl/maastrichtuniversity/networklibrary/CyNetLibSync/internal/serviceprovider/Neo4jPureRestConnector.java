@@ -77,17 +77,6 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	}
 
-//	@Override
-//	public void subset() {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public void query(String cypherQuery) {
-//		
-//	}
-
 	@Override
 	public List<Extension> getExtensions() {
 		List<Extension> res = new ArrayList<Extension>();
@@ -108,6 +97,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		Extension gridLayoutExt = new Neo4jExtension();
 		gridLayoutExt.setName("gridlayout");
 		gridLayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/GridLayoutExtension/graphdb/gridlayout");
+		
 		gridLayoutExt.setParameters(new ArrayList<ExtensionParameter>());
 
 		gridLayoutExt.setDescription("grid layout! handcoded extension!");
@@ -119,7 +109,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		forceAtlas2LayoutExt.setEndpoint(getInstanceLocation() + DATA_URL + "ext/ForceAtlas2LayoutExtension/graphdb/forceatlas2");
 		forceAtlas2LayoutExt.setParameters(new ArrayList<ExtensionParameter>());
 
-		forceAtlas2LayoutExt.setDescription("grid layout! handcoded extension!");
+		forceAtlas2LayoutExt.setDescription("force atlas 2 layout! handcoded extension!");
 		
 		res.add(forceAtlas2LayoutExt);
 		
