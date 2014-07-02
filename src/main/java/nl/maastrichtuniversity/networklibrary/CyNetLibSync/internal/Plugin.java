@@ -1,10 +1,8 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtExec;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jPureRestConnector;
 
@@ -20,9 +18,6 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.swing.DialogTaskManager;
 
 public class Plugin {
-	
-	// THIS IS HORRIBLE!!!!
-	private Map<String,Class<? extends ExtensionExecutor>> supportedExtensions;
 	
 	private CyApplicationManager cyApplicationManager = null;
 	
@@ -49,8 +44,12 @@ public class Plugin {
 			VisualMappingManager visualMappingMgr) {
 		super();
 		
-//		supportedExtensions = new HashMap<String,Class<? extends ExtensionExecutor>>();
-//		supportedExtensions.put("shortestPath",ShortestPathExtExec.class);
+		Set<String> localExtensions = new HashSet<String>();
+		localExtensions.add("neonetworkanalyzer");
+		localExtensions.add("forceatlas2");
+		localExtensions.add("circlelayout");
+		localExtensions.add("gridlayout");
+		localExtensions.add("cypher");
 			
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
@@ -64,6 +63,7 @@ public class Plugin {
 		this.visualMappingMgr = visualMappingMgr;
 		
 		interactor = new Neo4jPureRestConnector(this);
+		interactor.setLocalSupportedExtension(localExtensions);
 	}
 
 	public CyNetworkFactory getCyNetworkFactory() {
@@ -94,61 +94,12 @@ public class Plugin {
 		return cySwingApplication;
 	}
 	
-//	public List<Extension> getExtensions() {
-//		List<Extension> exts = getAvailableExtensions();
-//		List<Extension> supported = new ArrayList<Extension>();
-//		
-//		// OMG OMG OMG
-//		for(Extension ext : exts){
-//			if(getSupportedExtensions().containsKey(ext.getName())){
-//				supported.add(ext);
-//			}
-//		}
-//		
-//		return supported;
-//	}
-
-//	public void executeExtension(Extension extension) {
-//		// Stage 1: Parameter aquicistion
-//		try {
-//			ExtensionExecutor exec = (ExtensionExecutor)supportedExtensions.get(extension.getName()).newInstance();
-//			exec.setPlugin(this);
-//			exec.setExtension(extension);
-//			
-//			if(!exec.collectParameters()){
-//				JOptionPane.showMessageDialog(getCySwingApplication().getJFrame(), "Failed to collect parameters for " + extension.getName());
-//				return;
-//			}
-//			
-//			System.out.println(exec);
-//			
-//			List<Neo4jCall> calls = exec.buildNeo4jCalls(getNeo4jConnectionHandler().getInstanceDataLocation());
-//			
-//			for(Neo4jCall call : calls){
-//				System.out.println(call);
-//				Object callRetValue = getNeo4jConnectionHandler().executeExtensionCall(call);
-//				exec.processCallResponse(call,callRetValue);
-//			}
-//			
-//		} catch (InstantiationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-
 	public Neo4jInteractor getInteractor() {
 		return interactor;
 	}
 
 	public DialogTaskManager getDialogTaskManager() {
 		return diagTaskManager;
-	}
-
-	public Map<String, Class<? extends ExtensionExecutor>> getSupportedExtensions() {
-		return supportedExtensions;
 	}
 
 	public CyNetworkViewFactory getCyNetworkViewFactory() {

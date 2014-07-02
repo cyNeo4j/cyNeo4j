@@ -69,7 +69,7 @@ public class SimpleNeo4jConnectionHandler {
 			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
 			
 			for(String extName : extNames){
-				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
+//				res.addAll(Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler()));
 			}
 			
 		} catch (ClientProtocolException e) {

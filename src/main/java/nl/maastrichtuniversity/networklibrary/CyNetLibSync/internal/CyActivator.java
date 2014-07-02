@@ -44,7 +44,7 @@ public class CyActivator extends AbstractCyActivator {
 		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
 		
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
-		
+			
 		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
 		
@@ -63,13 +63,19 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(context,gridlayoutMenuAction,new Properties());
 		
 		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
+//		cySwingApplication.addAction(circlayoutMenuAction);
 		registerAllServices(context,circlayoutMenuAction,new Properties());
 		
 		ForceAtlas2LayoutExtMenuAction forceAtlasMenuAction = new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, plugin);
 		registerAllServices(context, forceAtlasMenuAction, new Properties());
+//		cySwingApplication.addAction(forceAtlasMenuAction);
+		
 		
 		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
 		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
+//		cySwingApplication.addAction(neoNetworkAnalyzerMenuAction);
 		
 	}
+	
+	
 }

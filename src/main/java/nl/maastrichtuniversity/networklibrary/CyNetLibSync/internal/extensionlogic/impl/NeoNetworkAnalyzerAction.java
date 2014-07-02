@@ -31,7 +31,7 @@ public class NeoNetworkAnalyzerAction extends AbstractCyAction {
 	public void actionPerformed(ActionEvent e) {
 		
 		
-		Extension neoAnalyzer = getPlugin().getInteractor().supportsExtension("NeoAnalyzerExt");
+		Extension neoAnalyzer = getPlugin().getInteractor().supportsExtension("neonetworkanalyzer");
 		
 		ExtensionExecutor exec = new NeoNetworkAnalyzerExec();
 		

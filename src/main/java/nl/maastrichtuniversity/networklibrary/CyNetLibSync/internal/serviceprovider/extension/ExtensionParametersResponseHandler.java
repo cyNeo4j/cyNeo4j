@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
@@ -15,15 +16,21 @@ import org.apache.http.client.ResponseHandler;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class ExtensionParametersResponseHandler implements
-		ResponseHandler<List<Neo4jExtension>> {
+		ResponseHandler<List<Extension>> {
+
+	private String extName = null;
+	
+	public ExtensionParametersResponseHandler(String extName) {
+		this.extName = extName;
+	}
 
 	@Override
-	public List<Neo4jExtension> handleResponse(HttpResponse response)
+	public List<Extension> handleResponse(HttpResponse response)
 			throws ClientProtocolException, IOException {
 
 		int responseCode = response.getStatusLine().getStatusCode();
 
-		List<Neo4jExtension> res = new ArrayList<Neo4jExtension>();
+		List<Extension> res = new ArrayList<Extension>();
 		
 		System.out.println("responseCode: " + responseCode);
 		if(responseCode >= 200 && responseCode < 300){
@@ -51,6 +58,8 @@ public class ExtensionParametersResponseHandler implements
 						currExt.addParameter(NeoUtils.parseExtParameter(parameter));
 					}
 					
+					currExt.setEndpoint(buildEndpoint(currExt));
+					
 					res.add(currExt);
 				}
 			}
@@ -65,9 +74,25 @@ public class ExtensionParametersResponseHandler implements
 		return res;
 	}
 	
+	private String buildEndpoint(Neo4jExtension currExt) {
+		String endpoint = extName + "/" + currExt.getType().toString().toLowerCase() + "/";
+		switch(currExt.getType()){
+		case NODE:
+		case RELATIONSHIP:
+			endpoint = endpoint + "<IDHERE>/";
+			break;
+		default:
+			break;
+		}
+		
+		endpoint = endpoint + currExt.getName();
+		
+		return endpoint;
+	}
+
 	protected Neo4jExtension.ExtensionTarget decideExtensionType(String target){
 		if(target.equals("graphdb"))
-			return Neo4jExtension.ExtensionTarget.GRAPH;
+			return Neo4jExtension.ExtensionTarget.GRAPHDB;
 		else if (target.equals("node"))
 			return Neo4jExtension.ExtensionTarget.NODE;
 		else if (target.equals("relationship"))

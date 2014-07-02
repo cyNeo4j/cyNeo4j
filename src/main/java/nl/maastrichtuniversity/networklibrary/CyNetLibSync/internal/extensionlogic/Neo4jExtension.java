@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Neo4jExtension implements Extension {
 
-	public enum ExtensionTarget { NODE, RELATIONSHIP, GRAPH }
+	public enum ExtensionTarget { NODE, RELATIONSHIP, GRAPHDB }
 	
 	private ExtensionTarget type;
 	private String name;

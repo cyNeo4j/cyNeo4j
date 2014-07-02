@@ -1,6 +1,7 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
 import java.util.List;
+import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 
@@ -24,6 +25,7 @@ public interface Neo4jInteractor {
 //	public void query(String cypherQuery);
 	
 	// extension interface
+	public void				setLocalSupportedExtension(Set<String> localExtensions);
 	public List<Extension> 	getExtensions();
 	public Extension		supportsExtension(String name);
 	public Object			executeExtensionCall(Neo4jCall call);
