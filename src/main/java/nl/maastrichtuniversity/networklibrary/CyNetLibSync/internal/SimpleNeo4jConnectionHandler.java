@@ -7,12 +7,9 @@ import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.ExtensionLocationsHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.ExtensionParametersResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.extension.PassThroughResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.general.Neo4jPingHandler;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncDownTaskFactory;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync.SyncUpTaskFactory;
 
 import org.apache.http.client.ClientProtocolException;

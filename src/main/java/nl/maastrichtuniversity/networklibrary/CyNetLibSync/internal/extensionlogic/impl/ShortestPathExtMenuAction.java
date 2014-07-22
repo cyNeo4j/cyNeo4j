@@ -1,12 +1,10 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;

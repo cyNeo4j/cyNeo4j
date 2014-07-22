@@ -2,7 +2,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 

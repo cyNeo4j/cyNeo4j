@@ -3,7 +3,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;

@@ -4,8 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -13,12 +19,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
-
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
 public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 

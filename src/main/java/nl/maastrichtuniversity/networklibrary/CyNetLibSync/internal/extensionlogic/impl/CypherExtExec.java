@@ -2,7 +2,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 

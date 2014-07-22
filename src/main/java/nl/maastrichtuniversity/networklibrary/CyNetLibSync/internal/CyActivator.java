@@ -2,11 +2,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
 import java.util.Properties;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ForceAtlas2LayoutExtMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncUpMenuAction;
