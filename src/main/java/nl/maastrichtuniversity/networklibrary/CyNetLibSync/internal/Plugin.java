@@ -1,12 +1,20 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.CypherMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ForceAtlas2LayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jPureRestConnector;
 
 import org.cytoscape.application.CyApplicationManager;
+import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
@@ -22,6 +30,8 @@ public class Plugin {
 	private CyApplicationManager cyApplicationManager = null;
 	
 	private Neo4jInteractor interactor = null;
+	
+	private List<AbstractCyAction> registeredActions = null;
 	
 	
 	private CySwingApplication cySwingApplication = null;
@@ -44,12 +54,12 @@ public class Plugin {
 			VisualMappingManager visualMappingMgr) {
 		super();
 		
-		Set<String> localExtensions = new HashSet<String>();
-		localExtensions.add("neonetworkanalyzer");
-		localExtensions.add("forceatlas2");
-		localExtensions.add("circlelayout");
-		localExtensions.add("gridlayout");
-		localExtensions.add("cypher");
+		Map<String,AbstractCyAction> localExtensions = new HashMap<String,AbstractCyAction>();
+		localExtensions.put("neonetworkanalyzer",new NeoNetworkAnalyzerAction(cyApplicationManager, this));
+		localExtensions.put("forceatlas2",new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, this));
+		localExtensions.put("circlelayout",new CircularLayoutExtMenuAction(cyApplicationManager, this));
+		localExtensions.put("gridlayout",new GridLayoutExtMenuAction(cyApplicationManager, this));
+		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
 			
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
@@ -64,6 +74,8 @@ public class Plugin {
 		
 		interactor = new Neo4jPureRestConnector(this);
 		interactor.setLocalSupportedExtension(localExtensions);
+		
+		registeredActions = new ArrayList<AbstractCyAction>();
 	}
 
 	public CyNetworkFactory getCyNetworkFactory() {
@@ -112,6 +124,27 @@ public class Plugin {
 
 	public VisualMappingManager getVisualMappingManager() {
 		return visualMappingMgr;
+	}
+
+	public void cleanUp() {
+		
+		//extension actions
+		unregisterActions();
+	
+	
+	}
+	
+	public void registerAction(AbstractCyAction action){
+		registeredActions.add(action);
+		
+		getCySwingApplication().addAction(action);
+	}
+
+	public void unregisterActions() {
+		for(AbstractCyAction action : registeredActions){
+			getCySwingApplication().removeAction(action);
+		}
+		
 	}
 	
 }

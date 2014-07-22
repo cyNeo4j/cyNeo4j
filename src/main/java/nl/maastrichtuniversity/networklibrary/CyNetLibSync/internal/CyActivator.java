@@ -7,7 +7,6 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ForceAtlas2LayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.GridLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl.ShortestPathExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectInstanceMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncDownMenuAction;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic.SyncUpMenuAction;
@@ -26,6 +25,8 @@ import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
 public class CyActivator extends AbstractCyActivator {
+	
+	protected Plugin plugin;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -41,10 +42,10 @@ public class CyActivator extends AbstractCyActivator {
 		CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = getService(context,CyLayoutAlgorithmManager.class);
 		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
 		
-		Plugin plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
+		plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
 		
-		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);
-			
+		// core actions
+		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);	
 		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
 		
@@ -52,30 +53,35 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(context, syncUpAction, new Properties());
 		registerAllServices(context, syncDownAction, new Properties());
 		
+
 		// automate me!
 //		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
 //		registerAllServices(context, spMenuAction, new Properties());
 		
-		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
-		registerAllServices(context, cypherMenuAction, new Properties());
-		
-		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
-		registerAllServices(context,gridlayoutMenuAction,new Properties());
-		
-		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
-//		cySwingApplication.addAction(circlayoutMenuAction);
-		registerAllServices(context,circlayoutMenuAction,new Properties());
-		
-		ForceAtlas2LayoutExtMenuAction forceAtlasMenuAction = new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, plugin);
-		registerAllServices(context, forceAtlasMenuAction, new Properties());
-//		cySwingApplication.addAction(forceAtlasMenuAction);
-		
-		
-		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
-		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
+//		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
+//		registerAllServices(context, cypherMenuAction, new Properties());
+//		
+//		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
+//		registerAllServices(context,gridlayoutMenuAction,new Properties());
+//		
+//		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
+////		cySwingApplication.addAction(circlayoutMenuAction);
+//		registerAllServices(context,circlayoutMenuAction,new Properties());
+//		
+//		ForceAtlas2LayoutExtMenuAction forceAtlasMenuAction = new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, plugin);
+//		registerAllServices(context, forceAtlasMenuAction, new Properties());
+////		cySwingApplication.addAction(forceAtlasMenuAction);
+//			
+//		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
+//		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
 //		cySwingApplication.addAction(neoNetworkAnalyzerMenuAction);
-		
+
 	}
 	
+	@Override
+	public void shutDown(){
+		plugin.cleanUp();
+	}
 	
+
 }

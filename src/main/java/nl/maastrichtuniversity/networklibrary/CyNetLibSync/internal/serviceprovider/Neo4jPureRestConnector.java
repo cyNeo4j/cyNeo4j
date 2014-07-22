@@ -3,6 +3,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
@@ -20,6 +21,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovi
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskIterator;
 
@@ -32,7 +34,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	protected String instanceLocation = null;
 	
 	private Plugin plugin;
-	private Set<String> localExtensions;
+	private Map<String,AbstractCyAction> localExtensions;
 	
 	public Neo4jPureRestConnector(Plugin plugin){
 		this.plugin = plugin;
@@ -42,14 +44,27 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	public boolean connect(String instanceLocation) {
 		if(validateConnection(instanceLocation)){
 			setInstanceLocation(instanceLocation);
+			registerExtension();
 		}
 		return isConnected();
+	}
+
+	protected void registerExtension() {
+		for(Extension ext : getExtensions()){
+			getPlugin().registerAction(localExtensions.get(ext.getName()));
+		}
 	}
 
 	@Override
 	public void disconnect() {
 		instanceLocation = null;
+		unregisterExtensions();
 
+	}
+
+	private void unregisterExtensions() {
+		getPlugin().unregisterActions();
+		
 	}
 
 	@Override
@@ -98,7 +113,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		
 		cypherExt.setParameters(params);
 		
-		if(localExtensions.contains("cypher")){
+		if(localExtensions.containsKey("cypher")){
 			res.add(cypherExt);
 		}
 		try {
@@ -109,7 +124,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 				
 				for(Extension ext : serverSupportedExt){
 					System.out.println(ext);
-					if(localExtensions.contains(ext.getName())){
+					if(localExtensions.containsKey(ext.getName())){
 						res.add(ext);
 					}
 				}
@@ -184,7 +199,7 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	}
 
 	@Override
-	public void setLocalSupportedExtension(Set<String> localExtensions) {
+	public void setLocalSupportedExtension(Map<String,AbstractCyAction> localExtensions) {
 		this.localExtensions = localExtensions;
 		
 	}

@@ -2,7 +2,6 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 
 import java.util.List;
 
-
 public interface Extension {
 
 	public String 	getName();
@@ -15,5 +14,4 @@ public interface Extension {
 	
 	public List<ExtensionParameter> 	getParameters();
 	public void 	setParameters(List<ExtensionParameter> params);
-
 }
