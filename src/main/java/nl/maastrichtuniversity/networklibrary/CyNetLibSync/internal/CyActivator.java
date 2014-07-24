@@ -48,29 +48,6 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(context, syncUpAction, new Properties());
 		registerAllServices(context, syncDownAction, new Properties());
 		
-
-		// automate me!
-//		ShortestPathExtMenuAction spMenuAction = new ShortestPathExtMenuAction(cyApplicationManager, plugin);
-//		registerAllServices(context, spMenuAction, new Properties());
-		
-//		CypherMenuAction cypherMenuAction = new CypherMenuAction(cyApplicationManager, plugin);
-//		registerAllServices(context, cypherMenuAction, new Properties());
-//		
-//		GridLayoutExtMenuAction gridlayoutMenuAction = new GridLayoutExtMenuAction(cyApplicationManager, plugin);
-//		registerAllServices(context,gridlayoutMenuAction,new Properties());
-//		
-//		CircularLayoutExtMenuAction circlayoutMenuAction = new CircularLayoutExtMenuAction(cyApplicationManager, plugin);
-////		cySwingApplication.addAction(circlayoutMenuAction);
-//		registerAllServices(context,circlayoutMenuAction,new Properties());
-//		
-//		ForceAtlas2LayoutExtMenuAction forceAtlasMenuAction = new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, plugin);
-//		registerAllServices(context, forceAtlasMenuAction, new Properties());
-////		cySwingApplication.addAction(forceAtlasMenuAction);
-//			
-//		NeoNetworkAnalyzerAction neoNetworkAnalyzerMenuAction = new NeoNetworkAnalyzerAction(cyApplicationManager, plugin);
-//		registerAllServices(context,neoNetworkAnalyzerMenuAction,new Properties());
-//		cySwingApplication.addAction(neoNetworkAnalyzerMenuAction);
-
 	}
 	
 	@Override

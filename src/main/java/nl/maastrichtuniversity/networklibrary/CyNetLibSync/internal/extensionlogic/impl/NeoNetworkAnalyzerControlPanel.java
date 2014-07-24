@@ -1,5 +1,7 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -12,7 +14,15 @@ import javax.swing.JSeparator;
 import javax.swing.LayoutStyle;
 
 
-public class NeoNetworkAnalyzerControlPanel extends JPanel {
+public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionListener {
+
+	private JCheckBox saveInGraph;
+	
+	private JCheckBox betweennes;
+	private JCheckBox stress;
+	private JCheckBox eccentricity;
+	private JRadioButton undirButton;
+	private JRadioButton dirButton;
 
 	public NeoNetworkAnalyzerControlPanel(){
 
@@ -58,8 +68,12 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel {
 
 	private JPanel buildButtonPanel() {
 		JButton runButton = new JButton("Analyze");
+		runButton.addActionListener(this);
+		runButton.setActionCommand("RUN_CMD");
 
 		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(this);
+		cancelButton.setActionCommand("CANCEL_CMD");
 
 		JPanel res = new JPanel();
 
@@ -71,27 +85,39 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel {
 	}
 
 	private JPanel buildSavePanel() {
-		JCheckBox saveInGraph = new JCheckBox("Save in graph");
+		saveInGraph = new JCheckBox("Save in graph");
 		JPanel res = new JPanel();
 
-		res.add(saveInGraph);
+		GroupLayout layout = new GroupLayout(res);
+		
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+					.addComponent(saveInGraph,GroupLayout.Alignment.LEADING)
+				);
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+					.addComponent(saveInGraph)
+					
+				);
+		
+		res.setLayout(layout);
 
+		
 		return res;
 	}
 
 	private JPanel buildParameterPanel() {
 		JLabel paramsLabel = new JLabel("Parameters to calculate");
 
-		JCheckBox betweennes = new JCheckBox("Betweenness");
-		JCheckBox stress = new JCheckBox("Stress");
-		JCheckBox eccentricity = new JCheckBox("Eccentricity");
+		betweennes = new JCheckBox("Betweenness");
+		stress = new JCheckBox("Stress");
+		eccentricity = new JCheckBox("Eccentricity");
 		// ...
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
 		
 		layout.setHorizontalGroup(
-
 				layout.createSequentialGroup()
 
 				.addGroup(layout.createParallelGroup()
@@ -125,12 +151,15 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel {
 
 	private JPanel buildDirectionalityPanel() {
 		JLabel directionalityLabel = new JLabel("Directionality");
-		JRadioButton undirButton = new JRadioButton("Undirected");
-		JRadioButton dirButton = new JRadioButton("Directed");
+		undirButton = new JRadioButton("Undirected");
+		dirButton = new JRadioButton("Directed");
 
 		ButtonGroup directionality = new ButtonGroup();
 		directionality.add(undirButton);
 		directionality.add(dirButton);
+		
+		undirButton.setSelected(true);
+		
 		
 		JPanel res = new JPanel();
 
@@ -151,12 +180,39 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel {
 					
 				);
 		
-//		res.add(directionalityLabel);
-//		res.add(undirButton);
-//		res.add(dirButton);
-
 		res.setLayout(layout);
 		
 		return res;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("RUN_CMD")){
+			
+		} else if(e.getActionCommand().equals("CANCEL_CMD")){
+			
+		}
+		
+	}
+	
+	private boolean isSaveInGraph(){
+		return saveInGraph.isSelected();
+	}
+	
+	private boolean isBetweenness(){
+		return betweennes.isSelected();
+	}
+	
+	private boolean isStress(){
+		return stress.isSelected();
+	}
+	
+	private boolean isEccentricity() {
+		return eccentricity.isSelected();
+	}
+	
+	private boolean isUndirected() {
+		return undirButton.isSelected();
+	}
+	
 }
