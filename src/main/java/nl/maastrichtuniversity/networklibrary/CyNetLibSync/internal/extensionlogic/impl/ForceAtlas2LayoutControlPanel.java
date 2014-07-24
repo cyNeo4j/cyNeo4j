@@ -102,7 +102,7 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 	public JPanel buildSettingsPanel(){
 		JPanel res = new JPanel();
 
-		GroupLayout layout = new GroupLayout(this);
+		GroupLayout layout = new GroupLayout(res);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
@@ -194,7 +194,7 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		
 		JPanel res = new JPanel();
 		
-		GroupLayout layout = new GroupLayout(this);
+		GroupLayout layout = new GroupLayout(res);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 				

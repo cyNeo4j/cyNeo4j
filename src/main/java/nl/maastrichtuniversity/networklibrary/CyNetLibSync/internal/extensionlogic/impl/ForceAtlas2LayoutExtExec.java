@@ -51,7 +51,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	}
 
 	private void setupDialog(){
-		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
+		dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
 		dialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
 		controls = new ForceAtlas2LayoutControlPanel(dialog);
