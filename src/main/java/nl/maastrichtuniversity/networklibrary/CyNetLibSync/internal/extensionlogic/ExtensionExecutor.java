@@ -15,5 +15,5 @@ public interface ExtensionExecutor {
 	void setExtension(Extension extension);
 
 	List<Neo4jCall> buildNeo4jCalls();
-
+	
 }

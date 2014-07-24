@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -17,14 +18,21 @@ import javax.swing.SwingConstants;
 
 public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListener {
 
+	private JDialog dialog;
+	
 	private JTextField param1Text;
 	private JTextField param2Text;
 	private JTextField param4Text;
 	private JCheckBox param3Box;
 	
+	private JTextField numItersText;
+	
 	private int numRuns = 0;
+	
+	private boolean runIt = false;
 
-	public ForceAtlas2LayoutControlPanel(){
+	public ForceAtlas2LayoutControlPanel(JDialog dialog){
+		this.dialog = dialog;
 		JPanel settings = buildSettingsPanel();
 		JPanel controls = buildRunPanel();
 
@@ -54,48 +62,39 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("RUN_CMD"))
-			prepInvocation();
-		
-		if(e.getActionCommand().equals("DONE_CMD"))
+		if(e.getActionCommand().equals("RUN_CMD")){
+			runIt = true;
 			closeUp();
+		}
 		
-//		switch(e.getActionCommand()){
-//			case "RUN_CMD":
-//				prepInvocation();
-//				break;
-//		
-//			case "DONE_CMD":
-//				closeUp();
-//				break;
-//		
-//		}
-		
+		if(e.getActionCommand().equals("DONE_CMD")){
+			runIt = false;
+			closeUp();
+		}
+				
 	}
 	
 
-	private void prepInvocation() {
-		Map<String,Object> params = getParameters();
-		
-		int numIters = numIterations();
-		
-		++numRuns;
-		
-		if(params != null && numIters > 0){
-		
-		System.out.println("going to run with numIters = " + numIters);
-		System.out.println(params);
-		}
-		else {
-			System.out.println("nothing to do because: numIters = " + numIters + " or params are null");
-		}
-
-	}
+//	private void prepInvocation() {
+//		Map<String,Object> params = getParameters();
+//		
+//		int numIters = getNumIterations();
+//		
+//		++numRuns;
+//		
+//		if(params != null && numIters > 0){
+//		
+//		System.out.println("going to run with numIters = " + numIters);
+//		System.out.println(params);
+//		}
+//		else {
+//			System.out.println("nothing to do because: numIters = " + numIters + " or params are null");
+//		}
+//
+//	}
 
 	private void closeUp() {
-		// closes down shop or tells the right people to close done shop.
-		System.out.println("closing");
-		
+		dialog.setVisible(false);
 	}
 	
 	
@@ -190,9 +189,6 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 
 		return params;
 	}
-	
-
-	private JTextField numItersText;
 
 	public JPanel buildRunPanel(){
 		
@@ -242,7 +238,11 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		return res;
 	}
 	
-	public int numIterations(){
+	public int getNumIterations(){
 		return Integer.valueOf(numItersText.getText()).intValue();
+	}
+	
+	public boolean runIt(){
+		return runIt;
 	}
 }

@@ -7,6 +7,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -23,8 +24,13 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	private JCheckBox eccentricity;
 	private JRadioButton undirButton;
 	private JRadioButton dirButton;
+	
+	private JDialog dialog = null;
 
-	public NeoNetworkAnalyzerControlPanel(){
+	private boolean runIt = false;
+
+	public NeoNetworkAnalyzerControlPanel(JDialog dialog){
+		this.dialog = dialog;
 
 		JPanel directionalityPanel = buildDirectionalityPanel();
 		JPanel parameterPanel = buildParameterPanel();
@@ -188,30 +194,38 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("RUN_CMD")){
-			
+			runIt  = true;
 		} else if(e.getActionCommand().equals("CANCEL_CMD")){
-			
+			runIt = false;
 		}
-		
+		closeUp();
 	}
 	
-	private boolean isSaveInGraph(){
+	protected boolean runIt(){
+		return runIt;
+	}
+	
+	protected void closeUp(){
+		dialog.setVisible(false);
+	}
+	
+	public boolean isSaveInGraph(){
 		return saveInGraph.isSelected();
 	}
 	
-	private boolean isBetweenness(){
+	public boolean isBetweenness(){
 		return betweennes.isSelected();
 	}
 	
-	private boolean isStress(){
+	public boolean isStress(){
 		return stress.isSelected();
 	}
 	
-	private boolean isEccentricity() {
+	public boolean isEccentricity() {
 		return eccentricity.isSelected();
 	}
 	
-	private boolean isUndirected() {
+	public boolean isUndirected() {
 		return undirButton.isSelected();
 	}
 	

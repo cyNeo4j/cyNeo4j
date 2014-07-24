@@ -3,11 +3,14 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic.ConnectPanel;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
 import org.cytoscape.application.CyApplicationManager;
@@ -29,7 +32,6 @@ public class NeoNetworkAnalyzerAction extends AbstractCyAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		
 		Extension neoAnalyzer = getPlugin().getInteractor().supportsExtension("neonetworkanalyzer");
 		

@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
@@ -25,6 +28,15 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
+	
+	private boolean run;
+	private boolean saveInGraph;
+	private boolean undirected;
+	
+	// to calculate
+	private boolean eccentricity;
+	private boolean betweenness;
+	private boolean stress;
 
 	public NeoNetworkAnalyzerExec() {
 
@@ -33,6 +45,28 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	@Override
 	public boolean collectParameters() {
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
+
+		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		NeoNetworkAnalyzerControlPanel p = new NeoNetworkAnalyzerControlPanel(dialog);
+		p.setOpaque(true);
+		dialog.setModal(true);
+		dialog.setContentPane(p);
+		dialog.setResizable(false);
+
+		dialog.pack();
+		dialog.setVisible(true);
+
+		run = p.runIt();
+		saveInGraph = p.isSaveInGraph();
+		undirected = p.isUndirected();
+		
+		eccentricity = p.isEccentricity();
+		stress = p.isStress();
+		betweenness = p.isBetweenness();
+		
+
 		return true;
 	}
 
@@ -43,18 +77,18 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 
 		ObjectMapper mapper = new ObjectMapper();
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
-		
+
 		try {
 			for(Object obj : allStats){
 				Map<String, Object> stats = mapper.readValue((String)obj, Map.class);
 				Long neoid = ((Integer)stats.get("nodeid")).longValue();
-				
+
 				System.out.println(stats);
 				System.out.println("working on node: " +neoid);
-				
+
 				Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 				CyNode n = nodeSet.iterator().next();
-				
+
 				for(Entry<String,Object> e : stats.entrySet()){
 
 					if(e.getKey().equals("neo_name") || e.getKey().equals("nodeid")){
@@ -62,7 +96,7 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 					}
 
 					addValue(n,defNodeTab,e.getKey(),e.getValue());
-					
+
 				}
 				System.out.println("\n");
 			}
@@ -80,7 +114,7 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 		if(defNodeTab.getColumn(key) == null){
 			defNodeTab.createColumn(key, value.getClass(), false);
 		}
-		
+
 		defNodeTab.getRow(n.getSUID()).set(key, value);
 	}
 
@@ -98,10 +132,13 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	public List<Neo4jCall> buildNeo4jCalls() {
 		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
 
-		String urlFragment = extension.getEndpoint();
-		String payload = "{\"saveInGraph\":false}";
+		if(run){
 
-		calls.add(new Neo4jCall(urlFragment,payload));
+			String urlFragment = extension.getEndpoint();
+			String payload = "{\"saveInGraph\":false}";
+
+			calls.add(new Neo4jCall(urlFragment,payload));
+		}
 
 		return calls;
 	}

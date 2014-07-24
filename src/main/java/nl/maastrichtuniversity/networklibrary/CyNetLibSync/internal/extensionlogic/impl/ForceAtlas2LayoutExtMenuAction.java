@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ContinuiousExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
@@ -25,37 +26,36 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		this.plugin = plugin;
-		
-//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
-//		putValue(LARGE_ICON_KEY, icon);
+
+		//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
+		//		putValue(LARGE_ICON_KEY, icon);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		// make a niceish UI
-		
+
 		Extension forceAtlas2LayoutExt = getPlugin().getInteractor().supportsExtension("forceatlas2");
-		
-		ExtensionExecutor exec = new ForceAtlas2LayoutExtExec();
-		
+
+		ContinuiousExtensionExecutor exec = new ForceAtlas2LayoutExtExec();
 		exec.setPlugin(plugin);
 		exec.setExtension(forceAtlas2LayoutExt);
-		
-		if(!exec.collectParameters()){
-			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + forceAtlas2LayoutExt.getName());
-			return;
-		}
-		
-		System.out.println(exec);
-		
-		List<Neo4jCall> calls = exec.buildNeo4jCalls();
-		
-		for(Neo4jCall call : calls){
-			System.out.println(call);
-			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
-			exec.processCallResponse(call,callRetValue);
-		}
+
+		do{
+			if(!exec.collectParameters()){
+				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + forceAtlas2LayoutExt.getName());
+				return;
+			}
+
+			System.out.println(exec);
+
+			List<Neo4jCall> calls = exec.buildNeo4jCalls();
+
+			for(Neo4jCall call : calls){
+				System.out.println(call);
+				Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
+				exec.processCallResponse(call,callRetValue);
+			}
+		} while(exec.doContinue());
 	}
 
 	protected Plugin getPlugin() {
