@@ -29,6 +29,22 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 
 	private boolean runIt = false;
 
+	private JCheckBox avgSP;
+
+	private JCheckBox topoCoeff;
+
+	
+
+	private JCheckBox radiality;
+
+	private JCheckBox multiEdgePairs;
+
+	private JCheckBox neighbourhoodConn;
+
+	private JCheckBox closeness;
+
+	private JCheckBox clustCoeff;
+
 	public NeoNetworkAnalyzerControlPanel(JDialog dialog){
 		this.dialog = dialog;
 
@@ -116,8 +132,16 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		JLabel paramsLabel = new JLabel("Parameters to calculate");
 
 		betweennes = new JCheckBox("Betweenness");
-		stress = new JCheckBox("Stress");
 		eccentricity = new JCheckBox("Eccentricity");
+		stress = new JCheckBox("Stress");
+		avgSP = new JCheckBox("Average Shortest Path Length");
+		radiality = new JCheckBox("Radiality");
+		topoCoeff = new JCheckBox("Topological Coeffecient");
+		neighbourhoodConn = new JCheckBox("Neighbourhood Connectivity");
+		multiEdgePairs = new JCheckBox("Multi Edge Pairs");
+		closeness = new JCheckBox("Closeness");
+		clustCoeff = new JCheckBox("Clustering Coefficient");
+		
 		// ...
 		JPanel res = new JPanel();
 
@@ -130,9 +154,16 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 						.addComponent(paramsLabel)
 						.addComponent(betweennes)
 						.addComponent(eccentricity)
+						.addComponent(radiality)
+						.addComponent(stress)
+						.addComponent(closeness)
 						)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(stress)
+						.addComponent(neighbourhoodConn)
+						.addComponent(avgSP)
+						.addComponent(topoCoeff)
+						.addComponent(multiEdgePairs)
+						.addComponent(clustCoeff)
 						)
 				);
 
@@ -142,10 +173,29 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 				.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
 						.addComponent(betweennes)
-						.addComponent(stress)
+						
+						.addComponent(neighbourhoodConn)
+						
+						
 						)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
 						.addComponent(eccentricity)
+						.addComponent(avgSP)
+						
+						
+						)
+				
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(radiality)
+						.addComponent(topoCoeff)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(stress)
+						.addComponent(multiEdgePairs)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(closeness)
+						.addComponent(clustCoeff)
 						)
 				);
 		
@@ -228,5 +278,35 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	public boolean isUndirected() {
 		return undirButton.isSelected();
 	}
+
+	public boolean isAvgSP() {
+		return avgSP.isSelected();
+	}
+
+	public boolean isTopoCoeff() {
+		return topoCoeff.isSelected();
+	}
+
+	public boolean isRadiality() {
+		return radiality.isSelected();
+	}
+
+	public boolean isMultiEdgePairs() {
+		return multiEdgePairs.isSelected();
+	}
+
+	public boolean isNeighbourhoodConn() {
+		return neighbourhoodConn.isSelected();
+	}
+
+	public boolean isCloseness() {
+		return closeness.isSelected();
+	}
+
+	public boolean isClustCoeff() {
+		return clustCoeff.isSelected();
+	}
+	
+	
 	
 }

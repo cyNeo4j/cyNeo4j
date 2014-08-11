@@ -2,6 +2,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -37,6 +39,13 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	private boolean eccentricity;
 	private boolean betweenness;
 	private boolean stress;
+	private boolean avgSp;
+	private boolean topoCoeff;
+	private boolean radiality;
+	private boolean neighbourhood;
+	private boolean multiEdgePairs;
+	private boolean closeness;
+	private boolean clustCoeff;
 
 	public NeoNetworkAnalyzerExec() {
 
@@ -65,6 +74,24 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 		eccentricity = p.isEccentricity();
 		stress = p.isStress();
 		betweenness = p.isBetweenness();
+		avgSp = p.isAvgSP();
+		radiality = p.isRadiality();
+		topoCoeff = p.isTopoCoeff();
+		neighbourhood = p.isNeighbourhoodConn();
+		multiEdgePairs = p.isMultiEdgePairs();
+		closeness = p.isCloseness();
+		clustCoeff = p.isClustCoeff();
+		
+//		@Parameter( name = "eccentricity", optional = false ) boolean eccentricity,
+//		@Parameter( name = "betweenness", optional = false ) boolean betweenness,
+//		@Parameter( name = "stress", optional = false ) boolean stress,
+//		@Parameter( name = "avgSP", optional = false ) boolean avgSP,
+//		@Parameter( name = "radiality", optional = false ) boolean radiality,
+//		@Parameter( name = "topoCoeff", optional = false ) boolean topoCoeff,
+//		@Parameter( name = "neighbourhood", optional = false ) boolean neighbourhood,
+//		@Parameter( name = "multiEdgePairs", optional = false ) boolean multiEdgePairs,
+//		@Parameter( name = "closeness", optional = false ) boolean closeness,
+//		@Parameter( name = "clustCoeff", optional = false ) boolean clustCoeff)
 		
 
 		return true;
@@ -133,11 +160,37 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
 
 		if(run){
-
 			String urlFragment = extension.getEndpoint();
-			String payload = "{\"saveInGraph\":false}";
-
-			calls.add(new Neo4jCall(urlFragment,payload));
+		
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("saveInGraph",saveInGraph);
+			params.put("eccentricity",eccentricity);
+			params.put("betweenness",betweenness);
+			params.put("stress",stress);
+			params.put("avgSP",avgSp);
+			params.put("radiality",radiality);
+			params.put("topoCoeff",topoCoeff);
+			params.put("neighbourhood",neighbourhood);
+			params.put("multiEdgePairs",multiEdgePairs);
+			params.put("closeness",closeness);
+			params.put("clustCoeff",clustCoeff);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			String payload;
+			try {
+				payload = mapper.writeValueAsString(params);
+				calls.add(new Neo4jCall(urlFragment,payload));
+			} catch (JsonGenerationException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			}
+			
 		}
 
 		return calls;

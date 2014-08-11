@@ -1,4 +1,5 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -13,26 +14,39 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
-import javax.swing.SwingConstants;
 
 
 public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListener {
 
 	private JDialog dialog;
-	
-	private JTextField param1Text;
-	private JTextField param2Text;
-	private JTextField param4Text;
-	private JCheckBox param3Box;
-	
+		
 	private JTextField numItersText;
-	
-	private int numRuns = 0;
-	
+
 	private boolean runIt = false;
+
+	private JCheckBox dissuadeHubs;
+
+	private JCheckBox linLogMode;
+
+	private JCheckBox preventOverlap;
+
+	private JTextField edgeWeightInfluence;
+
+	private JTextField scaling;
+
+	private JCheckBox strongGravityMode;
+
+	private JTextField gravity;
+
+	private JTextField tolerance;
+
+	private JCheckBox approxRepulsion;
+
+	private JTextField approx;
 
 	public ForceAtlas2LayoutControlPanel(JDialog dialog){
 		this.dialog = dialog;
+
 		JPanel settings = buildSettingsPanel();
 		JPanel controls = buildRunPanel();
 
@@ -106,58 +120,146 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		JLabel parameterLabel = new JLabel("Parameters");
-
-		JLabel param1Label = new JLabel("Parameter 1");
-		param1Text = new JTextField("100");
-
-		JLabel param2Label = new JLabel("Parameter 2");
-		param2Text = new JTextField("2000");
-		JLabel param4Label = new JLabel("Parameter 4");
-		param4Text = new JTextField("30000");
-
-		JLabel param3Label = new JLabel("Parameter 3");
-		param3Box = new JCheckBox();
-		param3Box.setHorizontalTextPosition(SwingConstants.LEFT);
-
+		//behaviour
+//		@Parameter( name = "dissuadeHubs", optional = false ) boolean dissuadeHubs,
+//		@Parameter( name = "linLogMode", optional = false ) boolean linLogMode,
+//		@Parameter( name = "preventOverlap", optional = false ) boolean preventOverlap,
+//		@Parameter( name = "edgeWeightInfluence", optional = false ) Double edgeWeightInfluence,
+//		
+//		// tuning
+//		@Parameter( name = "scaling", optional = false ) Double scaling,
+//		@Parameter( name = "strongGravityMode", optional = false ) boolean strongGravityMode,
+//		@Parameter( name = "gravity", optional = false ) Double gravity,
+//		
+//		// performance
+//		@Parameter( name = "tolerance", optional = false ) Double tolerance,
+//		@Parameter( name = "approxRepulsion", optional = false ) boolean approxRepulsion,
+//		@Parameter( name = "approx", optional = false ) Double approx)
+		
+		JLabel behaviourLabel = new JLabel("Behaviour");
+		JLabel tuningLabel = new JLabel("Tuning");
+		JSeparator tuSep = new JSeparator();
+		JLabel performanceLabel = new JLabel("Performance");
+		JSeparator peSep = new JSeparator();
+		
+		//behaviour
+		JLabel dissuadeHubsLabel = new JLabel("Dissuade hubs");
+		dissuadeHubs = new JCheckBox();
+		
+		JLabel linLogModeLabel = new JLabel("Linear log mode");
+		linLogMode = new JCheckBox();
+		
+		JLabel preventOverlapLabel = new JLabel("Prevent overlap");
+		preventOverlap = new JCheckBox();
+		
+		JLabel edgeWeightLabel = new JLabel("Edge weight influence");
+		edgeWeightInfluence = new JTextField("1.0",5);		
+		
+		
+		// tuning
+		JLabel scalingLabel = new JLabel("Scaling");
+		scaling = new JTextField("10.0");
+		JLabel strongGravityModeLabel = new JLabel("Strong gravity mode");
+		strongGravityMode = new JCheckBox();
+		
+		JLabel gravityLabel = new JLabel("Gravity");
+		gravity = new JTextField("1.0");
+		
+		
+		// performance
+		JLabel toleranceLabel = new JLabel("Tolerance");
+		tolerance = new JTextField("0.1");
+		
+		JLabel approxRepulsionLabel = new JLabel("Approximate repulsion");
+		approxRepulsion = new JCheckBox();
+		
+		JLabel approxLabel = new JLabel("Approximation");
+		approx = new JTextField("1.2");
+		
 		layout.setHorizontalGroup(
 
 				layout.createSequentialGroup()
 
 				.addGroup(layout.createParallelGroup()
-						.addComponent(parameterLabel)
-						.addComponent(param1Label)
-						.addComponent(param2Label)
-						.addComponent(param3Label)
-						.addComponent(param4Label)
+						.addComponent(behaviourLabel)
+						.addComponent(dissuadeHubsLabel)
+						.addComponent(linLogModeLabel)
+						.addComponent(preventOverlapLabel)
+						.addComponent(edgeWeightLabel)
+						.addComponent(tuSep)
+						.addComponent(tuningLabel)
+						.addComponent(scalingLabel)
+						.addComponent(strongGravityModeLabel)
+						.addComponent(gravityLabel)
+						.addComponent(peSep)
+						.addComponent(performanceLabel)
+						.addComponent(toleranceLabel)
+						.addComponent(approxRepulsionLabel)
+						.addComponent(approxLabel)
 						)
+				
 				.addGroup(layout.createParallelGroup()
-						.addComponent(param1Text)
-						.addComponent(param2Text)
-						.addComponent(param3Box)
-						.addComponent(param4Text)
+						.addComponent(dissuadeHubs)
+						.addComponent(linLogMode)
+						.addComponent(preventOverlap)		
+						.addComponent(edgeWeightInfluence)
+						.addComponent(scaling)
+						.addComponent(strongGravityMode)
+						.addComponent(gravity)
+						.addComponent(tolerance)
+						.addComponent(approxRepulsion)
+						.addComponent(approx)
 						)
+				
 				);
 
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
-				.addComponent(parameterLabel)
+				.addComponent(behaviourLabel)
 				.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(param1Label)
-						.addComponent(param1Text)
+						.addComponent(dissuadeHubsLabel)
+						.addComponent(dissuadeHubs)
 						)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(param2Label)
-						.addComponent(param2Text)
+						.addComponent(linLogModeLabel)
+						.addComponent(linLogMode)
 						)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(param3Label)
-						.addComponent(param3Box)
+						.addComponent(preventOverlapLabel)
+						.addComponent(preventOverlap)
 						)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(param4Label)
-						.addComponent(param4Text)
+						.addComponent(edgeWeightLabel)
+						.addComponent(edgeWeightInfluence)
+						)
+				.addComponent(tuSep)
+				.addComponent(tuningLabel)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(scalingLabel)
+						.addComponent(scaling)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(strongGravityModeLabel)
+						.addComponent(strongGravityMode)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(gravityLabel)
+						.addComponent(gravity)
+						)
+				.addComponent(peSep)
+				.addComponent(performanceLabel)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(toleranceLabel)
+						.addComponent(tolerance)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(approxRepulsionLabel)
+						.addComponent(approxRepulsion)
+						)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
+						.addComponent(approxLabel)
+						.addComponent(approx)
 						)
 				);
 
@@ -172,16 +274,34 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		Map<String,Object> params = new HashMap<String,Object>();
 
 		try{
-			String param1 = param1Text.getText();
-			String param2 = param2Text.getText();
-			String param4 = param4Text.getText();
+//			@Parameter( name = "dissuadeHubs", optional = false ) boolean dissuadeHubs,
+//			@Parameter( name = "linLogMode", optional = false ) boolean linLogMode,
+//			@Parameter( name = "preventOverlap", optional = false ) boolean preventOverlap,
+//			@Parameter( name = "edgeWeightInfluence", optional = false ) Double edgeWeightInfluence,
+//			
+//			// tuning
+//			@Parameter( name = "scaling", optional = false ) Double scaling,
+//			@Parameter( name = "strongGravityMode", optional = false ) boolean strongGravityMode,
+//			@Parameter( name = "gravity", optional = false ) Double gravity,
+//			
+//			// performance
+//			@Parameter( name = "tolerance", optional = false ) Double tolerance,
+//			@Parameter( name = "approxRepulsion", optional = false ) boolean approxRepulsion,
+//			@Parameter( name = "approx", optional = false ) Double approx)
 
-			boolean param3 = param3Box.isSelected();
-
-			params.put("param1", Double.valueOf(param1));
-			params.put("param2", Integer.valueOf(param2));
-			params.put("param3", param3);
-			params.put("param4", Double.valueOf(param4));
+			params.put("dissuadeHubs", dissuadeHubs.isSelected());
+			params.put("linLogMode", linLogMode.isSelected());
+			params.put("preventOverlap", preventOverlap.isSelected());
+			params.put("edgeWeightInfluence", Double.valueOf(edgeWeightInfluence.getText()));
+			
+			params.put("scaling", Double.valueOf(scaling.getText()));
+			params.put("strongGravityMode", strongGravityMode.isSelected());
+			params.put("gravity", Double.valueOf(gravity.getText()));
+			
+			params.put("tolerance", Double.valueOf(tolerance.getText()));
+			params.put("approxRepulsion", approxRepulsion.isSelected());
+			params.put("approx", Double.valueOf(approx.getText()));
+			
 		} catch (NumberFormatException e){
 			System.out.println("input parameters are not numbers!");
 			return null;

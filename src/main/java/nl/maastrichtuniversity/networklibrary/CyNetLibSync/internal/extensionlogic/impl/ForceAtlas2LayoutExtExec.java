@@ -1,7 +1,9 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JDialog;
@@ -13,6 +15,9 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
@@ -27,6 +32,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	private CyNetwork currNet;
 	
 	private boolean runIt;
+	private int numRuns = 0;
 	
 	private JDialog dialog = null;
 	private ForceAtlas2LayoutControlPanel controls = null;
@@ -91,7 +97,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 			CyUtils.updateVisualStyle(getPlugin().getVisualMappingManager(), networkView, currNet);
 		}
 
-
+		++numRuns;
 	}
 
 	@Override
@@ -111,10 +117,31 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
 
 		if(runIt){
+			
 			String urlFragment = extension.getEndpoint();
-			String payload = "{\"numIterations\":\"10\",\"saveInGraph\":false,\"pickup\":false}";
-
-			calls.add(new Neo4jCall(urlFragment,payload));
+			
+//			String payload = "{\"numIterations\":\"10\",\"saveInGraph\":false,\"pickup\":false}";
+			ObjectMapper mapper = new ObjectMapper();
+			String payload;
+			try {
+				Map<String,Object> params = controls.getParameters();
+				params.put("numIterations", controls.getNumIterations());
+				params.put("saveInGraph", true);
+				params.put("pickup",numRuns>0);
+				
+				payload = mapper.writeValueAsString(params);
+				calls.add(new Neo4jCall(urlFragment,payload));
+				
+			} catch (JsonGenerationException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.out.println("payload generation failed");
+				e.printStackTrace();
+			}
 		}
 
 		return calls;
