@@ -2,6 +2,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlo
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,8 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 
 public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 
+	public static final int IterationStepSize = 10;
+	
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
@@ -96,8 +99,6 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 
 			CyUtils.updateVisualStyle(getPlugin().getVisualMappingManager(), networkView, currNet);
 		}
-
-		++numRuns;
 	}
 
 	@Override
@@ -124,14 +125,29 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
 			try {
-				Map<String,Object> params = controls.getParameters();
-				params.put("numIterations", controls.getNumIterations());
-				params.put("saveInGraph", true);
-				params.put("pickup",numRuns>0);
 				
-				payload = mapper.writeValueAsString(params);
-				calls.add(new Neo4jCall(urlFragment,payload));
 				
+				
+				int numIterations = controls.getNumIterations();
+				
+				while(numIterations > 0){
+				
+					int itersToDo = IterationStepSize;
+					
+					if(numIterations < IterationStepSize)
+						itersToDo = numIterations;
+					
+					numIterations -= IterationStepSize;
+					
+					Map<String,Object> params = new HashMap<String,Object>(controls.getParameters());
+					params.put("saveInGraph", true);
+					params.put("numIterations", itersToDo);
+					params.put("pickup",numRuns>0);
+				
+					payload = mapper.writeValueAsString(params);
+					calls.add(new Neo4jCall(urlFragment,payload));
+					++numRuns;
+				}
 			} catch (JsonGenerationException e) {
 				System.out.println("payload generation failed");
 				e.printStackTrace();
@@ -146,6 +162,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 
 		return calls;
 	}
+	
 
 	@Override
 	public boolean doContinue() {
