@@ -11,7 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
 	<artifactId>CyNetLibSync</artifactId>
-	<version>0.4</version>
+	<version>0.9</version>
 
 	<name>CyNetLibSync</name>
 
