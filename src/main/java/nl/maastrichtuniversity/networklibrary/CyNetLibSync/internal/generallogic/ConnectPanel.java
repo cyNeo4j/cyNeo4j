@@ -40,7 +40,6 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 		this.dialog = dialog;
 		this.interactor = neo4jInteractor;
 
-
 		green = new ImageIcon(getClass().getResource("/images/tick30.png"));
 		red = new ImageIcon(getClass().getResource("/images/cross30.png"));
 		

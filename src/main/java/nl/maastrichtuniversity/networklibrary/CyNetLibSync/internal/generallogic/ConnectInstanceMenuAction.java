@@ -1,5 +1,6 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JDialog;
@@ -33,6 +34,7 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		
 		ConnectPanel p = new ConnectPanel(dialog,plugin.getInteractor());
 		p.setOpaque(true);
+		locate(dialog);
 		dialog.setModal(true);
 		dialog.setContentPane(p);
 		dialog.setResizable(false);
@@ -43,5 +45,17 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		
 		System.out.println("am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
 	}
+	
+	// from https://github.com/mkutmon/cytargetlinker/blob/master/cytargetlinker/src/main/java/org/cytargetlinker/app/internal/gui/ExtensionDialog.java
+	private void locate(JDialog dialog) {
+ 
+        Point cyLocation = plugin.getCySwingApplication().getJFrame().getLocation();
+        int cyHeight = plugin.getCySwingApplication().getJFrame().getHeight();
+        int cyWidth = plugin.getCySwingApplication().getJFrame().getWidth();
+
+        Point middle = new Point(cyLocation.x + (cyWidth / 4), cyLocation.y + (cyHeight / 4));
+
+        dialog.setLocation(middle);
+	 }
 
 }
