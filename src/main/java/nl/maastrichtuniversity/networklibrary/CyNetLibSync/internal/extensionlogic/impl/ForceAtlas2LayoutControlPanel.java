@@ -43,14 +43,16 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 	private JCheckBox approxRepulsion;
 
 	private JTextField approx;
+	
+	private Map<String, Object> params;
 
-	public ForceAtlas2LayoutControlPanel(JDialog dialog){
+	public ForceAtlas2LayoutControlPanel(JDialog dialog, Map<String, Object> params){
 		this.dialog = dialog;
+		this.params = params;
 
 		JPanel settings = buildSettingsPanel();
 		JPanel controls = buildRunPanel();
 
-		
 		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -77,64 +79,27 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("RUN_CMD")){
+			params = getParameters();
 			runIt = true;
-			closeUp();
 		}
 		
 		if(e.getActionCommand().equals("DONE_CMD")){
+			params = null;
 			runIt = false;
-			closeUp();
 		}
-				
+		closeUp();		
 	}
 	
-
-//	private void prepInvocation() {
-//		Map<String,Object> params = getParameters();
-//		
-//		int numIters = getNumIterations();
-//		
-//		++numRuns;
-//		
-//		if(params != null && numIters > 0){
-//		
-//		System.out.println("going to run with numIters = " + numIters);
-//		System.out.println(params);
-//		}
-//		else {
-//			System.out.println("nothing to do because: numIters = " + numIters + " or params are null");
-//		}
-//
-//	}
-
 	private void closeUp() {
 		dialog.setVisible(false);
 	}
 	
-	
-
 	public JPanel buildSettingsPanel(){
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-
-		//behaviour
-//		@Parameter( name = "dissuadeHubs", optional = false ) boolean dissuadeHubs,
-//		@Parameter( name = "linLogMode", optional = false ) boolean linLogMode,
-//		@Parameter( name = "preventOverlap", optional = false ) boolean preventOverlap,
-//		@Parameter( name = "edgeWeightInfluence", optional = false ) Double edgeWeightInfluence,
-//		
-//		// tuning
-//		@Parameter( name = "scaling", optional = false ) Double scaling,
-//		@Parameter( name = "strongGravityMode", optional = false ) boolean strongGravityMode,
-//		@Parameter( name = "gravity", optional = false ) Double gravity,
-//		
-//		// performance
-//		@Parameter( name = "tolerance", optional = false ) Double tolerance,
-//		@Parameter( name = "approxRepulsion", optional = false ) boolean approxRepulsion,
-//		@Parameter( name = "approx", optional = false ) Double approx)
 		
 		JLabel behaviourLabel = new JLabel("Behaviour");
 		JLabel tuningLabel = new JLabel("Tuning");
@@ -145,36 +110,42 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		//behaviour
 		JLabel dissuadeHubsLabel = new JLabel("Dissuade hubs");
 		dissuadeHubs = new JCheckBox();
+		dissuadeHubs.setSelected((Boolean)params.get("dissuadeHubs"));
 		
 		JLabel linLogModeLabel = new JLabel("Linear log mode");
 		linLogMode = new JCheckBox();
+		linLogMode.setSelected((Boolean)params.get("linLogMode"));
 		
 		JLabel preventOverlapLabel = new JLabel("Prevent overlap");
 		preventOverlap = new JCheckBox();
+		preventOverlap.setSelected((Boolean)params.get("preventOverlap"));
 		
 		JLabel edgeWeightLabel = new JLabel("Edge weight influence");
-		edgeWeightInfluence = new JTextField("1.0",5);		
+		edgeWeightInfluence = new JTextField(params.get("edgeWeightInfluence").toString(),5);		
 		
 		
 		// tuning
 		JLabel scalingLabel = new JLabel("Scaling");
-		scaling = new JTextField("10.0");
+		scaling = new JTextField(params.get("scaling").toString());
 		JLabel strongGravityModeLabel = new JLabel("Strong gravity mode");
 		strongGravityMode = new JCheckBox();
+		strongGravityMode.setSelected((Boolean)params.get("strongGravityMode"));
 		
 		JLabel gravityLabel = new JLabel("Gravity");
-		gravity = new JTextField("1.0");
+		gravity = new JTextField(params.get("gravity").toString(),5);
 		
 		
 		// performance
 		JLabel toleranceLabel = new JLabel("Tolerance");
-		tolerance = new JTextField("0.1");
+		tolerance = new JTextField(params.get("tolerance").toString(),5);
+		
 		
 		JLabel approxRepulsionLabel = new JLabel("Approximate repulsion");
 		approxRepulsion = new JCheckBox();
+		approxRepulsion.setSelected((Boolean)params.get("approxRepulsion"));
 		
 		JLabel approxLabel = new JLabel("Approximation");
-		approx = new JTextField("1.2");
+		approx = new JTextField(params.get("approx").toString(),5);
 		
 		layout.setHorizontalGroup(
 
@@ -271,24 +242,8 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 
 	// or individually
 	public Map<String,Object> getParameters(){
-		Map<String,Object> params = new HashMap<String,Object>();
-
+		
 		try{
-//			@Parameter( name = "dissuadeHubs", optional = false ) boolean dissuadeHubs,
-//			@Parameter( name = "linLogMode", optional = false ) boolean linLogMode,
-//			@Parameter( name = "preventOverlap", optional = false ) boolean preventOverlap,
-//			@Parameter( name = "edgeWeightInfluence", optional = false ) Double edgeWeightInfluence,
-//			
-//			// tuning
-//			@Parameter( name = "scaling", optional = false ) Double scaling,
-//			@Parameter( name = "strongGravityMode", optional = false ) boolean strongGravityMode,
-//			@Parameter( name = "gravity", optional = false ) Double gravity,
-//			
-//			// performance
-//			@Parameter( name = "tolerance", optional = false ) Double tolerance,
-//			@Parameter( name = "approxRepulsion", optional = false ) boolean approxRepulsion,
-//			@Parameter( name = "approx", optional = false ) Double approx)
-
 			params.put("dissuadeHubs", dissuadeHubs.isSelected());
 			params.put("linLogMode", linLogMode.isSelected());
 			params.put("preventOverlap", preventOverlap.isSelected());
@@ -301,6 +256,8 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 			params.put("tolerance", Double.valueOf(tolerance.getText()));
 			params.put("approxRepulsion", approxRepulsion.isSelected());
 			params.put("approx", Double.valueOf(approx.getText()));
+			
+			params.put("numIterations", getNumIterations());
 			
 		} catch (NumberFormatException e){
 			System.out.println("input parameters are not numbers!");
@@ -319,7 +276,7 @@ public class ForceAtlas2LayoutControlPanel extends JPanel implements ActionListe
 		layout.setAutoCreateContainerGaps(true);
 				
 		JLabel itersLabel = new JLabel("Iterations to Run");
-		numItersText = new JTextField("1000");
+		numItersText = new JTextField(params.get("numIterations").toString());
 		
 		JButton runButton = new JButton("Run");
 		runButton.addActionListener(this);

@@ -1,5 +1,7 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,43 +36,56 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	private Extension extension;
 	private CyNetwork currNet;
 	
-	private boolean runIt;
+	private boolean runIt = false;
 	private int numRuns = 0;
 	
-	private JDialog dialog = null;
-	private ForceAtlas2LayoutControlPanel controls = null;
+	
+	private Map<String,Object> params;
 
 	public ForceAtlas2LayoutExtExec() {
+		params = new HashMap<String, Object>();
+		
+		// default parameters
+		params.put("dissuadeHubs", false);
+		params.put("linLogMode", false);
+		params.put("preventOverlap", false);
+		params.put("edgeWeightInfluence", 1.0);
+		
+		params.put("scaling", 10.0);
+		params.put("strongGravityMode", false);
+		params.put("gravity", 1.0);
+		
+		params.put("tolerance", 0.1);
+		params.put("approxRepulsion", false);
+		params.put("approx", 1.2);
+		
+		params.put("saveInGraph", true);
+		params.put("numIterations", 1000);
 	}
 
 	@Override
-	public boolean collectParameters() {
+	public boolean collectParameters() {	
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
 
-		if(dialog == null)
-			setupDialog();
+		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
+		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		dialog.setVisible(true);
-
-		controls.getParameters();
-		controls.getNumIterations();
-		runIt = controls.runIt();
-
-		return true;
-	}
-
-	private void setupDialog(){
-		dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
-		dialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-
-		controls = new ForceAtlas2LayoutControlPanel(dialog);
+		ForceAtlas2LayoutControlPanel controls = new ForceAtlas2LayoutControlPanel(dialog,params);
 		controls.setOpaque(true);
 		dialog.setModal(true);
 		dialog.setContentPane(controls);
 		dialog.setResizable(false);
 
 		dialog.pack();
+		dialog.setVisible(true);
+
+		runIt = controls.runIt();
+		System.out.println("runIt = " + runIt);
+		
+		return true;
 	}
+
+	
 
 	private Plugin getPlugin() {
 		return plugin;
@@ -124,11 +139,8 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 //			String payload = "{\"numIterations\":\"10\",\"saveInGraph\":false,\"pickup\":false}";
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
-			try {
-				
-				
-				
-				int numIterations = controls.getNumIterations();
+			try {		
+				int numIterations = (Integer)params.get("numIterations");
 				
 				while(numIterations > 0){
 				
@@ -139,12 +151,12 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 					
 					numIterations -= IterationStepSize;
 					
-					Map<String,Object> params = new HashMap<String,Object>(controls.getParameters());
-					params.put("saveInGraph", true);
-					params.put("numIterations", itersToDo);
-					params.put("pickup",numRuns>0);
+					Map<String,Object> callParams = new HashMap<String,Object>(params);
+
+					callParams.put("numIterations", itersToDo);
+					callParams.put("pickup",numRuns>0);
 				
-					payload = mapper.writeValueAsString(params);
+					payload = mapper.writeValueAsString(callParams);
 					calls.add(new Neo4jCall(urlFragment,payload));
 					++numRuns;
 				}

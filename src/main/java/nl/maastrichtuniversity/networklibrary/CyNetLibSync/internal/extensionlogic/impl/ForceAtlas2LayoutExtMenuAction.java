@@ -48,19 +48,10 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + forceAtlas2LayoutExt.getName());
 				return;
 			}
-
-			System.out.println(exec);
 			
 			TaskIterator it = factory.createTaskIterator();
 			plugin.getDialogTaskManager().execute(it);
-
-//			List<Neo4jCall> calls = exec.buildNeo4jCalls();
-//
-//			for(Neo4jCall call : calls){
-//				System.out.println(call);
-//				Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
-//				exec.processCallResponse(call,callRetValue);
-//			}
+			
 		} while(exec.doContinue());
 	}
 
@@ -82,12 +73,14 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 
 			List<Neo4jCall> calls = exec.buildNeo4jCalls();
 
-			int progress = 0;
+			double progress = 0.0;
 			for(Neo4jCall call : calls){
 				System.out.println(call);
 				Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 				exec.processCallResponse(call,callRetValue);
-				monitor.setProgress(progress / calls.size());
+				++progress;
+				monitor.setProgress(progress / ((double)calls.size()));
+				
 			}
 			
 		}
@@ -99,7 +92,7 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		protected ForceAtlas2LayoutExtExec exec;
 		
 		public ForceAtlas2ExecutionTaskFactory(ForceAtlas2LayoutExtExec exec){
-			
+			this.exec = exec;
 		}
 		
 		@Override
