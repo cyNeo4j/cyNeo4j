@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import javax.swing.event.DocumentListener;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 
 public class ConnectPanel extends JPanel implements ActionListener, DocumentListener{
@@ -30,10 +33,17 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 	private JLabel status = null;
 	private JButton okButton = null;
 	
+	private ImageIcon green = null;
+	private ImageIcon red = null;
+	
 	public ConnectPanel(JDialog dialog, Neo4jInteractor neo4jInteractor) {
 		this.dialog = dialog;
 		this.interactor = neo4jInteractor;
 
+
+		green = new ImageIcon(getClass().getResource("/images/tick30.png"));
+		red = new ImageIcon(getClass().getResource("/images/cross30.png"));
+		
 		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -41,7 +51,10 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 		JLabel servURLLabel = new JLabel("Server URL");
 		servURL = new JTextField();
 		servURL.getDocument().addDocumentListener(this);
-		status = new JLabel("red");
+
+//		status = new JLabel("red");
+		status = new JLabel();
+		status.setIcon(red);
 		
 		okButton = new JButton("OK");
 		okButton.addActionListener(this);
@@ -130,10 +143,12 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 	protected void checkURLChange(){
 		System.out.println("checking URL change");
 		if(validURL()){
-			status.setText("green");
+//			status.setText("green");
+			status.setIcon(green);
 			okButton.setEnabled(true);
 		} else {
-			status.setText("red");
+//			status.setText("red");
+			status.setIcon(red);
 			okButton.setEnabled(false);
 		}
 	}
