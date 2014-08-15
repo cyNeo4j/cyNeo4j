@@ -33,8 +33,6 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 
 	private JCheckBox topoCoeff;
 
-	
-
 	private JCheckBox radiality;
 
 	private JCheckBox multiEdgePairs;
@@ -132,16 +130,34 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		JLabel paramsLabel = new JLabel("Parameters to calculate");
 
 		betweennes = new JCheckBox("Betweenness");
-		eccentricity = new JCheckBox("Eccentricity");
-		stress = new JCheckBox("Stress");
-		avgSP = new JCheckBox("Average Shortest Path Length");
-		radiality = new JCheckBox("Radiality");
-		topoCoeff = new JCheckBox("Topological Coeffecient");
-		neighbourhoodConn = new JCheckBox("Neighbourhood Connectivity");
-		multiEdgePairs = new JCheckBox("Multi Edge Pairs");
-		closeness = new JCheckBox("Closeness");
-		clustCoeff = new JCheckBox("Clustering Coefficient");
+		betweennes.setSelected(true);
 		
+		eccentricity = new JCheckBox("Eccentricity");
+		eccentricity.setSelected(true);
+		
+		stress = new JCheckBox("Stress");
+		stress.setSelected(true);
+		
+		avgSP = new JCheckBox("Average Shortest Path Length");
+		avgSP.setSelected(true);
+		
+		radiality = new JCheckBox("Radiality");
+		radiality.setSelected(true);
+		
+		topoCoeff = new JCheckBox("Topological Coeffecient");
+		topoCoeff.setSelected(true);
+		
+		neighbourhoodConn = new JCheckBox("Neighbourhood Connectivity");
+		neighbourhoodConn.setSelected(true);
+		
+		multiEdgePairs = new JCheckBox("Multi Edge Pairs");
+		multiEdgePairs.setSelected(true);
+		
+		closeness = new JCheckBox("Closeness");
+		closeness.setSelected(true);
+		
+		clustCoeff = new JCheckBox("Clustering Coefficient");
+		clustCoeff.setSelected(true);
 		// ...
 		JPanel res = new JPanel();
 
@@ -209,6 +225,7 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		JLabel directionalityLabel = new JLabel("Directionality");
 		undirButton = new JRadioButton("Undirected");
 		dirButton = new JRadioButton("Directed");
+		dirButton.setEnabled(false);
 
 		ButtonGroup directionality = new ButtonGroup();
 		directionality.add(undirButton);
