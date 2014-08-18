@@ -23,8 +23,7 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 		private String instanceLocation;
 		private CyNetworkFactory cyNetworkFactory;
 		private CyNetworkManager cyNetworkMgr;
-
-		
+		private String errors = null;
 
 		public SyncDownNodeResponseHandler(String instanceLocation,
 				CyNetworkFactory cyNetworkFactory, CyNetworkManager cyNetworkMgr) {
@@ -53,7 +52,7 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 
 			CyNetwork resNet = null;
 			
-			System.out.println("responseCode: " + responseCode);
+//			System.out.println("responseCode: " + responseCode);
 			if(responseCode >= 200 && responseCode < 300){
 				ObjectMapper mapper = new ObjectMapper();
 				Map<String,Object> nodes = mapper.readValue(response.getEntity().getContent(), Map.class);
@@ -62,10 +61,6 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 
 				if(data.size() > 0){
 					CyNetwork myNet = getCyNetworkFactory().createNetwork();
-
-//					Set<String> attributeCols = new HashSet<String>();
-//					attributeCols.add("name");
-					
 
 					myNet.getRow(myNet).set(CyNetwork.NAME,getInstanceLocation());
 					
@@ -89,23 +84,16 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 						Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
 
 						for(Entry<String,Object> obj : nodeProps.entrySet()){
-//							if(!attributeCols.contains(obj.getKey())){
 							if(defNodeTab.getColumn(obj.getKey()) == null){
 								if(obj.getValue().getClass() == ArrayList.class){
 									defNodeTab.createListColumn(obj.getKey(), String.class, true);
 								} else {
 									defNodeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
 								}
-//								attributeCols.add(obj.getKey());
-							} else {
-								System.out.println("col: " + obj.getKey() + " type: " + defNodeTab.getColumn(obj.getKey()).getType().toString());
-								System.out.println("value: " + obj.getValue() + " type: " + obj.getValue().getClass().toString());
-								
 							}
 
 							Object value = CyUtils.fixSpecialTypes(obj.getValue(), defNodeTab.getColumn(obj.getKey()).getType());
 							defNodeTab.getRow(cyNode.getSUID()).set(obj.getKey(), value);
-
 						}
 					}
 					
@@ -114,14 +102,18 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 				}
 
 			} else {
-				System.out.println("ERROR " + responseCode);
+				errors = "ERROR " + responseCode;
+				
 				ObjectMapper mapper = new ObjectMapper();
-
+				
 				Map<String,String> error = mapper.readValue(response.getEntity().getContent(),Map.class);
-				System.out.println(error);
-
+				errors = errors + "\n" + error.toString();
 			}
 
 			return resNet;
+		}
+		
+		public String getErrors(){
+			return errors;
 		}
 	}

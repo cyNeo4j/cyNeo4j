@@ -1,6 +1,5 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.generallogic;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,10 +16,8 @@ import javax.swing.event.DocumentListener;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jInteractor;
 
 import org.apache.commons.validator.routines.UrlValidator;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
-
+@SuppressWarnings("serial")
 public class ConnectPanel extends JPanel implements ActionListener, DocumentListener{
 
 	private static final String CANCEL_CMD = "cancel";
@@ -51,7 +48,6 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 		servURL = new JTextField();
 		servURL.getDocument().addDocumentListener(this);
 
-//		status = new JLabel("red");
 		status = new JLabel();
 		status.setIcon(red);
 		
@@ -142,11 +138,9 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 	protected void checkURLChange(){
 		System.out.println("checking URL change");
 		if(validURL()){
-//			status.setText("green");
 			status.setIcon(green);
 			okButton.setEnabled(true);
 		} else {
-//			status.setText("red");
 			status.setIcon(red);
 			okButton.setEnabled(false);
 		}

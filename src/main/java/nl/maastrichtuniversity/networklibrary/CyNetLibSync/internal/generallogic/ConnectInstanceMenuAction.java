@@ -11,6 +11,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
+@SuppressWarnings("serial")
 public class ConnectInstanceMenuAction extends AbstractCyAction {
 	
 	public final static String MENU_TITLE = "Connect to Instance";
@@ -46,7 +47,7 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		System.out.println("am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
 	}
 	
-	// from https://github.com/mkutmon/cytargetlinker/blob/master/cytargetlinker/src/main/java/org/cytargetlinker/app/internal/gui/ExtensionDialog.java
+	// adapted from https://github.com/mkutmon/cytargetlinker/blob/master/cytargetlinker/src/main/java/org/cytargetlinker/app/internal/gui/ExtensionDialog.java
 	private void locate(JDialog dialog) {
  
         Point cyLocation = plugin.getCySwingApplication().getJFrame().getLocation();

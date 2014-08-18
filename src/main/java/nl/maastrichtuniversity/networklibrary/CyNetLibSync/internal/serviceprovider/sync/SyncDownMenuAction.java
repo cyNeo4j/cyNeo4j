@@ -9,6 +9,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
+@SuppressWarnings("serial")
 public class SyncDownMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Sync Down";
@@ -22,8 +23,6 @@ public class SyncDownMenuAction extends AbstractCyAction {
 		setEnabled(false);
 		this.plugin = plugin;
 		
-//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
-//		putValue(LARGE_ICON_KEY, icon);
 	}
 
 	protected Plugin getPlugin() {
@@ -39,7 +38,4 @@ public class SyncDownMenuAction extends AbstractCyAction {
 		getPlugin().getInteractor().syncDown(false);
 	}
 
-//	public boolean isInToolBar() {
-//		return true;
-//	}
 }

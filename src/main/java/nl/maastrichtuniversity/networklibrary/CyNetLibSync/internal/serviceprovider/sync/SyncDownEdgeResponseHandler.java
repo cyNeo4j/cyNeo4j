@@ -22,10 +22,13 @@ import org.cytoscape.model.CyTable;
 public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 
 	private CyNetwork network;
+	private String errors;
 
 	public SyncDownEdgeResponseHandler(CyNetwork network) {
 		super();
 		this.network = network;
+		
+		errors = null;
 	}
 
 	protected CyNetwork getNetwork() {
@@ -38,26 +41,22 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 		int responseCode = response.getStatusLine().getStatusCode();
 
 		Long resNet = null;
-		System.out.println("responseCode: " + responseCode);
 		if(responseCode >= 200 && responseCode < 300){
+			resNet = new Long(0);
 			ObjectMapper mapper = new ObjectMapper();
 			Map<String,Object> nodes = mapper.readValue(response.getEntity().getContent(), Map.class);
 
 			List<Object> data = (ArrayList<Object>)nodes.get("data");
 
-			if(data.size() > 0){
-				
+			if(data.size() > 0){				
 				CyNetwork myNet = getNetwork();
 
-//				Set<String> attributeCols = new HashSet<String>();
-//				attributeCols.add("name");
 				CyTable defEdgeTab = myNet.getDefaultEdgeTable();
 				if(defEdgeTab.getColumn("neoid") == null){
 					defEdgeTab.createColumn("neoid", Long.class, false);
 				}
 
 				for(Object nodeObj : data){
-					
 					Map<Object, Object> edge = (Map<Object, Object>)((ArrayList<Object>)nodeObj).get(0);
 
 					String selfURL = (String)edge.get("self");
@@ -94,6 +93,7 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 					CyNode endNode = res.iterator().next();
 					
 					CyEdge cyEdge = myNet.addEdge(startNode, endNode, true);
+					++resNet;
 					
 					myNet.getRow(cyEdge).set("neoid", self);
 					myNet.getRow(cyEdge).set(CyEdge.INTERACTION, type);
@@ -101,15 +101,12 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 					Map<String,Object> nodeProps = (Map<String,Object>) edge.get("data");
 
 					for(Entry<String,Object> obj : nodeProps.entrySet()){
-//						if(!attributeCols.contains(obj.getKey())){
 						if(defEdgeTab.getColumn(obj.getKey()) == null){
 							if(obj.getValue().getClass() == ArrayList.class){
 								defEdgeTab.createListColumn(obj.getKey(), String.class, true);
 							} else {
 								defEdgeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
 							}
-							
-//							attributeCols.add(obj.getKey());
 						}
 						
 						Object value = CyUtils.fixSpecialTypes(obj.getValue(), defEdgeTab.getColumn(obj.getKey()).getType());
@@ -120,14 +117,18 @@ public class SyncDownEdgeResponseHandler implements ResponseHandler<Long> {
 			}
 
 		} else {
-			System.out.println("ERROR " + responseCode);
+			errors = "ERROR " + responseCode;
+			
 			ObjectMapper mapper = new ObjectMapper();
-
+			
 			Map<String,String> error = mapper.readValue(response.getEntity().getContent(),Map.class);
-			System.out.println(error);
-
+			errors = errors + "\n" + error.toString();
 		}
 
 		return resNet;
+	}
+	
+	public String getErrors(){
+		return errors;
 	}
 }

@@ -21,9 +21,6 @@ public class SyncUpMenuAction extends AbstractCyAction {
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		this.plugin = plugin;
-		
-//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/green_up.png"));
-//		putValue(LARGE_ICON_KEY, icon);
 	}
 
 	protected Plugin getPlugin() {
@@ -38,9 +35,4 @@ public class SyncUpMenuAction extends AbstractCyAction {
 		}
 		getPlugin().getInteractor().syncUp(true,getPlugin().getCyApplicationManager().getCurrentNetwork());
 	}
-	
-//	public boolean isInToolBar() {
-//		return true;
-//	}
-
 }

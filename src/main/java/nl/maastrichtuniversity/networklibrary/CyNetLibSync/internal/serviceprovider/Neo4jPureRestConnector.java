@@ -89,12 +89,13 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 				mergeInCurrent, 
 				getPlugin().getCyNetworkFactory(), 
 				getInstanceLocation(), 
-				getCypherURL()/*,
+				getCypherURL(),
 				getPlugin().getCyNetViewMgr(),
 				getPlugin().getCyNetworkViewFactory(),
 				getPlugin().getCyLayoutAlgorithmManager(),
-				getPlugin().getVisualMappingManager()*/).createTaskIterator();
-		
+				getPlugin().getVisualMappingManager()
+				).createTaskIterator();
+			
 		plugin.getDialogTaskManager().execute(it);
 
 	}
@@ -175,10 +176,9 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		try {
 			return instanceLocation != null && Request.Get(instanceLocation).execute().handleResponse(new Neo4jPingHandler());
 		} catch (ClientProtocolException e) {
-//			e.printStackTrace();
 		} catch (IOException e) {
-//			e.printStackTrace();
-		}		
+		}
+		// show exceptions? does the user understand the error messages? 
 		return false;
 	}
 	
