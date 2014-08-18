@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.neo4j;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 

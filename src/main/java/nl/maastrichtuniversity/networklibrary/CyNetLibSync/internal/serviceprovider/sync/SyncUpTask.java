@@ -2,7 +2,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprov
 
 import java.io.IOException;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers.ReturnCodeResponseHandler;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.general.ReturnCodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
 import org.apache.http.client.ClientProtocolException;

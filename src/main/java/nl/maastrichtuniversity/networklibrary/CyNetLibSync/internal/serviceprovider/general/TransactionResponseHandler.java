@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.ResponseHandlers;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.general;
 
 import java.io.IOException;
 import java.util.Map;

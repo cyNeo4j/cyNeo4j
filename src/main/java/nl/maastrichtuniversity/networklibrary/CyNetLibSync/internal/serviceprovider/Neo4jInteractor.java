@@ -21,11 +21,7 @@ public interface Neo4jInteractor {
 	// full sync interface
 	public void syncUp(boolean wipeRemote, CyNetwork curr);
 	public void syncDown(boolean mergeInCurrent);
-	
-//	// subset interface
-//	public void subset(/* parameters, targetNetwork */);
-//	public void query(String cypherQuery);
-	
+		
 	// extension interface
 	public void				setLocalSupportedExtension(Map<String,AbstractCyAction> localExtensions);
 	public List<Extension> 	getExtensions();

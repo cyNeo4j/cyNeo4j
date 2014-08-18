@@ -1,4 +1,4 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.synclogic;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.sync;
 
 import java.awt.event.ActionEvent;
 

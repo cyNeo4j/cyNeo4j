@@ -2,7 +2,7 @@ package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils;
 
 import java.util.Map;
 
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jExtParam;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.neo4j.Neo4jExtParam;
 
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNode;
