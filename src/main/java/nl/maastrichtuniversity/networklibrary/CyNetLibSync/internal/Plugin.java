@@ -62,7 +62,7 @@ public class Plugin {
 		localExtensions.put("forceatlas2",new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("circlelayout",new CircularLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("gridlayout",new GridLayoutExtMenuAction(cyApplicationManager, this));
-		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
+//		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
 			
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
