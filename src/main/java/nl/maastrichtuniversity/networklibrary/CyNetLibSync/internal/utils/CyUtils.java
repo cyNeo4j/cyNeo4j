@@ -95,8 +95,7 @@ public class CyUtils {
 		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Long.class);
 	}
 
-	
-	public static Object fixSpecialTypes(Object val, Class req){
+	public static Object fixSpecialTypes(Object val, Class<?> req){
 		
 		Object retV = null;
 		

@@ -41,13 +41,10 @@ public class NeoNetworkAnalyzerAction extends AbstractCyAction {
 			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + neoAnalyzer.getName());
 			return;
 		}
-		
-		System.out.println(exec);
-		
+	
 		List<ExtensionCall> calls = exec.buildExtensionCalls();
 		
 		for(ExtensionCall call : calls){
-			System.out.println(call);
 			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 			exec.processCallResponse(call,callRetValue);
 		}

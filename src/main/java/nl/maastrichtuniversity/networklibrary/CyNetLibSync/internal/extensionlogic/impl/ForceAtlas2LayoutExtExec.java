@@ -79,7 +79,6 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 		dialog.setVisible(true);
 
 		runIt = controls.runIt();
-		System.out.println("runIt = " + runIt);
 		
 		return true;
 	}
@@ -102,7 +101,6 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 			Long neoid = values.get(i*3).longValue();
 			Double x = values.get(i*3+1);
 			Double y = values.get(i*3+2);
-
 
 			Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 			CyNode n = nodeSet.iterator().next();
@@ -134,8 +132,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 		if(runIt){
 			
 			String urlFragment = extension.getEndpoint();
-			
-//			String payload = "{\"numIterations\":\"10\",\"saveInGraph\":false,\"pickup\":false}";
+
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
 			try {		
@@ -160,14 +157,11 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 					++numRuns;
 				}
 			} catch (JsonGenerationException e) {
-				System.out.println("payload generation failed");
-				e.printStackTrace();
+				System.out.println("payload generation failed" + e);
 			} catch (JsonMappingException e) {
-				System.out.println("payload generation failed");
-				e.printStackTrace();
+				System.out.println("payload generation failed" + e);
 			} catch (IOException e) {
-				System.out.println("payload generation failed");
-				e.printStackTrace();
+				System.out.println("payload generation failed" + e);
 			}
 		}
 

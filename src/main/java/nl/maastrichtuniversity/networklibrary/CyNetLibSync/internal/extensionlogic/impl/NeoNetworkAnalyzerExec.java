@@ -82,18 +82,6 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 		multiEdgePairs = p.isMultiEdgePairs();
 		closeness = p.isCloseness();
 		clustCoeff = p.isClustCoeff();
-		
-//		@Parameter( name = "eccentricity", optional = false ) boolean eccentricity,
-//		@Parameter( name = "betweenness", optional = false ) boolean betweenness,
-//		@Parameter( name = "stress", optional = false ) boolean stress,
-//		@Parameter( name = "avgSP", optional = false ) boolean avgSP,
-//		@Parameter( name = "radiality", optional = false ) boolean radiality,
-//		@Parameter( name = "topoCoeff", optional = false ) boolean topoCoeff,
-//		@Parameter( name = "neighbourhood", optional = false ) boolean neighbourhood,
-//		@Parameter( name = "multiEdgePairs", optional = false ) boolean multiEdgePairs,
-//		@Parameter( name = "closeness", optional = false ) boolean closeness,
-//		@Parameter( name = "clustCoeff", optional = false ) boolean clustCoeff)
-		
 
 		return true;
 	}
@@ -111,15 +99,12 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 				Map<String, Object> stats = mapper.readValue((String)obj, Map.class);
 				Long neoid = ((Integer)stats.get("nodeid")).longValue();
 
-				System.out.println(stats);
-				System.out.println("working on node: " +neoid);
-
 				Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 				CyNode n = nodeSet.iterator().next();
 
 				for(Entry<String,Object> e : stats.entrySet()){
 
-					if(e.getKey().equals("neo_name") || e.getKey().equals("nodeid")){
+					if(e.getKey().equals("nodeid")){
 						continue;
 					}
 

@@ -25,16 +25,10 @@ public class GridLayoutExtMenuAction extends AbstractCyAction {
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		this.plugin = plugin;
-		
-//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
-//		putValue(LARGE_ICON_KEY, icon);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		// make a niceish UI
-		
 		Extension gridLayoutExt = getPlugin().getInteractor().supportsExtension("gridlayout");
 		
 		ExtensionExecutor exec = new SimpleLayoutExtExec();
@@ -47,12 +41,9 @@ public class GridLayoutExtMenuAction extends AbstractCyAction {
 			return;
 		}
 		
-		System.out.println(exec);
-		
 		List<ExtensionCall> calls = exec.buildExtensionCalls();
 		
 		for(ExtensionCall call : calls){
-			System.out.println(call);
 			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 			exec.processCallResponse(call,callRetValue);
 		}

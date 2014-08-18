@@ -28,7 +28,6 @@ public class CypherExtExec implements ExtensionExecutor {
 
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
-//		List<Map<String,Object>> paths = (List<Map<String,Object>>)callRetValue;
 		System.out.println(callRetValue.toString());
 
 	}

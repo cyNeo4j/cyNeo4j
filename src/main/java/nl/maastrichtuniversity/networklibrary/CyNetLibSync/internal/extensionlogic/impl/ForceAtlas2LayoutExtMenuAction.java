@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.neo4j.Neo4jCall;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -29,9 +28,6 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		this.plugin = plugin;
-
-		//		ImageIcon icon = new ImageIcon(getClass().getResource("/resources/red_down.png"));
-		//		putValue(LARGE_ICON_KEY, icon);
 	}
 
 	@Override
