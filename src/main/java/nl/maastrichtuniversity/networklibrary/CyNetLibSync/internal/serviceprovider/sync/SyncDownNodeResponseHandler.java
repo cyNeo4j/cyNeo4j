@@ -75,8 +75,6 @@ public class SyncDownNodeResponseHandler implements ResponseHandler<CyNetwork> {
 
 						String selfURL = (String)node.get("self");
 						Long self = Long.valueOf(selfURL.substring(selfURL.lastIndexOf('/')+1));
-
-						System.out.println("working on: " + self);
 						
 						CyNode cyNode = myNet.addNode();
 						myNet.getRow(cyNode).set("neoid", self);

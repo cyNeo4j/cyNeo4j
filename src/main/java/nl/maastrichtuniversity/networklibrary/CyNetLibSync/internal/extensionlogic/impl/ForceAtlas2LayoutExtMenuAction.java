@@ -72,7 +72,6 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 
 			double progress = 0.0;
 			for(ExtensionCall call : calls){
-				System.out.println(call);
 				Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 				exec.processCallResponse(call,callRetValue);
 				++progress;

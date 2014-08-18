@@ -125,7 +125,6 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 				List<Extension> serverSupportedExt = Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler(getInstanceLocation() + EXT_URL + extName)); 
 				
 				for(Extension ext : serverSupportedExt){
-					System.out.println(ext);
 					if(localExtensions.containsKey(ext.getName())){
 						res.add(ext);
 					}
@@ -158,7 +157,6 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 		Object retVal = null;
 		try {
 			String url = call.getUrlFragment();
-			System.out.println("invoking extension at: "+ getInstanceLocation() + call.getUrlFragment());
 			retVal = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
 			
 		} catch (ClientProtocolException e) {
@@ -172,7 +170,6 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 
 	@Override
 	public boolean validateConnection(String instanceLocation) {
-		System.out.println("validating url: " + instanceLocation);
 		try {
 			return instanceLocation != null && Request.Get(instanceLocation).execute().handleResponse(new Neo4jPingHandler());
 		} catch (ClientProtocolException e) {

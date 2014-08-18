@@ -42,9 +42,6 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		
 		dialog.pack();
 		dialog.setVisible(true);
-		
-		
-		System.out.println("am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
 	}
 	
 	// adapted from https://github.com/mkutmon/cytargetlinker/blob/master/cytargetlinker/src/main/java/org/cytargetlinker/app/internal/gui/ExtensionDialog.java

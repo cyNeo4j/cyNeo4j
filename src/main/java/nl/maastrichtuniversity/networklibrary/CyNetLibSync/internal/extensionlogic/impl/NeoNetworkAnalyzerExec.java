@@ -111,7 +111,6 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 					addValue(n,defNodeTab,e.getKey(),e.getValue());
 
 				}
-				System.out.println("\n");
 			}
 
 		} catch (JsonParseException e1) {

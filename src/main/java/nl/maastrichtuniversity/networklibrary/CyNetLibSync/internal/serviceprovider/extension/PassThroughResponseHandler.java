@@ -17,14 +17,10 @@ public class PassThroughResponseHandler implements ResponseHandler<Object> {
 
 		Object retVal = null;
 
-		System.out.println("responseCode: " + responseCode);
 		if(responseCode >= 200 && responseCode < 300){
 
 			ObjectMapper mapper = new ObjectMapper();
 			retVal = mapper.readValue(response.getEntity().getContent(), Object.class);
-			
-//			retVal = IOUtils.toString(response.getEntity().getContent());
-
 		} else {
 			System.out.println("ERROR " + responseCode);
 			ObjectMapper mapper = new ObjectMapper();

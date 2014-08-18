@@ -100,7 +100,6 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 		
 		if(e.getActionCommand().equals(OK_CMD)){
 			if(validURL()){
-				System.out.println("oking with: " + servURL.getText());
 				interactor.connect(servURL.getText());
 			}
 			closeUp();
@@ -136,7 +135,6 @@ public class ConnectPanel extends JPanel implements ActionListener, DocumentList
 	}
 	
 	protected void checkURLChange(){
-		System.out.println("checking URL change");
 		if(validURL()){
 			status.setIcon(green);
 			okButton.setEnabled(true);
