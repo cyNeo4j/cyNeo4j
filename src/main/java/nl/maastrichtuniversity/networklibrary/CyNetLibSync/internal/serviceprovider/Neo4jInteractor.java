@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
@@ -29,5 +30,5 @@ public interface Neo4jInteractor {
 	public void				setLocalSupportedExtension(Map<String,AbstractCyAction> localExtensions);
 	public List<Extension> 	getExtensions();
 	public Extension		supportsExtension(String name);
-	public Object			executeExtensionCall(Neo4jCall call);
+	public Object			executeExtensionCall(ExtensionCall call);
 }

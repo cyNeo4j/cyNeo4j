@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
 import org.cytoscape.application.CyApplicationManager;
@@ -71,10 +72,10 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		public void run(TaskMonitor monitor) throws Exception {
 			monitor.setStatusMessage("Executing ForceAtlas2 layout"); 
 
-			List<Neo4jCall> calls = exec.buildNeo4jCalls();
+			List<ExtensionCall> calls = exec.buildExtensionCalls();
 
 			double progress = 0.0;
-			for(Neo4jCall call : calls){
+			for(ExtensionCall call : calls){
 				System.out.println(call);
 				Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 				exec.processCallResponse(call,callRetValue);

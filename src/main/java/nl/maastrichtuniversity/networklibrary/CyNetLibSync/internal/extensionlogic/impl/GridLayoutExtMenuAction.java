@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -49,9 +49,9 @@ public class GridLayoutExtMenuAction extends AbstractCyAction {
 		
 		System.out.println(exec);
 		
-		List<Neo4jCall> calls = exec.buildNeo4jCalls();
+		List<ExtensionCall> calls = exec.buildExtensionCalls();
 		
-		for(Neo4jCall call : calls){
+		for(ExtensionCall call : calls){
 			System.out.println(call);
 			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
 			exec.processCallResponse(call,callRetValue);

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
@@ -52,13 +53,13 @@ public class ShortestPathExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public List<Neo4jCall> buildNeo4jCalls() {
+	public List<ExtensionCall> buildExtensionCalls() {
 		String instanceLocation = getExtension().getEndpoint();
 //		curl -X POST http://localhost:7474/db/data/ext/ShortestPath/node/1311/shortestPath -H "Content-Type: application/json" -d '{"target":"http://localhost:7474/db/data/node/1315","depth":5}'
 		String urlFragment = "ShortestPath/node/" +CyUtils.getNeoID(getNet(), from)+ "/shortestPath";
 		String payload = "{\"target\":\""+instanceLocation+"node/"+CyUtils.getNeoID(getNet(), to)+"\",\"depth\":"+getDepth()+"}";
 		
-		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
+		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 		calls.add(new Neo4jCall(urlFragment, payload));
 		
 		urlFragment = "ShortestPath/node/" +CyUtils.getNeoID(getNet(), to)+ "/shortestPath";
@@ -69,7 +70,7 @@ public class ShortestPathExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public void processCallResponse(Neo4jCall call, Object callRetValue) {
+	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 		List<Map<String,Object>> paths = (List<Map<String,Object>>)callRetValue;
 
 		CyTable edgeTab = getNet().getDefaultEdgeTable();

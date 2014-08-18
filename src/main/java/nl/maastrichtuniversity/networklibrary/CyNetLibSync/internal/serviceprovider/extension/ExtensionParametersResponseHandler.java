@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
-import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jExtension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.NeoUtils;
 
 import org.apache.http.HttpResponse;

@@ -1,5 +1,10 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
 
+/**
+ * This interface describes a parameter for the call of an extension.
+ * @author gsu
+ *
+ */
 public interface ExtensionParameter {
 	public String 	getName();
 	public String 	getDescription();

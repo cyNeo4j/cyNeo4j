@@ -1,7 +1,5 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +13,7 @@ import javax.swing.JFrame;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ContinuiousExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
 
@@ -92,7 +91,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	}
 
 	@Override
-	public void processCallResponse(Neo4jCall call, Object callRetValue) {
+	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 
 		List<Double> values = (List<Double>)callRetValue;
 
@@ -129,8 +128,8 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	}
 
 	@Override
-	public List<Neo4jCall> buildNeo4jCalls() {
-		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
+	public List<ExtensionCall> buildExtensionCalls() {
+		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 
 		if(runIt){
 			

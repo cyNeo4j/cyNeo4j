@@ -1,6 +1,8 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
-public class Neo4jCall {
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
+
+public class Neo4jCall implements ExtensionCall {
 	private String urlFragment;
 	private String payload;
 	
@@ -26,6 +28,4 @@ public class Neo4jCall {
 		return "Neo4jCall [urlFragment=" + urlFragment + ", payload=" + payload
 				+ "]";
 	}
-	
-	
 }

@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 
@@ -26,7 +27,7 @@ public class CypherExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public void processCallResponse(Neo4jCall call, Object callRetValue) {
+	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 //		List<Map<String,Object>> paths = (List<Map<String,Object>>)callRetValue;
 		System.out.println(callRetValue.toString());
 
@@ -43,8 +44,8 @@ public class CypherExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public List<Neo4jCall> buildNeo4jCalls() {
-		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
+	public List<ExtensionCall> buildExtensionCalls() {
+		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 		
 		String urlFragment = extension.getEndpoint();
 		String payload = "{\"query\" : \""+query+"\",\"params\" : {}}";

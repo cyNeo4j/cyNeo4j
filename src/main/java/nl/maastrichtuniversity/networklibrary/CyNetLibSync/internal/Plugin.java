@@ -32,8 +32,7 @@ public class Plugin {
 	private Neo4jInteractor interactor = null;
 	
 	private List<AbstractCyAction> registeredActions = null;
-	
-	
+
 	private CySwingApplication cySwingApplication = null;
 	private CyNetworkFactory cyNetworkFactory = null;
 	private CyTableFactory cyTableFactory = null;
@@ -54,6 +53,10 @@ public class Plugin {
 			VisualMappingManager visualMappingMgr) {
 		super();
 		
+		/*
+		 * This should eventually be replaced by a more modular system. Each of the extensions
+		 * is its own Cytoscape app and this app just serves as a entry point for them?
+		 */
 		Map<String,AbstractCyAction> localExtensions = new HashMap<String,AbstractCyAction>();
 		localExtensions.put("neonetworkanalyzer",new NeoNetworkAnalyzerAction(cyApplicationManager, this));
 		localExtensions.put("forceatlas2",new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, this));
@@ -127,11 +130,8 @@ public class Plugin {
 	}
 
 	public void cleanUp() {
-		
 		//extension actions
 		unregisterActions();
-	
-	
 	}
 	
 	public void registerAction(AbstractCyAction action){

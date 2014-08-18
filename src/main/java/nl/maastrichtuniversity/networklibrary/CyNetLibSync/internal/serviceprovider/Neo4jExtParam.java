@@ -1,4 +1,6 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
+
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionParameter;
 
 public class Neo4jExtParam implements ExtensionParameter{
 

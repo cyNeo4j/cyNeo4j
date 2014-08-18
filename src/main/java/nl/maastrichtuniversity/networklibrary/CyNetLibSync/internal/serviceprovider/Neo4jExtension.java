@@ -1,7 +1,10 @@
-package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic;
+package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionParameter;
 
 public class Neo4jExtension implements Extension {
 

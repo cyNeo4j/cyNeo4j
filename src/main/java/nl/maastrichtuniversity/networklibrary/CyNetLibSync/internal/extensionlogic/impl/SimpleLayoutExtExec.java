@@ -6,6 +6,7 @@ import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
+import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionExecutor;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.serviceprovider.Neo4jCall;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.utils.CyUtils;
@@ -37,7 +38,7 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public void processCallResponse(Neo4jCall call, Object callRetValue) {
+	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 		
 		List<Double> values = (List<Double>)callRetValue;
 		
@@ -76,8 +77,8 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 	}
 
 	@Override
-	public List<Neo4jCall> buildNeo4jCalls() {
-		List<Neo4jCall> calls = new ArrayList<Neo4jCall>();
+	public List<ExtensionCall> buildExtensionCalls() {
+		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 		
 		String urlFragment = extension.getEndpoint();
 		String payload = "{\"saveInGraph\":false}";
