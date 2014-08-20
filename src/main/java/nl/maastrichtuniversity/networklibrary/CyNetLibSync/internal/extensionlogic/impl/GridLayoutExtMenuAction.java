@@ -16,7 +16,7 @@ import org.cytoscape.application.swing.AbstractCyAction;
 public class GridLayoutExtMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Grid Layout";
-	public final static String MENU_LOC = "Apps.CyNetLibSync.Layouts";
+	public final static String MENU_LOC = "Apps.cyNeo4j.Layouts";
 
 	private Plugin plugin;
 

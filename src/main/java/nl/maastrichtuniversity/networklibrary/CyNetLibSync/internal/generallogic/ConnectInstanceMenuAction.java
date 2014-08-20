@@ -15,13 +15,14 @@ import org.cytoscape.application.swing.AbstractCyAction;
 public class ConnectInstanceMenuAction extends AbstractCyAction {
 	
 	public final static String MENU_TITLE = "Connect to Instance";
-	public final static String MENU_LOC = "Apps.CyNetLibSync";
+	public final static String MENU_LOC = "Apps.cyNeo4j";
 	
 	private Plugin plugin;
 	
 	public ConnectInstanceMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
+		setMenuGravity(0.0f);
 		this.plugin = plugin;
 	}
 	

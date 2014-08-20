@@ -11,7 +11,7 @@ import org.cytoscape.application.swing.AbstractCyAction;
 
 public class ShortestPathExtMenuAction extends AbstractCyAction {
 
-	private static final String MENU_LOC = "Apps.CyNetLibSync";
+	private static final String MENU_LOC = "Apps.cyNeo4j";
 	private Plugin plugin;
 
 

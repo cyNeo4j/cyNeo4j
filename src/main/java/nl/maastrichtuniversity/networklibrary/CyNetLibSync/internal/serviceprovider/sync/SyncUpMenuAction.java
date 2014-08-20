@@ -12,7 +12,7 @@ import org.cytoscape.application.swing.AbstractCyAction;
 public class SyncUpMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Sync Up";
-	public final static String MENU_LOC = "Apps.CyNetLibSync";
+	public final static String MENU_LOC = "Apps.cyNeo4j";
 
 	private Plugin plugin;
 
@@ -20,6 +20,7 @@ public class SyncUpMenuAction extends AbstractCyAction {
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
+		setMenuGravity(0.1f);
 		this.plugin = plugin;
 	}
 

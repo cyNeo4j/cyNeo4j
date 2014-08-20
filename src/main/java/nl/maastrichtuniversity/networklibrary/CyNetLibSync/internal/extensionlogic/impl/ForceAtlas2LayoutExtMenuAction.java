@@ -19,7 +19,7 @@ import org.cytoscape.work.TaskMonitor;
 public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Force Atlas2 Layout";
-	public final static String MENU_LOC = "Apps.CyNetLibSync.Layouts";
+	public final static String MENU_LOC = "Apps.cyNeo4j.Layouts";
 
 	private Plugin plugin;
 

@@ -15,7 +15,7 @@ import org.cytoscape.application.swing.AbstractCyAction;
 
 public class NeoNetworkAnalyzerAction extends AbstractCyAction {
 	public final static String MENU_TITLE = "NeoNetworkAnalyzer";
-	public final static String MENU_LOC = "Apps.CyNetLibSync.Statistics";
+	public final static String MENU_LOC = "Apps.cyNeo4j.Statistics";
 
 	private Plugin plugin;
 
