@@ -10,10 +10,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
-	<artifactId>CyNetLibSync</artifactId>
-	<version>0.9</version>
+	<artifactId>cyneo4j</artifactId>
+	<version>1.0</version>
 
-	<name>CyNetLibSync</name>
+	<name>cyNeo4j</name>
 
 	<packaging>bundle</packaging>
 
