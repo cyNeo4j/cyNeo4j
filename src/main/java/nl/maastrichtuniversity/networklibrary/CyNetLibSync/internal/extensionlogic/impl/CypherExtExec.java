@@ -1,7 +1,10 @@
 package nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -28,8 +31,14 @@ public class CypherExtExec implements ExtensionExecutor {
 
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
-		System.out.println(callRetValue.toString());
+		System.out.println(callRetValue.getClass().toString());
 
+		Map<String,Object> retVal = (Map<String,Object>)callRetValue;
+		
+		for(Entry<String,Object> e : retVal.entrySet()){
+			System.out.println(e.getKey() + "\t" + e.getValue().getClass().toString());
+		}
+		
 	}
 
 	@Override
