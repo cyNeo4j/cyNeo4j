@@ -23,8 +23,14 @@ public class CypherResultParser {
 	protected Map<String,ResType> colType = new HashMap<String,ResType>();
 	protected CyNetwork currNet;
 	
-	public CypherResultParser(CyNetwork currNet){
-		this.currNet = currNet;
+	protected long numNodes;
+	protected long numEdges;
+	
+	public CypherResultParser(CyNetwork network){
+		this.currNet = network;
+		
+		numNodes = 0;
+		numEdges = 0;
 	}
 
 	public void parseRetVal(Object callRetValue){
@@ -92,6 +98,7 @@ public class CypherResultParser {
 		if(cyNode == null){
 			cyNode = currNet.addNode();
 			currNet.getRow(cyNode).set("neoid", self);
+			++numNodes;
 		}
 		
 		Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
@@ -149,6 +156,7 @@ public class CypherResultParser {
 		}
 		
 		CyEdge cyEdge = currNet.addEdge(startNode, endNode, true);
+		++numEdges;
 		
 		currNet.getRow(cyEdge).set("neoid", self);
 		currNet.getRow(cyEdge).set(CyEdge.INTERACTION, type);
@@ -170,6 +178,14 @@ public class CypherResultParser {
 		}
 	}
 
+	public long nodesAdded(){
+		return numNodes;
+	}
+	
+	public long edgesAdded() {
+		return numEdges;
+	}
+	
 	protected ResType duckTypeObject(Object obj,String column){
 
 		ResType result = colType.get(column);

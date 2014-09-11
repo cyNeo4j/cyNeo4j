@@ -34,18 +34,20 @@ public class CypherExtExec implements ExtensionExecutor {
 		
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
 		
-		if(currNet == null){
-			currNet = getPlugin().getCyNetworkFactory().createNetwork();
-			currNet.getRow(currNet).set(CyNetwork.NAME,query);
-		}
-		
-		return query != null && !query.isEmpty() && currNet != null;
+		return query != null && !query.isEmpty();
 	}
 
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 		System.out.println(callRetValue.getClass().toString());
 
+		if(currNet == null){
+			currNet = getPlugin().getCyNetworkFactory().createNetwork();
+			currNet.getRow(currNet).set(CyNetwork.NAME,query);
+			getPlugin().getCyNetworkManager().addNetwork(currNet);
+			
+		}
+		
 		CypherResultParser cypherResParser = new CypherResultParser(currNet);
 		cypherResParser.parseRetVal(callRetValue);
 		
