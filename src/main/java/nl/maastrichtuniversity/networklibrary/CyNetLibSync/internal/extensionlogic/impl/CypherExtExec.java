@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import org.cytoscape.model.CyNetwork;
+
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.Extension;
 import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlogic.ExtensionCall;
@@ -19,25 +21,33 @@ public class CypherExtExec implements ExtensionExecutor {
 	private Plugin plugin;
 	private Extension extension;
 	private String query;
+	private CyNetwork currNet;
 	
 	public CypherExtExec() {
 	}
 
 	@Override
 	public boolean collectParameters() {
-		query = JOptionPane.showInputDialog(plugin.getCySwingApplication().getJFrame(),"Cypher Query");
-		return query != null && !query.isEmpty();
+		
+		query = JOptionPane.showInputDialog(plugin.getCySwingApplication().getJFrame(),"Cypher Query","match (n)-[r]->(m) return n,r,m");
+//		query = "match (n)-[r]->(m) return n,r,m";
+		
+		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
+		
+		if(currNet == null){
+			currNet = getPlugin().getCyNetworkFactory().createNetwork();
+			currNet.getRow(currNet).set(CyNetwork.NAME,query);
+		}
+		
+		return query != null && !query.isEmpty() && currNet != null;
 	}
 
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 		System.out.println(callRetValue.getClass().toString());
 
-		Map<String,Object> retVal = (Map<String,Object>)callRetValue;
-		
-		for(Entry<String,Object> e : retVal.entrySet()){
-			System.out.println(e.getKey() + "\t" + e.getValue().getClass().toString());
-		}
+		CypherResultParser cypherResParser = new CypherResultParser(currNet);
+		cypherResParser.parseRetVal(callRetValue);
 		
 	}
 
@@ -61,6 +71,10 @@ public class CypherExtExec implements ExtensionExecutor {
 		calls.add(new Neo4jCall(urlFragment, payload));
 		
 		return calls;
+	}
+	
+	protected Plugin getPlugin() {
+		return plugin;
 	}
 
 }

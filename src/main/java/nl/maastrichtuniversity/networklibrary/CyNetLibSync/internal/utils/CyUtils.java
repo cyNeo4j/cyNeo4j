@@ -91,6 +91,20 @@ public class CyUtils {
 		return net.getDefaultNodeTable().getRow(n.getSUID()).get("neoid", Long.class);
 	}
 	
+	public static CyNode getNodeByNeoId(CyNetwork network, Long neoId){
+		Set<CyNode> res = CyUtils.getNodesWithValue(network, network.getDefaultNodeTable(), "neoid", neoId);
+		if(res.size() > 1){
+			throw new IllegalArgumentException("more than one start node found! " + res.toString());
+		}
+		
+		if(res.size() == 0){
+			return null;
+		}
+		CyNode n = res.iterator().next();
+		
+		return n;
+	}
+	
 	public static Long getNeoID(CyNetwork net, CyEdge e){
 		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Long.class);
 	}
@@ -117,4 +131,6 @@ public class CyUtils {
 		vs.apply(view);
 		view.updateView();
 	}
+	
+	
 }
