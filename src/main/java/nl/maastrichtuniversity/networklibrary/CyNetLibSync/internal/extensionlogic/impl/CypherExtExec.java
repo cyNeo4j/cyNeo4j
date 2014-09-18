@@ -34,6 +34,8 @@ public class CypherExtExec implements ExtensionExecutor {
 		
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
 		
+		query = query.replaceAll("\"", "\\\\\"");
+		
 		return query != null && !query.isEmpty();
 	}
 

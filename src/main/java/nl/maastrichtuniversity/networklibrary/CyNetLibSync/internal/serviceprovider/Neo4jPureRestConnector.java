@@ -156,6 +156,8 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	public Object executeExtensionCall(ExtensionCall call) {
 		Object retVal = null;
 		try {
+			System.out.println("executing call: " + call.getUrlFragment());
+			System.out.println("using payload: " + call.getPayload());
 			String url = call.getUrlFragment();
 			retVal = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
 			

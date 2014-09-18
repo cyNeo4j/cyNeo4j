@@ -92,7 +92,6 @@ public class CypherResultParser {
 		String selfURL = (String)node.get("self");
 		Long self = Long.valueOf(NeoUtils.extractID((String)node.get("self")));
 		
-		// this forces a new node to be created. no merging happening at all
 		CyNode cyNode = CyUtils.getNodeByNeoId(currNet, self);
 		
 		if(cyNode == null){
