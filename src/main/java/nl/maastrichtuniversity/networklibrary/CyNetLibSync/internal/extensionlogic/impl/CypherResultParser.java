@@ -18,17 +18,17 @@ public class CypherResultParser {
 
 	private static final String NODE_KEY = "outgoing_typed_relationships";
 	private static final String EDGE_KEY = "type";
-	
+
 	protected List<String> cols;
 	protected Map<String,ResType> colType = new HashMap<String,ResType>();
 	protected CyNetwork currNet;
-	
+
 	protected long numNodes;
 	protected long numEdges;
-	
+
 	public CypherResultParser(CyNetwork network){
 		this.currNet = network;
-		
+
 		numNodes = 0;
 		numEdges = 0;
 	}
@@ -62,44 +62,44 @@ public class CypherResultParser {
 				String col = cols.get(i);
 				ResType type = duckTypeObject(item, col);
 				System.out.println("col: " + col + " of type: " +type);
-				
+
 				switch(type){
 				case Node:
 					parseNode(item,col);
 					break;
-					
+
 				case Edge:
 					parseEdge(item,col);
 					break;
-				
+
 				default:
 					break;
-				
+
 				}
 			}
 		}
 	}
-	
+
 	public void parseNode(Object nodeObj, String column){
-		
+
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
 		if(defNodeTab.getColumn("neoid") == null){
 			defNodeTab.createColumn("neoid", Long.class, false);
 		}
-		
+
 		Map<String,Object> node = (Map<String,Object>)nodeObj;
-		
+
 		String selfURL = (String)node.get("self");
 		Long self = Long.valueOf(NeoUtils.extractID((String)node.get("self")));
-		
+
 		CyNode cyNode = CyUtils.getNodeByNeoId(currNet, self);
-		
+
 		if(cyNode == null){
 			cyNode = currNet.addNode();
 			currNet.getRow(cyNode).set("neoid", self);
 			++numNodes;
 		}
-		
+
 		Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
 
 		for(Entry<String,Object> obj : nodeProps.entrySet()){
@@ -115,76 +115,81 @@ public class CypherResultParser {
 			defNodeTab.getRow(cyNode.getSUID()).set(obj.getKey(), value);
 		}
 	}
-	
+
 	public void parseEdge(Object edgeObj, String column){
-		
+
 		CyTable defEdgeTab = currNet.getDefaultEdgeTable();
 		if(defEdgeTab.getColumn("neoid") == null){
 			defEdgeTab.createColumn("neoid", Long.class, false);
 		}
-		
+
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
 		if(defNodeTab.getColumn("neoid") == null){
 			defNodeTab.createColumn("neoid", Long.class, false);
 		}
-		
+
 		Map<Object, Object> edge = (Map<Object, Object>)edgeObj;
 
 		String selfURL = (String)edge.get("self");
 		Long self = NeoUtils.extractID(selfURL);
-		
-		String startUrl = (String)edge.get("start");
-		Long start = NeoUtils.extractID(startUrl);
-		
-		String endUrl = (String)edge.get("end");
-		Long end = NeoUtils.extractID(endUrl);
-		
-		String type = (String)edge.get("type");
 
-		CyNode startNode = CyUtils.getNodeByNeoId(currNet, start);
-		CyNode endNode = CyUtils.getNodeByNeoId(currNet, end);
-		
-		if(startNode == null){
-			startNode = currNet.addNode();
-			currNet.getRow(startNode).set("neoid", start);
-		}
-		
-		if(endNode == null){
-			endNode = currNet.addNode();
-			currNet.getRow(endNode).set("neoid", end);
-		}
-		
-		CyEdge cyEdge = currNet.addEdge(startNode, endNode, true);
-		++numEdges;
-		
-		currNet.getRow(cyEdge).set("neoid", self);
-		currNet.getRow(cyEdge).set(CyEdge.INTERACTION, type);
+		CyEdge cyEdge = CyUtils.getEdgeByNeoId(currNet, self);
 
-		Map<String,Object> nodeProps = (Map<String,Object>) edge.get("data");
+		if(cyEdge == null){
 
-		for(Entry<String,Object> obj : nodeProps.entrySet()){
-			if(defEdgeTab.getColumn(obj.getKey()) == null){
-				if(obj.getValue().getClass() == ArrayList.class){
-					defEdgeTab.createListColumn(obj.getKey(), String.class, true);
-				} else {
-					defEdgeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
-				}
+			String startUrl = (String)edge.get("start");
+			Long start = NeoUtils.extractID(startUrl);
+
+			String endUrl = (String)edge.get("end");
+			Long end = NeoUtils.extractID(endUrl);
+
+			String type = (String)edge.get("type");
+
+			CyNode startNode = CyUtils.getNodeByNeoId(currNet, start);
+			CyNode endNode = CyUtils.getNodeByNeoId(currNet, end);
+
+			if(startNode == null){
+				startNode = currNet.addNode();
+				currNet.getRow(startNode).set("neoid", start);
 			}
-			
-			Object value = CyUtils.fixSpecialTypes(obj.getValue(), defEdgeTab.getColumn(obj.getKey()).getType());
-			defEdgeTab.getRow(cyEdge.getSUID()).set(obj.getKey(), value);
 
+			if(endNode == null){
+				endNode = currNet.addNode();
+				currNet.getRow(endNode).set("neoid", end);
+			}
+
+			cyEdge = currNet.addEdge(startNode, endNode, true);
+			++numEdges;
+
+			currNet.getRow(cyEdge).set("neoid", self);
+			currNet.getRow(cyEdge).set(CyEdge.INTERACTION, type);
+
+			Map<String,Object> nodeProps = (Map<String,Object>) edge.get("data");
+
+			for(Entry<String,Object> obj : nodeProps.entrySet()){
+				if(defEdgeTab.getColumn(obj.getKey()) == null){
+					if(obj.getValue().getClass() == ArrayList.class){
+						defEdgeTab.createListColumn(obj.getKey(), String.class, true);
+					} else {
+						defEdgeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
+					}
+				}
+
+				Object value = CyUtils.fixSpecialTypes(obj.getValue(), defEdgeTab.getColumn(obj.getKey()).getType());
+				defEdgeTab.getRow(cyEdge.getSUID()).set(obj.getKey(), value);
+
+			}
 		}
 	}
 
 	public long nodesAdded(){
 		return numNodes;
 	}
-	
+
 	public long edgesAdded() {
 		return numEdges;
 	}
-	
+
 	protected ResType duckTypeObject(Object obj,String column){
 
 		ResType result = colType.get(column);

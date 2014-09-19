@@ -108,6 +108,20 @@ public class CyUtils {
 	public static Long getNeoID(CyNetwork net, CyEdge e){
 		return net.getDefaultEdgeTable().getRow(e.getSUID()).get("neoid", Long.class);
 	}
+	
+	public static CyEdge getEdgeByNeoId(CyNetwork network, Long neoId){
+		Set<CyEdge> res = CyUtils.getEdgeWithValue(network, network.getDefaultEdgeTable(), "neoid", neoId);
+		if(res.size() > 1){
+			throw new IllegalArgumentException("more than one start node found! " + res.toString());
+		}
+		
+		if(res.size() == 0){
+			return null;
+		}
+		CyEdge e = res.iterator().next();
+		
+		return e;
+	}
 
 	public static Object fixSpecialTypes(Object val, Class<?> req){
 		
