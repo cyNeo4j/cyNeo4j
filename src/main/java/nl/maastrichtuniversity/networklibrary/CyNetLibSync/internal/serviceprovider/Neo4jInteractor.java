@@ -26,5 +26,5 @@ public interface Neo4jInteractor {
 	public void				setLocalSupportedExtension(Map<String,AbstractCyAction> localExtensions);
 	public List<Extension> 	getExtensions();
 	public Extension		supportsExtension(String name);
-	public Object			executeExtensionCall(ExtensionCall call);
+	public Object			executeExtensionCall(ExtensionCall call, boolean async);
 }

@@ -5,6 +5,7 @@ import nl.maastrichtuniversity.networklibrary.CyNetLibSync.internal.extensionlog
 public class Neo4jCall implements ExtensionCall {
 	private String urlFragment;
 	private String payload;
+	private boolean async;
 	
 	public String getUrlFragment() {
 		return urlFragment;
@@ -18,14 +19,35 @@ public class Neo4jCall implements ExtensionCall {
 	public void setPayload(String payload) {
 		this.payload = payload;
 	}
+	@Deprecated
 	public Neo4jCall(String urlFragment, String payload) {
 		super();
 		this.urlFragment = urlFragment;
 		this.payload = payload;
+		this.async = false;
 	}
+	
+	public Neo4jCall(String urlFragment, String payload, boolean async) {
+		super();
+		this.urlFragment = urlFragment;
+		this.payload = payload;
+		this.async = async;
+	}
+	
 	@Override
 	public String toString() {
 		return "Neo4jCall [urlFragment=" + urlFragment + ", payload=" + payload
 				+ "]";
 	}
+	@Override
+	public void setAsync(boolean async) {
+		this.async = async;
+		
+	}
+	@Override
+	public boolean isAsync() {
+		return async;
+	}
+
+	
 }

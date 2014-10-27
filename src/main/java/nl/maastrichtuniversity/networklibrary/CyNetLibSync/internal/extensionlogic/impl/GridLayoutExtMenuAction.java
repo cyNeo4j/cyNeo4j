@@ -44,7 +44,7 @@ public class GridLayoutExtMenuAction extends AbstractCyAction {
 		List<ExtensionCall> calls = exec.buildExtensionCalls();
 		
 		for(ExtensionCall call : calls){
-			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
+			Object callRetValue = plugin.getInteractor().executeExtensionCall(call,false);
 			exec.processCallResponse(call,callRetValue);
 		}
 	}

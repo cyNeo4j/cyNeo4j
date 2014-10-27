@@ -54,15 +54,12 @@ public class CypherResultParser {
 		for(int r = 0; r < rows.size(); ++r){
 			List<Object> row = rows.get(r);
 
-			System.out.println("row: " + r);
-
 			for(int i = 0; i < row.size(); ++i){
 
 				Object item = row.get(i);
 				String col = cols.get(i);
 				ResType type = duckTypeObject(item, col);
-				System.out.println("col: " + col + " of type: " +type);
-
+				
 				switch(type){
 				case Node:
 					parseNode(item,col);

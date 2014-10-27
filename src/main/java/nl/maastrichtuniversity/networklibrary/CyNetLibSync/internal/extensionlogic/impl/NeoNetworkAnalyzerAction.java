@@ -44,12 +44,12 @@ public class NeoNetworkAnalyzerAction extends AbstractCyAction {
 	
 		List<ExtensionCall> calls = exec.buildExtensionCalls();
 		long time = System.currentTimeMillis();
+		System.out.println("start time cyNeo4j: " + time);
 		for(ExtensionCall call : calls){
-			Object callRetValue = plugin.getInteractor().executeExtensionCall(call);
+			Object callRetValue = plugin.getInteractor().executeExtensionCall(call,call.isAsync());
 			exec.processCallResponse(call,callRetValue);
 		}
-		
-		System.out.println("start time cyNeo4j: " + time);
+	
 		time = System.currentTimeMillis() - time;
 		System.out.println("runtime time cyNeo4j: " + time);
 	}

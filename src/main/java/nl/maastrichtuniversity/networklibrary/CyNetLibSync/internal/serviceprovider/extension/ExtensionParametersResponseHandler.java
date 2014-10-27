@@ -32,7 +32,7 @@ public class ExtensionParametersResponseHandler implements
 
 		List<Extension> res = new ArrayList<Extension>();
 		
-		System.out.println("responseCode: " + responseCode);
+//		System.out.println("responseCode: " + responseCode);
 		if(responseCode >= 200 && responseCode < 300){
 			ObjectMapper mapper = new ObjectMapper();
 			Map<String,Object> targets = mapper.readValue(response.getEntity().getContent(),Map.class);

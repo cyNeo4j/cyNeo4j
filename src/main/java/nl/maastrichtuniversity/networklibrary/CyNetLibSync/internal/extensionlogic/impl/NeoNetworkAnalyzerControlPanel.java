@@ -18,6 +18,7 @@ import javax.swing.LayoutStyle;
 public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionListener {
 
 	private JCheckBox saveInGraph;
+	private JCheckBox doAsync;
 	
 	private JCheckBox betweennes;
 	private JCheckBox stress;
@@ -42,6 +43,7 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	private JCheckBox closeness;
 
 	private JCheckBox clustCoeff;
+	
 
 	public NeoNetworkAnalyzerControlPanel(JDialog dialog){
 		this.dialog = dialog;
@@ -106,6 +108,7 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 
 	private JPanel buildSavePanel() {
 		saveInGraph = new JCheckBox("Save in graph");
+		doAsync = new JCheckBox("Execute asynchronous");
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
@@ -113,10 +116,12 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		layout.setHorizontalGroup(
 				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addComponent(saveInGraph,GroupLayout.Alignment.LEADING)
+					.addComponent(doAsync)
 				);
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 					.addComponent(saveInGraph)
+					.addComponent(doAsync)
 					
 				);
 		
@@ -278,6 +283,10 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	
 	public boolean isSaveInGraph(){
 		return saveInGraph.isSelected();
+	}
+	
+	public boolean isDoAsync(){
+		return doAsync.isSelected();
 	}
 	
 	public boolean isBetweenness(){

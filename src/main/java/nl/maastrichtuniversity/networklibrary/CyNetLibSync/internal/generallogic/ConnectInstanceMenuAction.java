@@ -29,8 +29,8 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		System.out.println("sanity: am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
-		System.out.println("alive!");
+//		System.out.println("sanity: am i connected to "+plugin.getInteractor().getInstanceLocation()+"? " + plugin.getInteractor().isConnected());
+//		System.out.println("alive!");
 		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

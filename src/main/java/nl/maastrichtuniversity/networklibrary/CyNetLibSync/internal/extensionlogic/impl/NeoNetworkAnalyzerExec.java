@@ -31,9 +31,10 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
-	
+
 	private boolean run;
 	private boolean saveInGraph;
+	private boolean doAsync;
 	private boolean undirected;
 	
 	// to calculate
@@ -70,8 +71,9 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 
 		run = p.runIt();
 		saveInGraph = p.isSaveInGraph();
+		doAsync = p.isDoAsync();
 		undirected = p.isUndirected();
-		
+
 		eccentricity = p.isEccentricity();
 		stress = p.isStress();
 		betweenness = p.isBetweenness();
@@ -89,36 +91,44 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 
-		List<Object> allStats = (List<Object>)callRetValue;
+		if(currNet != null){
 
-		ObjectMapper mapper = new ObjectMapper();
-		CyTable defNodeTab = currNet.getDefaultNodeTable();
+			List<Object> allStats = (List<Object>)callRetValue;
 
-		try {
-			for(Object obj : allStats){
-				Map<String, Object> stats = mapper.readValue((String)obj, Map.class);
-				Long neoid = ((Integer)stats.get("nodeid")).longValue();
+			ObjectMapper mapper = new ObjectMapper();
+			CyTable defNodeTab = currNet.getDefaultNodeTable();
 
-				Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
-				CyNode n = nodeSet.iterator().next();
+			try {
+				for(Object obj : allStats){
+					Map<String, Object> stats = mapper.readValue((String)obj, Map.class);
+					Long neoid = ((Integer)stats.get("nodeid")).longValue();
 
-				for(Entry<String,Object> e : stats.entrySet()){
+					Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 
-					if(e.getKey().equals("nodeid")){
-						continue;
+					if(nodeSet != null && nodeSet.size() > 0){
+						CyNode n = nodeSet.iterator().next();
+
+						if(n != null){
+
+							for(Entry<String,Object> e : stats.entrySet()){
+
+								if(e.getKey().equals("nodeid")){
+									continue;
+								}
+
+								addValue(n,defNodeTab,e.getKey(),e.getValue());
+
+							}}
 					}
-
-					addValue(n,defNodeTab,e.getKey(),e.getValue());
-
 				}
-			}
 
-		} catch (JsonParseException e1) {
-			e1.printStackTrace();
-		} catch (JsonMappingException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			} catch (JsonParseException e1) {
+				e1.printStackTrace();
+			} catch (JsonMappingException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 
@@ -146,7 +156,7 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 
 		if(run){
 			String urlFragment = extension.getEndpoint();
-		
+
 			Map<String,Object> params = new HashMap<String,Object>();
 			params.put("saveInGraph",saveInGraph);
 			params.put("eccentricity",eccentricity);
@@ -159,12 +169,12 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 			params.put("multiEdgePairs",multiEdgePairs);
 			params.put("closeness",closeness);
 			params.put("clustCoeff",clustCoeff);
-			
+
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
 			try {
 				payload = mapper.writeValueAsString(params);
-				calls.add(new Neo4jCall(urlFragment,payload));
+				calls.add(new Neo4jCall(urlFragment,payload,doAsync));
 			} catch (JsonGenerationException e) {
 				System.out.println("payload generation failed");
 				e.printStackTrace();
@@ -175,7 +185,7 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 				System.out.println("payload generation failed");
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		return calls;
