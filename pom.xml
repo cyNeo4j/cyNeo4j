@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<properties>
-		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.CyNetLibSync</bundle.symbolicName>
-		<bundle.namespace>nl.maastrichtuniversity.networklibrary.CyNetLibSync</bundle.namespace>
+		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.symbolicName>
+		<bundle.namespace>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.namespace>
 		<cytoscape.version>3.1.1</cytoscape.version>
 	</properties>
 
@@ -18,12 +18,10 @@
 	<packaging>bundle</packaging>
 
 	<build>
-
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 			</resource>
-
 		</resources>
 		<plugins>
 			<plugin>
@@ -222,66 +220,12 @@
 			<version>1.5.2</version>
 		</dependency>
 
-
-
-
-		<!-- Logging -->
 		<dependency>
 			<groupId>org.ops4j.pax.logging</groupId>
 			<artifactId>pax-logging-api</artifactId>
 			<version>1.5.2</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- <dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>server-api</artifactId> <version>2.0.0</version> </dependency> 
-			<dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> 
-			<version>1.0.13</version> </dependency> <dependency> <groupId>ch.qos.logback</groupId> 
-			<artifactId>logback-core</artifactId> <version>1.0.13</version> </dependency> -->
-		<!-- monster deps -->
-
-		<!-- <dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>neo4j-udc</artifactId> <version>2.0.0</version> </dependency> 
-			<dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-kernel</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>neo4j-lucene-index</artifactId> <version>2.0.0</version> </dependency> 
-			<dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-graph-algo</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>neo4j-graph-matching</artifactId> <version>2.0.0</version> </dependency> 
-			<dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-cypher</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>neo4j-cypher-commons</artifactId> <version>2.0.0</version> </dependency> 
-			<dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-cypher-compiler-1.9</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.neo4j</groupId> 
-			<artifactId>neo4j-cypher-compiler-2.0</artifactId> <version>2.0.0</version> 
-			</dependency> <dependency> <groupId>org.neo4j</groupId> <artifactId>neo4j-jmx</artifactId> 
-			<version>2.0.0</version> </dependency> <dependency> <groupId>org.parboiled</groupId> 
-			<artifactId>parboiled-scala_2.10</artifactId> <version>1.1.6</version> </dependency> 
-			<dependency> <groupId>org.parboiled</groupId> <artifactId>parboiled-core</artifactId> 
-			<version>1.1.6</version> </dependency> <dependency> <groupId>com.googlecode.concurrentlinkedhashmap</groupId> 
-			<artifactId>concurrentlinkedhashmap-lru</artifactId> <version>1.3.1</version> 
-			</dependency> <dependency> <groupId>org.scala-lang</groupId> <artifactId>scala-library</artifactId> 
-			<version>2.10.3</version> </dependency> <dependency> <groupId>org.apache.geronimo.specs</groupId> 
-			<artifactId>geronimo-jta_1.1_spec</artifactId> <version>1.1.1</version> </dependency> 
-			<dependency> <groupId>org.apache.lucene</groupId> <artifactId>lucene-core</artifactId> 
-			<version>3.6.2</version> </dependency> <dependency> <groupId>ch.qos.logback</groupId> 
-			<artifactId>logback-classic</artifactId> <version>0.9.13</version> </dependency> 
-			<dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-core</artifactId> 
-			<version>0.9.19</version> </dependency> <dependency> <groupId>org.jvnet.sorcerer</groupId> 
-			<artifactId>sorcerer-javac</artifactId> <version>0.8</version> </dependency> 
-			<dependency> <groupId>org.apache.geronimo.specs</groupId> <artifactId>geronimo-jms_1.1_spec</artifactId> 
-			<version>1.1.1</version> </dependency> <dependency> <groupId>javax.mail</groupId> 
-			<artifactId>mail</artifactId> <version>1.4</version> </dependency> <dependency> 
-			<groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
-			<version>3.0.1</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>org.codehaus.janino</groupId> <artifactId>janino</artifactId> <version>2.5.16</version> 
-			</dependency> <dependency> <groupId>org.apache.ant</groupId> <artifactId>ant-nodeps</artifactId> 
-			<version>1.7.0</version> </dependency> <dependency> <groupId>org.apache.ant</groupId> 
-			<artifactId>ant</artifactId> <version>1.8.2</version> </dependency> -->
-
-
 
 	</dependencies>
 
