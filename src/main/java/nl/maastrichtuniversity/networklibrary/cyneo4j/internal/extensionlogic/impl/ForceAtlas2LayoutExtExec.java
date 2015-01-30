@@ -153,7 +153,7 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 					callParams.put("pickup",numRuns>0);
 				
 					payload = mapper.writeValueAsString(callParams);
-					calls.add(new Neo4jCall(urlFragment,payload));
+					calls.add(new Neo4jCall(urlFragment,payload,false));
 					++numRuns;
 				}
 			} catch (JsonGenerationException e) {

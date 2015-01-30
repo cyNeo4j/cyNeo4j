@@ -69,7 +69,7 @@ public class CypherExtExec implements ExtensionExecutor {
 		String urlFragment = extension.getEndpoint();
 		String payload = "{\"query\" : \""+query+"\",\"params\" : {}}";
 		
-		calls.add(new Neo4jCall(urlFragment, payload));
+		calls.add(new Neo4jCall(urlFragment, payload,false));
 		
 		return calls;
 	}
