@@ -9,7 +9,7 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.Ex
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
 
-public interface Neo4jInteractor {
+public interface Neo4jServer {
 
 	// general house keeping
 	public boolean 	connect(String instanceLocation);

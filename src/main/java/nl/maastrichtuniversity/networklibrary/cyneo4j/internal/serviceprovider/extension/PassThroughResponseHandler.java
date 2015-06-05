@@ -27,6 +27,7 @@ public class PassThroughResponseHandler implements ResponseHandler<Object> {
 
 			Map<String,String> error = mapper.readValue(response.getEntity().getContent(),Map.class);
 			System.out.println(error);
+			retVal = null;
 		}
 
 		return retVal;

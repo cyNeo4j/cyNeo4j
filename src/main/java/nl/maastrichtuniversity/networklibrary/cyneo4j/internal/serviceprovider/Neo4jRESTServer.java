@@ -30,7 +30,7 @@ import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.work.TaskIterator;
 
-public class Neo4jPureRestConnector implements Neo4jInteractor {
+public class Neo4jRESTServer implements Neo4jServer {
 
 	private static final String DATA_URL = "/db/data/";
 	private static final String CYPHER_URL = DATA_URL + "cypher";
@@ -44,13 +44,18 @@ public class Neo4jPureRestConnector implements Neo4jInteractor {
 	protected ExecutorService threadpool;
 	protected Async async;
 
-	public Neo4jPureRestConnector(Plugin plugin){
+	public Neo4jRESTServer(Plugin plugin){
 		this.plugin = plugin;
 	
 	}
 
 	@Override
 	public boolean connect(String instanceLocation) {
+		
+		if(isConnected()){
+			disconnect();
+		}
+		
 		if(validateConnection(instanceLocation)){
 			setInstanceLocation(instanceLocation);
 			registerExtension();

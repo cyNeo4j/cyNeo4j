@@ -10,8 +10,8 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.im
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.ForceAtlas2LayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.GridLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jInteractor;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jPureRestConnector;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jServer;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jRESTServer;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -29,7 +29,7 @@ public class Plugin {
 	
 	private CyApplicationManager cyApplicationManager = null;
 	
-	private Neo4jInteractor interactor = null;
+	private Neo4jServer interactor = null;
 	
 	private List<AbstractCyAction> registeredActions = null;
 
@@ -57,13 +57,19 @@ public class Plugin {
 		 * This should eventually be replaced by a more modular system. Each of the extensions
 		 * is its own Cytoscape app and this app just serves as a entry point for them?
 		 */
+		/*
+		 * DEV ENTRY POINT OF NOTE 3:
+		 * Link a name of a plugin on the server side with an action in the app!
+		 * The linked action will be displayed in the cyNeo4j menu item if the plugin is available on the server
+		 */
 		Map<String,AbstractCyAction> localExtensions = new HashMap<String,AbstractCyAction>();
 		localExtensions.put("neonetworkanalyzer",new NeoNetworkAnalyzerAction(cyApplicationManager, this));
 		localExtensions.put("forceatlas2",new ForceAtlas2LayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("circlelayout",new CircularLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("gridlayout",new GridLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
-			
+		
+		
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
 		this.cyNetworkFactory = cyNetworkFactory;
@@ -75,7 +81,7 @@ public class Plugin {
 		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
 		this.visualMappingMgr = visualMappingMgr;
 		
-		interactor = new Neo4jPureRestConnector(this);
+		interactor = new Neo4jRESTServer(this);
 		interactor.setLocalSupportedExtension(localExtensions);
 		
 		registeredActions = new ArrayList<AbstractCyAction>();
@@ -109,7 +115,7 @@ public class Plugin {
 		return cySwingApplication;
 	}
 	
-	public Neo4jInteractor getInteractor() {
+	public Neo4jServer getInteractor() {
 		return interactor;
 	}
 
