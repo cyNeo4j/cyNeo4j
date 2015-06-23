@@ -51,7 +51,7 @@ public class SyncUpTask extends AbstractTask {
 				progress = 0.1;
 				taskMonitor.setProgress(progress);
 
-				System.out.println(wipeQuery);
+//				System.out.println(wipeQuery);
 
 				wiped = Request.Post(getCypherURL()).bodyString(wipeQuery, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
 			}
@@ -69,7 +69,6 @@ public class SyncUpTask extends AbstractTask {
 
 					String params = CyUtils.convertCyAttributesToJson(node, defNodeTab);
 					String cypher = "{ \"query\" : \"CREATE (n { props }) return id(n)\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
-					System.out.println(cypher);
 
 					Long neoid = Request.Post(getCypherURL()).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
 					defNodeTab.getRow(node.getSUID()).set("neoid", neoid);
@@ -82,18 +81,18 @@ public class SyncUpTask extends AbstractTask {
 				if(defEdgeTab.getColumn("neoid") == null){
 					defEdgeTab.createColumn("neoid", Long.class, false);
 				}
-
+				
 				for(CyEdge edge : currNet.getEdgeList()){
 					taskMonitor.setStatusMessage("uploading edges");
-					String from = defNodeTab.getRow(edge.getSource().getSUID()).get(CyNetwork.NAME, String.class);
-					String to = defNodeTab.getRow(edge.getTarget().getSUID()).get(CyNetwork.NAME, String.class);
+					String from = edge.getSource().getSUID().toString();
+					String to = edge.getTarget().getSUID().toString();
 
 					String rparams = CyUtils.convertCyAttributesToJson(edge, defEdgeTab);
 
 					String rtype = defEdgeTab.getRow(edge.getSUID()).get(CyEdge.INTERACTION, String.class);
 
-					String cypher = "{\"query\" : \"MATCH (from { name: {fname}}),(to { name: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : \""+from+"\", \"tname\" : \""+to+"\", \"rprops\" : "+ rparams +" }}";
-				
+					String cypher = "{\"query\" : \"MATCH (from { SUID: {fname}}),(to { SUID: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : "+from+", \"tname\" : "+to+", \"rprops\" : "+ rparams +" }}";
+					
 					Long neoid = Request.Post(getCypherURL()).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
 					defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
 
