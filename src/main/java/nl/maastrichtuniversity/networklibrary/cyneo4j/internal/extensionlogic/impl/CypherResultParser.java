@@ -42,7 +42,6 @@ public class CypherResultParser {
 	}
 
 	protected void readColumns(List<String> columns){
-		System.out.println(columns);
 		cols = columns;
 		for(String col : cols){
 			colType.put(col,ResType.Unknown);

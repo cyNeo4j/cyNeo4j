@@ -39,6 +39,8 @@ public class SyncDownTask extends AbstractTask{
 	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
 	private VisualMappingManager visualMappingMgr;
 
+	int chunkSize = 500;
+	
 	public SyncDownTask(boolean mergeInCurrent, String cypherURL,
 			String instanceLocation, CyNetworkFactory cyNetworkFactory,
 			CyNetworkManager cyNetworkMgr,
@@ -71,15 +73,14 @@ public class SyncDownTask extends AbstractTask{
 				IdListHandler idListHandler = new IdListHandler();
 				List<Long> nodeIds = Request.Post(cypherURL).bodyString(nodeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
 				List<Long> edgeIds = Request.Post(cypherURL).bodyString(edgeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
-
-				taskMonitor.setProgress(0.1);
 				
 				int numQueries = nodeIds.size() + edgeIds.size();
-				int chunkSize = 50;
 				
-				double progress_increment = 0.7 / chunkSize;
+				double progress_increment = (0.7 / (double)numQueries) * (double)chunkSize;				
 				double progress = 0.1;
 
+				taskMonitor.setProgress(progress);
+				
 				if(nodeIds.size() > 0){
 
 					taskMonitor.setTitle("Synchronizing the remote network DOWN");
@@ -112,6 +113,8 @@ public class SyncDownTask extends AbstractTask{
 						progress+=progress_increment;
 						taskMonitor.setProgress(progress);
 					}
+					
+					cyNetworkMgr.addNetwork(network);
 
 					cypherParser = new CypherResultParser(network);
 					taskMonitor.setStatusMessage("Downloading edges");
@@ -135,9 +138,7 @@ public class SyncDownTask extends AbstractTask{
 						progress+=progress_increment;
 						taskMonitor.setProgress(progress);
 					}
-
-					cyNetworkMgr.addNetwork(network);
-					
+		
 					taskMonitor.setStatusMessage("Creating View");
 					taskMonitor.setProgress(0.8);
 					
@@ -149,7 +150,6 @@ public class SyncDownTask extends AbstractTask{
 						view = cyNetworkViewFactory.createNetworkView(network);
 						cyNetworkViewMgr.addNetworkView(view);
 					}
-
 
 					taskMonitor.setStatusMessage("Applying Layout");
 					taskMonitor.setProgress(0.9);

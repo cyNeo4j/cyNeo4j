@@ -27,11 +27,9 @@ public class IdListHandler implements ResponseHandler<List<Long>> {
 			Map<String,Object> wrapper = mapper.readValue(response.getEntity().getContent(), Map.class);
 			
 			List<List<Integer>> queryRes = (List<List<Integer>>)wrapper.get("data");
-//			System.out.println("queryRes: " + queryRes);
 			ids = new ArrayList<Long>();
 			
 			for(List<Integer> id : queryRes){
-//				System.out.println("id: " + id + " " + id.getClass() + " " + id.get(0).getClass());
 				ids.add(id.get(0).longValue());
 			}
 		} else {
