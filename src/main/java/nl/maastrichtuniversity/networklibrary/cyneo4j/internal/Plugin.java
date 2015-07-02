@@ -57,8 +57,9 @@ public class Plugin {
 		 * This should eventually be replaced by a more modular system. Each of the extensions
 		 * is its own Cytoscape app and this app just serves as a entry point for them?
 		 */
+		
 		/*
-		 * DEV ENTRY POINT OF NOTE 3:
+		 * DEV ENTRY POINT 
 		 * Link a name of a plugin on the server side with an action in the app!
 		 * The linked action will be displayed in the cyNeo4j menu item if the plugin is available on the server
 		 */

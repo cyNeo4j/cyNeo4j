@@ -38,13 +38,7 @@ public class CyActivator extends AbstractCyActivator {
 		VisualMappingManager visualMappingMgr = getService(context,VisualMappingManager.class);
 		
 		plugin = new Plugin(cyApplicationManager,cySwingApplication,cyNetworkFactory,tableFactory,cyNetMgr,cyNetViewMgr,diagTaskManager,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr);
-		
-		/*
-		 * DEV ENTRY POINT OF NOTE 1:
-		 * Sets up the core actions of cyNeo4j: Connect and Sync Up/Down.
-		 * All other actions are treated as a neo4j server plugin and are only made available if the server supports it!
-		 */
-		
+				
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager,plugin);	
 		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
