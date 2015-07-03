@@ -22,6 +22,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
@@ -36,7 +37,7 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	private boolean saveInGraph;
 	private boolean doAsync;
 	private boolean undirected;
-	
+
 	// to calculate
 	private boolean eccentricity;
 	private boolean betweenness;
@@ -118,7 +119,8 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 
 								addValue(n,defNodeTab,e.getKey(),e.getValue());
 
-							}}
+							}
+						}
 					}
 				}
 
@@ -136,8 +138,14 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 		if(defNodeTab.getColumn(key) == null){
 			defNodeTab.createColumn(key, value.getClass(), false);
 		}
+		Object val2 = value;
+		
+		CyColumn col = defNodeTab.getColumn(key);
+		if(!value.getClass().equals(col.getType())){
+			val2 = col.getType().cast(value);
+		}
 
-		defNodeTab.getRow(n.getSUID()).set(key, value);
+		defNodeTab.getRow(n.getSUID()).set(key, val2);
 	}
 
 	@Override
