@@ -21,12 +21,15 @@ public class SyncUpTask extends AbstractTask {
 
 	private boolean wipeRemote;
 	private String cypherURL;
+	private String auth;
 	private CyNetwork currNet;
 
-	public SyncUpTask(boolean wipeRemote,String cypherURL,CyNetwork currNet){
+	public SyncUpTask(boolean wipeRemote,String cypherURL,String auth,CyNetwork currNet){
 		this.wipeRemote = wipeRemote;
 		this.cypherURL = cypherURL;
+		this.auth = auth;
 		this.currNet = currNet;
+		
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class SyncUpTask extends AbstractTask {
 
 //				System.out.println(wipeQuery);
 
-				wiped = Request.Post(getCypherURL()).bodyString(wipeQuery, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
+				wiped = Request.Post(getCypherURL()).addHeader("Authorization:", auth).bodyString(wipeQuery, ContentType.APPLICATION_JSON).execute().handleResponse(new ReturnCodeResponseHandler());
 			}
 
 			if(wiped == wipeRemote){
@@ -68,9 +71,11 @@ public class SyncUpTask extends AbstractTask {
 				for(CyNode node : currNet.getNodeList()){
 
 					String params = CyUtils.convertCyAttributesToJson(node, defNodeTab);
+					System.out.println("params: " + params);
 					String cypher = "{ \"query\" : \"CREATE (n { props }) return id(n)\", \"params\" : {   \"props\" : [ "+ params +" ] } }";
 
-					Long neoid = Request.Post(getCypherURL()).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
+//					System.out.println("\n" + cypher);
+					Long neoid = Request.Post(getCypherURL()).addHeader("Authorization:", auth).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
 					defNodeTab.getRow(node.getSUID()).set("neoid", neoid);
 
 					progress = progress + stepSize;
@@ -93,7 +98,9 @@ public class SyncUpTask extends AbstractTask {
 
 					String cypher = "{\"query\" : \"MATCH (from { SUID: {fname}}),(to { SUID: {tname}}) CREATE (from)-[r:"+rtype+" { rprops } ]->(to) return id(r)\", \"params\" : { \"fname\" : "+from+", \"tname\" : "+to+", \"rprops\" : "+ rparams +" }}";
 					
-					Long neoid = Request.Post(getCypherURL()).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
+					System.out.println("query = " + cypher);
+					
+					Long neoid = Request.Post(getCypherURL()).addHeader("Authorization:", auth).bodyString(cypher, ContentType.APPLICATION_JSON).execute().handleResponse(new CreateIdReturnResponseHandler());
 					defEdgeTab.getRow(edge.getSUID()).set("neoid", neoid);
 
 					progress = progress + stepSize;

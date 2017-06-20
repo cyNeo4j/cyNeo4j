@@ -34,7 +34,8 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-		ConnectPanel p = new ConnectPanel(dialog,plugin.getInteractor());
+		
+		ConnectPanel p = new ConnectPanel(dialog,plugin.getInteractor(),plugin.getCySwingApplication());
 		p.setOpaque(true);
 		locate(dialog);
 		dialog.setModal(true);

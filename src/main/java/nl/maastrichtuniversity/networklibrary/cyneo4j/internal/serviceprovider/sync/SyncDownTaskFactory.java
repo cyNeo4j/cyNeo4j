@@ -16,6 +16,7 @@ public class SyncDownTaskFactory extends AbstractTaskFactory {
 	private CyNetworkFactory cyNetworkFactory;
 	private String instanceLocation;
 	private String cypherURL;
+	private String auth;
 	private CyNetworkViewManager cyNetworkViewMgr;
 	private CyNetworkViewFactory cyNetworkViewFactory;
 	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
@@ -24,6 +25,7 @@ public class SyncDownTaskFactory extends AbstractTaskFactory {
 	public SyncDownTaskFactory(CyNetworkManager cyNetworkMgr,
 			boolean mergeInCurrent, CyNetworkFactory cyNetworkFactory,
 			String instanceLocation, String cypherURL,
+			String auth,
 			CyNetworkViewManager cyNetworkViewMgr,
 			CyNetworkViewFactory cyNetworkViewFactory,
 			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
@@ -34,6 +36,7 @@ public class SyncDownTaskFactory extends AbstractTaskFactory {
 		this.cyNetworkFactory = cyNetworkFactory;
 		this.instanceLocation = instanceLocation;
 		this.cypherURL = cypherURL;
+		this.auth = auth;
 		this.cyNetworkViewMgr = cyNetworkViewMgr;
 		this.cyNetworkViewFactory = cyNetworkViewFactory;
 		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
@@ -42,7 +45,7 @@ public class SyncDownTaskFactory extends AbstractTaskFactory {
 
 	@Override
 	public TaskIterator createTaskIterator() {
-		return new TaskIterator(new SyncDownTask(mergeInCurrent, cypherURL, instanceLocation, cyNetworkFactory, cyNetworkMgr,cyNetworkViewMgr,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr));
+		return new TaskIterator(new SyncDownTask(mergeInCurrent, cypherURL, instanceLocation, auth, cyNetworkFactory, cyNetworkMgr,cyNetworkViewMgr,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr));
 	}
 
 }

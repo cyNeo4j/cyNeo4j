@@ -32,6 +32,7 @@ public class SyncDownTask extends AbstractTask{
 	private boolean mergeInCurrent;
 	private String cypherURL;
 	private String instanceLocation;
+	private String auth;
 	private CyNetworkFactory cyNetworkFactory;
 	private CyNetworkManager cyNetworkMgr;
 	private CyNetworkViewManager cyNetworkViewMgr;
@@ -42,7 +43,9 @@ public class SyncDownTask extends AbstractTask{
 	int chunkSize = 500;
 	
 	public SyncDownTask(boolean mergeInCurrent, String cypherURL,
-			String instanceLocation, CyNetworkFactory cyNetworkFactory,
+			String instanceLocation, 
+			String auth,
+			CyNetworkFactory cyNetworkFactory,
 			CyNetworkManager cyNetworkMgr,
 			CyNetworkViewManager cyNetworkViewMgr,
 			CyNetworkViewFactory cyNetworkViewFactory,
@@ -52,6 +55,7 @@ public class SyncDownTask extends AbstractTask{
 		this.mergeInCurrent = mergeInCurrent;
 		this.cypherURL = cypherURL;
 		this.instanceLocation = instanceLocation;
+		this.auth = auth;
 		this.cyNetworkFactory = cyNetworkFactory;
 		this.cyNetworkMgr = cyNetworkMgr;
 		this.cyNetworkViewMgr = cyNetworkViewMgr;
@@ -62,6 +66,9 @@ public class SyncDownTask extends AbstractTask{
 
 	@Override
 	public void run(TaskMonitor taskMonitor) throws Exception {
+//		System.out.println("instance: " + instanceLocation);
+//		System.out.println("cypher: " + cypherURL);
+//		System.out.println("auth: " + auth);
 		if(mergeInCurrent){
 
 		} else {
@@ -71,8 +78,8 @@ public class SyncDownTask extends AbstractTask{
 				String edgeIdQuery = "{ \"query\" : \"MATCH ()-[r]->() RETURN id(r)\",\"params\" : {}}";
 
 				IdListHandler idListHandler = new IdListHandler();
-				List<Long> nodeIds = Request.Post(cypherURL).bodyString(nodeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
-				List<Long> edgeIds = Request.Post(cypherURL).bodyString(edgeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
+				List<Long> nodeIds = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(nodeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
+				List<Long> edgeIds = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(edgeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
 				
 				int numQueries = nodeIds.size() + edgeIds.size();
 				
@@ -102,7 +109,7 @@ public class SyncDownTask extends AbstractTask{
 						String array = toJSONArray(nodeIds.subList(start, end));
 						String query = "{\"query\" : \"MATCH (n) where id(n) in {toget} RETURN n\", \"params\" : { \"toget\" : " + array + "} }";
 						
-						Object responseObj = Request.Post(cypherURL).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
+						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
 						
 						if(responseObj == null){
 							throw new IllegalArgumentException("query failed! " + query);
@@ -128,7 +135,7 @@ public class SyncDownTask extends AbstractTask{
 						String array = toJSONArray(edgeIds.subList(start, end));
 						String query = "{\"query\" : \"MATCH ()-[r]->() where id(r) in {toget} RETURN r\", \"params\" : { \"toget\" : " + array + "} }";
 						
-						Object responseObj = Request.Post(cypherURL).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
+						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
 						cypherParser.parseRetVal(responseObj);
 						
 						if(responseObj == null){

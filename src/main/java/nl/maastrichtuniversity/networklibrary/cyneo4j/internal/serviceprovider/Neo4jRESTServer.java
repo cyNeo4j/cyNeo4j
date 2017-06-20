@@ -7,7 +7,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Async;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.cytoscape.application.swing.AbstractCyAction;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.work.TaskIterator;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.Extension;
@@ -22,14 +30,6 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.g
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync.SyncDownTaskFactory;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync.SyncUpTaskFactory;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.fluent.Async;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.cytoscape.application.swing.AbstractCyAction;
-import org.cytoscape.model.CyNetwork;
-import org.cytoscape.work.TaskIterator;
-
 public class Neo4jRESTServer implements Neo4jServer {
 
 	private static final String DATA_URL = "/db/data/";
@@ -37,30 +37,34 @@ public class Neo4jRESTServer implements Neo4jServer {
 	private static final String EXT_URL = DATA_URL + "ext/";
 
 	protected String instanceLocation = null;
+	//	protected String user = null;
+	//	protected String password = null;
+	protected String auth = null;
 
 	private Plugin plugin;
 	private Map<String,AbstractCyAction> localExtensions;
-	
+
 	protected ExecutorService threadpool;
 	protected Async async;
 
 	public Neo4jRESTServer(Plugin plugin){
 		this.plugin = plugin;
-	
 	}
 
 	@Override
-	public boolean connect(String instanceLocation) {
-		
-		if(isConnected()){
-			disconnect();
-		}
-		
-		if(validateConnection(instanceLocation)){
+	public Neo4jServer.ServerMessage connect(String instanceLocation,String user, String pass) {
+
+		//		if(isConnected()){
+		disconnect();
+		//		}
+
+		ServerMessage msg = validateConnection(instanceLocation, user, pass); 
+		if(msg == ServerMessage.CONNECT_SUCCESS){
+			setAuth(user,pass);
 			setInstanceLocation(instanceLocation);
 			registerExtension();
 		}
-		return isConnected();
+		return msg;
 	}
 
 	protected void registerExtension() {
@@ -81,10 +85,10 @@ public class Neo4jRESTServer implements Neo4jServer {
 
 	}
 
-	@Override
-	public boolean isConnected() {
-		return validateConnection(getInstanceLocation());
-	}
+	//	@Override
+	//	public boolean isConnected() {
+	//		return validateConnection(getInstanceLocation());
+	//	}
 
 	@Override
 	public String getInstanceLocation() {
@@ -103,6 +107,7 @@ public class Neo4jRESTServer implements Neo4jServer {
 				getPlugin().getCyNetworkFactory(), 
 				getInstanceLocation(), 
 				getCypherURL(),
+				getAuth(),
 				getPlugin().getCyNetViewMgr(),
 				getPlugin().getCyNetworkViewFactory(),
 				getPlugin().getCyLayoutAlgorithmManager(),
@@ -132,10 +137,10 @@ public class Neo4jRESTServer implements Neo4jServer {
 			res.add(cypherExt);
 		}
 		try {
-			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).execute().handleResponse(new ExtensionLocationsHandler());
+			Set<String> extNames = Request.Get(getInstanceLocation() + EXT_URL).addHeader("Authorization:", getAuth()).execute().handleResponse(new ExtensionLocationsHandler());
 
 			for(String extName : extNames){
-				List<Extension> serverSupportedExt = Request.Get(getInstanceLocation() + EXT_URL + extName).execute().handleResponse(new ExtensionParametersResponseHandler(getInstanceLocation() + EXT_URL + extName)); 
+				List<Extension> serverSupportedExt = Request.Get(getInstanceLocation() + EXT_URL + extName).addHeader("Authorization:", getAuth()).execute().handleResponse(new ExtensionParametersResponseHandler(getInstanceLocation() + EXT_URL + extName)); 
 
 				for(Extension ext : serverSupportedExt){
 					if(localExtensions.containsKey(ext.getName())){
@@ -156,7 +161,7 @@ public class Neo4jRESTServer implements Neo4jServer {
 
 	@Override
 	public void syncUp(boolean wipeRemote, CyNetwork curr) {
-		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
+		TaskIterator it = new SyncUpTaskFactory(wipeRemote,getCypherURL(),getAuth(), getPlugin().getCyApplicationManager().getCurrentNetwork()).createTaskIterator();
 		plugin.getDialogTaskManager().execute(it);
 
 	}
@@ -164,7 +169,7 @@ public class Neo4jRESTServer implements Neo4jServer {
 	private String getCypherURL() {
 		return getInstanceLocation() + CYPHER_URL;
 	}
-	
+
 	protected void setupAsync(){
 		threadpool = Executors.newFixedThreadPool(2);
 		async = Async.newInstance().use(threadpool);
@@ -173,24 +178,22 @@ public class Neo4jRESTServer implements Neo4jServer {
 	@Override
 	public Object executeExtensionCall(ExtensionCall call, boolean doAsync) {
 		Object retVal = null;
-		
+
 		if(doAsync){
 			setupAsync();
-			
-//			System.out.println("executing call: " + call.getUrlFragment());
-//			System.out.println("using payload: " + call.getPayload());
+
+			//			System.out.println("executing call: " + call.getUrlFragment());
+			//			System.out.println("using payload: " + call.getPayload());
 			String url = call.getUrlFragment();
-			Request req = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON);
-			
+			Request req = Request.Post(url).addHeader("Authorization:",getAuth()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON);
+
 			async.execute(req);
 		} else {
-
-			
 			try {
-//				System.out.println("executing call: " + call.getUrlFragment());
-//				System.out.println("using payload: " + call.getPayload());
+				//				System.out.println("executing call: " + call.getUrlFragment());
+				//				System.out.println("using payload: " + call.getPayload());
 				String url = call.getUrlFragment();
-				retVal = Request.Post(url).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
+				retVal = Request.Post(url).addHeader("Authorization:",getAuth()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
 
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -203,14 +206,54 @@ public class Neo4jRESTServer implements Neo4jServer {
 	}
 
 	@Override
-	public boolean validateConnection(String instanceLocation) {
-		try {
-			return instanceLocation != null && Request.Get(instanceLocation).execute().handleResponse(new Neo4jPingHandler());
-		} catch (ClientProtocolException e) {
-		} catch (IOException e) {
+	public ServerMessage validateConnection(String instanceLocation, String user, String pass) {
+		// send message to server to check if running
+		// send message probing if auth is required
+		// if true try authenticating with user and pass
+		if(instanceLocation != null && !instanceLocation.isEmpty()){
+
+			ServerMessage msg = ServerMessage.CONNECT_FAILED;
+			try {
+				msg = Request.Get(instanceLocation + "/db/data/").addHeader("Authorization:", makeAuth(user, pass)).execute().handleResponse(new Neo4jPingHandler());
+			} catch (ClientProtocolException e) {
+			} catch (IOException e) {
+			}
+
+			if(user == null || user.isEmpty()){
+				if(msg == ServerMessage.AUTH_FAILURE){
+					return ServerMessage.AUTH_REQUIRED;
+				}
+			}
+			
+			return msg;
 		}
-		// show exceptions? does the user understand the error messages? 
-		return false;
+		return ServerMessage.CONNECT_FAILED;
+	}
+
+	//	protected boolean validateConnection(String instanceLocation) {
+	//		return instanceLocation != null && pingConnection(instanceLocation,getAuth());
+	//	}
+
+	//	protected boolean pingConnection(String instanceLocation, String auth){
+	//		try {
+	//			return Request.Get(instanceLocation + "/db/data/").addHeader("Authorization:", auth).execute().handleResponse(new Neo4jPingHandler());
+	//		} catch (ClientProtocolException e) {
+	//		} catch (IOException e) {
+	//		}
+	//		
+	//		return false;
+	//	}
+
+	protected String makeAuth(String user, String password){
+		return new String(Base64.encodeBase64((user + ":" + password).getBytes()));
+	}
+
+	protected void setAuth(String user, String password){
+		this.auth =  makeAuth(user,password);
+	}
+
+	protected String getAuth(){
+		return auth;
 	}
 
 	protected Plugin getPlugin() {

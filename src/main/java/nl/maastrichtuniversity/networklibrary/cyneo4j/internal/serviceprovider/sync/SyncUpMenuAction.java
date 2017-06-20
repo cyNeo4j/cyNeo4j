@@ -30,10 +30,10 @@ public class SyncUpMenuAction extends AbstractCyAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(!plugin.getInteractor().isConnected()){
-			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
-			return;
-		}
+//		if(!plugin.getInteractor().isConnected()){
+//			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
+//			return;
+//		}
 		getPlugin().getInteractor().syncUp(true,getPlugin().getCyApplicationManager().getCurrentNetwork());
 	}
 }

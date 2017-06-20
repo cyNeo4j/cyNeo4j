@@ -97,19 +97,12 @@ public class CypherResultParser {
 		}
 
 		Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
-
-		for(Entry<String,Object> obj : nodeProps.entrySet()){
-			if(defNodeTab.getColumn(obj.getKey()) == null){
-				if(obj.getValue().getClass() == ArrayList.class){
-					defNodeTab.createListColumn(obj.getKey(), String.class, true);
-				} else {
-					defNodeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
-				}
-			}
-
-			Object value = CyUtils.fixSpecialTypes(obj.getValue(), defNodeTab.getColumn(obj.getKey()).getType());
-			defNodeTab.getRow(cyNode.getSUID()).set(obj.getKey(), value);
-		}
+		
+		CyUtils.addProperties(cyNode.getSUID(), defNodeTab, nodeProps);
+				
+		Map<String, Object> metadata = (Map<String,Object>) node.get("metadata");
+		
+		CyUtils.addProperties(cyNode.getSUID(), defNodeTab, metadata);
 	}
 
 	public void parseEdge(Object edgeObj, String column){
@@ -160,21 +153,9 @@ public class CypherResultParser {
 			currNet.getRow(cyEdge).set("neoid", self);
 			currNet.getRow(cyEdge).set(CyEdge.INTERACTION, type);
 
-			Map<String,Object> nodeProps = (Map<String,Object>) edge.get("data");
+			Map<String,Object> edgeProps = (Map<String,Object>) edge.get("data");
 
-			for(Entry<String,Object> obj : nodeProps.entrySet()){
-				if(defEdgeTab.getColumn(obj.getKey()) == null){
-					if(obj.getValue().getClass() == ArrayList.class){
-						defEdgeTab.createListColumn(obj.getKey(), String.class, true);
-					} else {
-						defEdgeTab.createColumn(obj.getKey(), obj.getValue().getClass(), true);
-					}
-				}
-
-				Object value = CyUtils.fixSpecialTypes(obj.getValue(), defEdgeTab.getColumn(obj.getKey()).getType());
-				defEdgeTab.getRow(cyEdge.getSUID()).set(obj.getKey(), value);
-
-			}
+			CyUtils.addProperties(cyEdge.getSUID(), defEdgeTab, edgeProps);
 		}
 	}
 

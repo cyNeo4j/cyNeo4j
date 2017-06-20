@@ -11,11 +11,18 @@ import org.cytoscape.model.CyNetwork;
 
 public interface Neo4jServer {
 
+	public enum ServerMessage{
+		CONNECT_SUCCESS,
+		CONNECT_FAILED,
+		AUTH_FAILURE,
+		AUTH_REQUIRED
+	}
+
 	// general house keeping
-	public boolean 	connect(String instanceLocation);
-	public boolean	validateConnection(String instanceLocation);
+	public ServerMessage 	connect(String instanceLocation, String user, String pass);
+	public ServerMessage	validateConnection(String instanceLocation, String user, String pass);
 	public void		disconnect();
-	public boolean 	isConnected();
+//	public boolean 	isConnected(); // candidate to remove from the API
 	public String	getInstanceLocation();
 	
 	// full sync interface
