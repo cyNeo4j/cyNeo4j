@@ -84,14 +84,6 @@ public class SyncDsmnTaskFactory extends AbstractTaskFactory {
 
 	@Override
 	public TaskIterator createTaskIterator() {
-//		return new TaskIterator(new SyncDsmnTask(mergeInCurrent, cypherURL, instanceLocation, auth, cyNetworkFactory, cyNetworkMgr,cyNetworkViewMgr,cyNetworkViewFactory,cyLayoutAlgorithmMgr,visualMappingMgr,queryList,vmfFactoryP,vmfFactoryC));
 		return new TaskIterator(new SyncDsmnTask(mergeInCurrent, plugin, cypherURL, instanceLocation, auth));
-		
-//		(CyNetworkManager cyNetworkMgr,
-//				boolean mergeInCurrent, Plugin plugin,
-//				String instanceLocation, String cypherURL,
-//				String auth,
-//				Set<String> queryList)
 	}
-
 }

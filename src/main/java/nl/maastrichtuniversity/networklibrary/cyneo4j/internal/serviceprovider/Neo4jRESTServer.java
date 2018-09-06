@@ -134,21 +134,6 @@ public class Neo4jRESTServer implements Neo4jServer {
 							 getCypherURL(),
 							 getAuth()
 							).createTaskIterator();
-		
-//		TaskIterator it = new SyncDsmnTaskFactory(getPlugin().getCyNetworkManager(), 
-//				mergeInCurrent, 
-//				getPlugin().getCyNetworkFactory(), 
-//				getInstanceLocation(), 
-//				getCypherURL(),
-//				getAuth(),
-//				getPlugin().getCyNetViewMgr(),
-//				getPlugin().getCyNetworkViewFactory(),
-//				getPlugin().getCyLayoutAlgorithmManager(),
-//				getPlugin().getVisualMappingManager(),
-//				getPlugin().getQueryList(),
-//				getPlugin().getVmfFactoryP(),
-//				getPlugin().getVmfFactoryC()
-//				).createTaskIterator();
 
 		plugin.getDialogTaskManager().execute(it);		
 
@@ -245,17 +230,12 @@ public class Neo4jRESTServer implements Neo4jServer {
 
 		if(doAsync){
 			setupAsync();
-
-			//			System.out.println("executing call: " + call.getUrlFragment());
-			//			System.out.println("using payload: " + call.getPayload());
 			String url = call.getUrlFragment();
 			Request req = Request.Post(url).addHeader("Authorization:",getAuth()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON);
 
 			async.execute(req);
 		} else {
 			try {
-				//				System.out.println("executing call: " + call.getUrlFragment());
-				//				System.out.println("using payload: " + call.getPayload());
 				String url = call.getUrlFragment();
 				retVal = Request.Post(url).addHeader("Authorization:",getAuth()).bodyString(call.getPayload(), ContentType.APPLICATION_JSON).execute().handleResponse(new PassThroughResponseHandler());
 
@@ -294,20 +274,6 @@ public class Neo4jRESTServer implements Neo4jServer {
 		return ServerMessage.CONNECT_FAILED;
 	}
 
-	//	protected boolean validateConnection(String instanceLocation) {
-	//		return instanceLocation != null && pingConnection(instanceLocation,getAuth());
-	//	}
-
-	//	protected boolean pingConnection(String instanceLocation, String auth){
-	//		try {
-	//			return Request.Get(instanceLocation + "/db/data/").addHeader("Authorization:", auth).execute().handleResponse(new Neo4jPingHandler());
-	//		} catch (ClientProtocolException e) {
-	//		} catch (IOException e) {
-	//		}
-	//		
-	//		return false;
-	//	}
-
 	protected String makeAuth(String user, String password){
 		return new String(Base64.encodeBase64((user + ":" + password).getBytes()));
 	}
@@ -340,7 +306,6 @@ public class Neo4jRESTServer implements Neo4jServer {
 	@Override
 	public void setLocalSupportedExtension(Map<String,AbstractCyAction> localExtensions) {
 		this.localExtensions = localExtensions;
-
 	}
 
 }

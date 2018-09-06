@@ -1,19 +1,16 @@
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn;
 
 import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -33,16 +30,10 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 		
 		this.dialog = dialog;
 		this.plugin = plugin;
-//		this.interactor = plugin.getInteractor();
-//		this.cySwingApp = plugin.getCySwingApplication();
 		
-//		JLabel jLabel1 = new JLabel("Select your datasource: ");
-		
-		JLabel labelName = new JLabel("Network name: ");
-		
+		JLabel labelName = new JLabel("Network name: ");		
 		textField = new JTextField();
-	 
-//	    JPanel radioPanel = new JPanel(new GridLayout());
+
 	    GridBagConstraints gbc = new GridBagConstraints();
 	    gbc.gridx = 0;
 	    gbc.gridy = GridBagConstraints.RELATIVE;

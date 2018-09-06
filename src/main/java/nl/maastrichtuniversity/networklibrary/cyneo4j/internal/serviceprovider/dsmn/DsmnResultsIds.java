@@ -5,16 +5,16 @@ import java.util.Set;
 
 public class DsmnResultsIds {
 	private Set<String> notInResult = new HashSet<String>();
-	private Set<String> notInDatase = new HashSet<String>();
+	private Set<String> notInDatabase = new HashSet<String>();
 	private Set<String> presentNames = new HashSet<String>();
 	
 	
 	public DsmnResultsIds(Set<String> notInResult,
-			Set<String> notInDatase,
+			Set<String> notInDatabase,
 			Set<String> presentNames) {
 		super();
 		this.notInResult = notInResult;
-		this.notInDatase = notInDatase;
+		this.notInDatabase = notInDatabase;
 		this.presentNames = presentNames;
 	}
 
@@ -29,13 +29,13 @@ public class DsmnResultsIds {
 	}
 
 
-	public Set<String> getNotInDatase() {
-		return notInDatase;
+	public Set<String> getNotInDatabase() {
+		return notInDatabase;
 	}
 
 
-	public void setNotInDatase(Set<String> notInDatase) {
-		this.notInDatase = notInDatase;
+	public void setNotInDatabase(Set<String> notInDatabase) {
+		this.notInDatabase = notInDatabase;
 	}
 
 

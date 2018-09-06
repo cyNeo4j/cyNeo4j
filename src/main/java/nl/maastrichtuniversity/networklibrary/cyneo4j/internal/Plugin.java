@@ -82,10 +82,7 @@ public class Plugin {
 		localExtensions.put("circlelayout",new CircularLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("gridlayout",new GridLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
-//		localExtensions.put("dsmn",new SyncDsmnMenuAction(cyApplicationManager, this));
-		
-		
-		// new SyncDsmnMenuAction(cyApplicationManager, plugin);
+	
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
 		this.cyNetworkFactory = cyNetworkFactory;
@@ -168,7 +165,6 @@ public class Plugin {
 		for(AbstractCyAction action : registeredActions){
 			getCySwingApplication().removeAction(action);
 		}
-		
 	}
 
 	public Set<String> getQueryList() {

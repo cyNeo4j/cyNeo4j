@@ -75,15 +75,13 @@ public class DsmnResultParser {
 					ObjectMapper mapper = new ObjectMapper();
 					Map<String,Object> retVal = mapper.readValue(responseObj.returnResponse().getEntity().getContent(), Map.class);
 					
-					String col = cols.get(i);
+					String col = cols.get(i);				
 					
-//					System.out.println(retVal.get("start"));					
 					responseObj = Request.Get(retVal.get("start").toString()).addHeader("Authorization:", auth).execute();					
 					mapper = new ObjectMapper();
 					Map<String,Object> retVal2 = mapper.readValue(responseObj.returnResponse().getEntity().getContent(), Map.class);			
 					String name = parseNode(retVal2,col);
-					
-//					System.out.println(retVal.get("end"));				
+			
 					responseObj = Request.Get(retVal.get("end").toString()).addHeader("Authorization:", auth).execute();			
 					mapper = new ObjectMapper();
 					Map<String,Object> retVal3 = mapper.readValue(responseObj.returnResponse().getEntity().getContent(), Map.class);
@@ -117,11 +115,9 @@ public class DsmnResultParser {
 			currNet.getRow(cyNode).set("name", name);			
 			++numNodes;
 		}
-//		System.out.println("data ");
 		Map<String,Object> nodeProps = (Map<String,Object>) node.get("data");
 		
-		CyUtils.addProperties(cyNode.getSUID(), defNodeTab, nodeProps);
-//		System.out.println("metadata ");	
+		CyUtils.addProperties(cyNode.getSUID(), defNodeTab, nodeProps);	
 		Map<String, Object> metadata = (Map<String,Object>) node.get("metadata");
 		
 		CyUtils.addProperties(cyNode.getSUID(), defNodeTab, metadata);

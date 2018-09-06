@@ -40,7 +40,6 @@ public class SyncDsmnMenuAction extends AbstractCyAction {
 					"Please connect to an instance first!");
 		}
 		else{
-
 			JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
 			dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -50,11 +49,8 @@ public class SyncDsmnMenuAction extends AbstractCyAction {
 			dialog.setModal(true);
 			dialog.setContentPane(p);
 			dialog.setResizable(false);
-
 			dialog.pack();
 			dialog.setVisible(true);
-
-//			getPlugin().getInteractor().syncDsmn(false);
 		}
 	}
 	
