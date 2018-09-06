@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Async;
@@ -15,6 +17,7 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.work.TaskIterator;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
@@ -23,11 +26,14 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.Ex
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.ExtensionParameter;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.neo4j.Neo4jExtParam;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.neo4j.Neo4jExtension;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnResultsIds;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.SyncDsmnTaskFactory;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.ExtensionLocationsHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.ExtensionParametersResponseHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.PassThroughResponseHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.general.Neo4jPingHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync.SyncDownTaskFactory;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync.SyncNewTaskFactory;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync.SyncUpTaskFactory;
 
 public class Neo4jRESTServer implements Neo4jServer {
@@ -115,12 +121,70 @@ public class Neo4jRESTServer implements Neo4jServer {
 				).createTaskIterator();
 
 		plugin.getDialogTaskManager().execute(it);
+		
+	}
+	
+	@Override
+	public void syncDsmn (boolean mergeInCurrent) {
+		
+		TaskIterator it = new SyncDsmnTaskFactory(
+							 mergeInCurrent, 
+							 getPlugin(),
+							 getInstanceLocation(), 
+							 getCypherURL(),
+							 getAuth()
+							).createTaskIterator();
+		
+//		TaskIterator it = new SyncDsmnTaskFactory(getPlugin().getCyNetworkManager(), 
+//				mergeInCurrent, 
+//				getPlugin().getCyNetworkFactory(), 
+//				getInstanceLocation(), 
+//				getCypherURL(),
+//				getAuth(),
+//				getPlugin().getCyNetViewMgr(),
+//				getPlugin().getCyNetworkViewFactory(),
+//				getPlugin().getCyLayoutAlgorithmManager(),
+//				getPlugin().getVisualMappingManager(),
+//				getPlugin().getQueryList(),
+//				getPlugin().getVmfFactoryP(),
+//				getPlugin().getVmfFactoryC()
+//				).createTaskIterator();
+
+		plugin.getDialogTaskManager().execute(it);		
+
+	}
+	
+	@Override
+	public void syncNew (boolean mergeInCurrent) {
+		
+		TaskIterator it = new SyncNewTaskFactory(getPlugin().getCyNetworkManager(), 
+				mergeInCurrent, 
+				getPlugin().getCyNetworkFactory(), 
+				getInstanceLocation(), 
+				getCypherURL(),
+				getAuth(),
+				getPlugin().getCyNetViewMgr(),
+				getPlugin().getCyNetworkViewFactory(),
+				getPlugin().getCyLayoutAlgorithmManager(),
+				getPlugin().getVisualMappingManager(),
+				getPlugin().getQueryList()
+				).createTaskIterator();
+
+		plugin.getDialogTaskManager().execute(it);
 
 	}
 
 	@Override
 	public List<Extension> getExtensions() {
 		List<Extension> res = new ArrayList<Extension>();
+		
+		Extension dsmnExt = new Neo4jExtension();
+		dsmnExt.setName("dsmn");
+		dsmnExt.setEndpoint(getCypherURL());
+		
+		if(localExtensions.containsKey("dsmn")){
+			res.add(dsmnExt);
+		}
 
 		Extension cypherExt = new Neo4jExtension();
 		cypherExt.setName("cypher");

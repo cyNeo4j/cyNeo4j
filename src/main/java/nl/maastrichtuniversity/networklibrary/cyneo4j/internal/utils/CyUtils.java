@@ -185,6 +185,25 @@ public class CyUtils {
 		vs.apply(view);
 		view.updateView();
 	}
+	
+	public static void updateDirectedVisualStyle(VisualMappingManager visualMappingMgr, CyNetworkView view, CyNetwork network) {
+		VisualStyle vs = getVisualStyleByName(visualMappingMgr, "Directed");
+		visualMappingMgr.setVisualStyle(vs, view);
+		vs.apply(view);
+		view.updateView();
+	}
+	
+	private static  VisualStyle getVisualStyleByName(VisualMappingManager visualMappingMgr, String styleName){
+		Set<VisualStyle> styles = visualMappingMgr.getAllVisualStyles();
+		// fix because styles can not be found by name
+		for (VisualStyle style: styles){
+			if (style.getTitle().equals(styleName)){
+				return style;
+			}
+		}
+		return visualMappingMgr.getDefaultVisualStyle();
+	}
+	
 
 	private static boolean matchingValues(Class<?> valueClass, Class<?> colClass){
 		if(valueClass.equals(colClass)){
@@ -239,7 +258,7 @@ public class CyUtils {
 	}
 	
 	public static void addValueToTable(Long suid, String key, Object value, CyTable table) {				
-		
+//		System.out.println("value "+value.getClass());
 		Class<?> valueClass = value.getClass();
 		
 		String fixedKey = detectImmutableProblem(key, table, valueClass, table.getColumn(key).getType());
@@ -247,15 +266,19 @@ public class CyUtils {
 		Class<?> colClass = table.getColumn(fixedKey).getType();
 		Class<?> colTypeClass = table.getColumn(fixedKey).getListElementType();
 		
-		if(valueClass.equals(colClass)){
-			table.getRow(suid).set(fixedKey, value);
-			return;
-		}
+//		System.out.println("element "+colClass);
 		
 		if(colClass.equals(Long.class) && valueClass.equals(Integer.class)){
 			table.getRow(suid).set(fixedKey, Long.valueOf(((Integer)value).longValue()));
 			return;
 		}
+		
+		if(valueClass.equals(colClass)){
+			table.getRow(suid).set(fixedKey, value);
+			return;
+		}
+		
+		
 		
 		// both lists!
 		if(valueClass.equals(ArrayList.class) && colClass.equals(List.class)){
@@ -324,10 +347,21 @@ public class CyUtils {
 				if(obj.getValue().getClass() == ArrayList.class){
 					table.createListColumn(obj.getKey(), CyUtils.getArrayListType((ArrayList)obj.getValue()), false);
 				} else {
+//					
+//					try {
+//						Integer.parseInt((String) obj.getValue());
+//						table.createColumn(obj.getKey(), Integer.class, false);
+//					}
+//					catch (NumberFormatException e){
+//						table.createColumn(obj.getKey(), obj.getValue().getClass(), false);
+//					}
+//					System.out.println("table "+obj.getValue().getClass());
+//					System.out.println("table "+obj.getValue());
+//					System.out.println("table "+obj.getKey());
 					table.createColumn(obj.getKey(), obj.getValue().getClass(), false);
 				}
 			}
-
+//			
 			CyUtils.addValueToTable(suid,obj.getKey(),obj.getValue(),table);
 
 		}
