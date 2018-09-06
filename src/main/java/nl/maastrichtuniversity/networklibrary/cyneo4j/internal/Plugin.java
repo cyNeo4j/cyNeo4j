@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.CircularLayoutExtMenuAction;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.CypherMenuAction;
@@ -12,6 +13,9 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.im
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.NeoNetworkAnalyzerAction;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jServer;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jRESTServer;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnResultPanel;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnResultsIds;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.SyncDsmnMenuAction;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
@@ -22,6 +26,7 @@ import org.cytoscape.model.CyTableFactory;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
+import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.swing.DialogTaskManager;
 
@@ -42,7 +47,13 @@ public class Plugin {
 	private CyNetworkViewFactory cyNetworkViewFactory = null;
 	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr = null;
 	private VisualMappingManager visualMappingMgr = null;
-		
+	private VisualMappingFunctionFactory vmfFactoryP = null;
+	private VisualMappingFunctionFactory vmfFactoryC = null;
+	private Set<String> queryList = null;
+	private DsmnResultsIds ids = null;
+	private String networkName = "";
+	private	DsmnResultPanel resultPanel = null;
+
 	public Plugin(CyApplicationManager cyApplicationManager,
 			CySwingApplication cySwingApplication,
 			CyNetworkFactory cyNetworkFactory, CyTableFactory cyTableFactory,
@@ -50,7 +61,9 @@ public class Plugin {
 			DialogTaskManager diagTaskManager,
 			CyNetworkViewFactory cyNetworkViewFactory,
 			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
-			VisualMappingManager visualMappingMgr) {
+			VisualMappingManager visualMappingMgr,
+			VisualMappingFunctionFactory vmfFactoryP,
+			VisualMappingFunctionFactory vmfFactoryC ) {
 		super();
 		
 		/*
@@ -69,8 +82,10 @@ public class Plugin {
 		localExtensions.put("circlelayout",new CircularLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("gridlayout",new GridLayoutExtMenuAction(cyApplicationManager, this));
 		localExtensions.put("cypher",new CypherMenuAction(cyApplicationManager, this));
+//		localExtensions.put("dsmn",new SyncDsmnMenuAction(cyApplicationManager, this));
 		
 		
+		// new SyncDsmnMenuAction(cyApplicationManager, plugin);
 		this.cyApplicationManager = cyApplicationManager;
 		this.cySwingApplication = cySwingApplication;
 		this.cyNetworkFactory = cyNetworkFactory;
@@ -81,6 +96,8 @@ public class Plugin {
 		this.cyNetworkViewFactory = cyNetworkViewFactory;
 		this.cyLayoutAlgorithmMgr = cyLayoutAlgorithmMgr;
 		this.visualMappingMgr = visualMappingMgr;
+		this.setVmfFactoryP(vmfFactoryP);
+		this.setVmfFactoryC(vmfFactoryC);
 		
 		interactor = new Neo4jRESTServer(this);
 		interactor.setLocalSupportedExtension(localExtensions);
@@ -152,6 +169,54 @@ public class Plugin {
 			getCySwingApplication().removeAction(action);
 		}
 		
+	}
+
+	public Set<String> getQueryList() {
+		return queryList;
+	}
+
+	public void setQueryList(Set<String> queryList) {
+		this.queryList = queryList;
+	}
+
+	public VisualMappingFunctionFactory getVmfFactoryP() {
+		return vmfFactoryP;
+	}
+
+	public void setVmfFactoryP(VisualMappingFunctionFactory vmfFactoryP) {
+		this.vmfFactoryP = vmfFactoryP;
+	}
+
+	public VisualMappingFunctionFactory getVmfFactoryC() {
+		return vmfFactoryC;
+	}
+
+	public void setVmfFactoryC(VisualMappingFunctionFactory vmfFactoryC) {
+		this.vmfFactoryC = vmfFactoryC;
+	}
+
+	public DsmnResultsIds getIds() {
+		return ids;
+	}
+
+	public void setIds(DsmnResultsIds ids) {
+		this.ids = ids;
+	}
+	
+	public String getNetworkName() {
+		return networkName;
+	}
+
+	public void setNetworkName(String networkName) {
+		this.networkName = networkName;
+	}
+
+	public DsmnResultPanel getResultPanel() {
+		return resultPanel;
+	}
+
+	public void setResultPanel(DsmnResultPanel resultPanel) {
+		this.resultPanel = resultPanel;
 	}
 	
 }

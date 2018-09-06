@@ -133,6 +133,7 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 //			if(validURL()){
 			switch(interactor.connect(getUrl(),getUser(),getPass())){
 			case CONNECT_SUCCESS:
+				JOptionPane.showMessageDialog(cySwingApp.getJFrame(), "Connected!");
 				closeUp();
 				break;
 				

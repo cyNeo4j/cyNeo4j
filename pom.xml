@@ -11,7 +11,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
 	<artifactId>cyneo4j</artifactId>
-	<version>1.3dev</version>
+	<version>1.4.5</version>
 
 	<name>cyNeo4j</name>
 
@@ -124,11 +124,13 @@
 			<artifactId>service-api</artifactId>
 			<version>${cytoscape.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>swing-application-api</artifactId>
 			<version>${cytoscape.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>session-api</artifactId>
