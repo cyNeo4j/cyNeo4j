@@ -60,7 +60,6 @@ public class SyncDsmnTask extends AbstractTask{
 	private VisualMappingFunctionFactory vmfFactoryP;
 	private VisualMappingFunctionFactory vmfFactoryC;
 	private Set<String> queryList;
-//	private DsmnResultsIds ids;
 	private Plugin plugin;
 
 	int chunkSize = 500;
@@ -223,7 +222,7 @@ public class SyncDsmnTask extends AbstractTask{
 			taskMonitor.setProgress(0.8);
 			
 			plugin.setIds(new DsmnResultsIds(notInDataseNames, queryList , presentNames));
-			createPanel();		
+			createDsmnResultPanel();		
 			
 			
 			
@@ -238,16 +237,13 @@ public class SyncDsmnTask extends AbstractTask{
 			CyUtils.updateDirectedVisualStyle(visualMappingMgr, view, network);
 			
 			VisualStyle currentVisualStyle = visualMappingMgr.getCurrentVisualStyle();
-			PassthroughMapping mapp = (PassthroughMapping) vmfFactoryP.createVisualMappingFunction(
-																	"count", Integer.class,
-																	BasicVisualLexicon.EDGE_WIDTH);
-			currentVisualStyle.addVisualMappingFunction(mapp);
+			
 			currentVisualStyle.apply(view);
 			view.updateView();
 		}
 	}
 	
-	private void createPanel(){
+	private void createDsmnResultPanel(){
 		DsmnResultPanel resultPanel = plugin.getResultPanel();
 		JTabbedPane tabPanel = resultPanel.getTabbedPane();
 
@@ -266,7 +262,7 @@ public class SyncDsmnTask extends AbstractTask{
         textArea.setText("Dmsn result analysis\n\n"
         		+ "Present in the query: "+ ids.getPresentNames()+ "\n\n"
 				+ "Not In shortest path result: "+ ids.getNotInResult()+ "\n\n"
-				+ "Not in the database: "+ ids.getNotInDatase()
+				+ "Not in the database: "+ ids.getNotInDatabase()
 				); 
         
         layout.addLayoutComponent(textArea, BorderLayout.CENTER);

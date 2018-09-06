@@ -51,48 +51,32 @@ public class SyncDsmnMenuResults extends AbstractCyAction {
 			createPanel();
 		}
 	}
-	
 
 	private void createPanel(){
-		
 		JTabbedPane tabPanel = plugin.getResultPanel().getTabbedPane();
-//		panel.removeAll();
-		
+
 		JPanel panel = new JPanel();
 		
 		BorderLayout layout = new BorderLayout();		
 		DsmnResultsIds ids = plugin.getIds();		
 		
 		JTextArea textArea = new JTextArea();
-//        textArea.setColumns(20);
         textArea.setLineWrap(true);
-//        textArea.setRows(5);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false); 
-//        textArea.setSize(600, 800);
         textArea.setText("Dmsn result analysis\n\n"
         		+ "Present in the query: "+ ids.getPresentNames()+ "\n\n"
 				+ "Not In shortest path result: "+ ids.getNotInResult()+ "\n\n"
-				+ "Not in the database: "+ ids.getNotInDatase()
+				+ "Not in the database: "+ ids.getNotInDatabase()
 				); 
-//        JScrollPane jScrollPane1 = new JScrollPane(textArea);
         
         layout.addLayoutComponent(textArea, BorderLayout.WEST);
         
         panel.add(textArea);
         panel.setLayout(layout);
         panel.setOpaque(true);
-//        panel.setLayout(new BorderLayout());
-//		locate(dialog);
-//		dialog.setModal(true);
-//		dialog.setContentPane(p);
-//		dialog.setResizable(true);
-
-//		panel.pack();
-//        panel.validate();
-//        panel.repaint();
+        
 		panel.setVisible(true);
-		tabPanel.addTab(plugin.getNetworkName(), panel);
-		
+		tabPanel.addTab(plugin.getNetworkName(), panel);	
 	}
 }

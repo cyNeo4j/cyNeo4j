@@ -51,28 +51,19 @@ public class CyActivator extends AbstractCyActivator {
 		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
 		SyncDsmnMenuAction syncDsmnAction = new SyncDsmnMenuAction(cyApplicationManager, plugin);
-//		SyncDsmnMenuResults syncDsmnResults = new SyncDsmnMenuResults(cyApplicationManager, plugin);
-//		SyncNewMenuAction syncNewAction = new SyncNewMenuAction(cyApplicationManager, plugin);
-		
 
 		DsmnResultPanel myPanel = new DsmnResultPanel();
 		plugin.setResultPanel(myPanel);
 		registerService(context,myPanel,CytoPanelComponent.class, new Properties());
-		
-		
+
 		registerAllServices(context, connectAction, new Properties());
 		registerAllServices(context, syncUpAction, new Properties());
 		registerAllServices(context, syncDownAction, new Properties());
 		registerAllServices(context, syncDsmnAction, new Properties());
-//		registerAllServices(context, syncDsmnResults, new Properties());
-//		registerAllServices(context, syncNewAction, new Properties());
-		
 	}
 	
 	@Override
 	public void shutDown(){
 		plugin.cleanUp();
 	}
-	
-
 }
