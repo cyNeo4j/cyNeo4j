@@ -2,6 +2,7 @@ cyNeo4j
 ============
 
 A Cytoscape app to connect to a Neo4j database and execute extensions of the Neo4j database.
+This app is being extended to query the shortest path for metabolic conversions.
 
 Find the app in the Cytoscape app store (http://apps.cytoscape.org/apps/cyneo4j) and on
 Github (https://github.com/gsummer/cyNeo4j).
