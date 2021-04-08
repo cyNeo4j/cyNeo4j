@@ -135,8 +135,13 @@ public class SyncDsmnTask extends AbstractTask{
 			}
 			queryArray = queryArray + "]";
 			
-			String neo4jQuery = "match (a),(b), p=allShortestPaths((a)-[:interaction*]->(b)) where  a <> b and a.id in " 
-					+ queryArray + " and b.id in " + queryArray + " return p";
+			String neo4jQuery = "MATCH (n:Metabolite) where n.wdID IN  " + queryArray 
+					+ "  WITH collect(n) as nodes  " 
+					+ " UNWIND nodes as n " 
+					+ " UNWIND nodes as m " 
+					+ " WITH * WHERE n <> m " 
+					+ " MATCH p = allShortestPaths( (n:Metabolite)-[:AllInteractions*]->(m:Metabolite) ) "  
+					+ " return p";
 			String payload = "{ \"query\" : \""+neo4jQuery+"\",\"params\" : {}}";
 			
 			taskMonitor.setProgress(0.1);
