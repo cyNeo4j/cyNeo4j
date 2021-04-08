@@ -259,10 +259,10 @@ public class SyncDsmnTask extends AbstractTask{
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false); 
         textArea.setSize(600, 800);
-        textArea.setText("Dmsn result analysis\n\n"
-        		+ "Present in the query: "+ ids.getPresentNames()+ "\n\n"
-				+ "Not In shortest path result: "+ ids.getNotInResult()+ "\n\n"
-				+ "Not in the database: "+ ids.getNotInDatabase()
+        textArea.setText("Dmsn result analysis:\n\n"
+        		+ "IDs present in the query: "+ ids.getPresentNames()+ "\n\n"
+				+ "Not connected through shortest path: "+ ids.getNotInResult()+ "\n\n"
+				+ "IDs not in the database: "+ ids.getNotInDatabase()
 				); 
         
         layout.addLayoutComponent(textArea, BorderLayout.CENTER);

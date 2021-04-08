@@ -2,9 +2,9 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 
 import java.util.HashSet;
 import java.util.Set;
-
+//Used in resultsPanel
 public class DsmnResultsIds {
-	private Set<String> notInResult = new HashSet<String>();
+	private Set<String> notInResult = new HashSet<String>(); 
 	private Set<String> notInDatabase = new HashSet<String>();
 	private Set<String> presentNames = new HashSet<String>();
 	

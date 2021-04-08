@@ -37,7 +37,7 @@ public class SyncDsmnMenuAction extends AbstractCyAction {
 
 		if (plugin.getInteractor().getInstanceLocation()==null){
 			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
-					"Please connect to an instance first!");
+					"Please connect to a Neo4j instance first!");
 		}
 		else{
 			JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
