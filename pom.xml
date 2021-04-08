@@ -5,7 +5,7 @@
 	<properties>
 		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.symbolicName>
 		<bundle.namespace>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.namespace>
-		<cytoscape.version>3.1.1</cytoscape.version>
+		<cytoscape.version>3.1.1</cytoscape.version>  
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
