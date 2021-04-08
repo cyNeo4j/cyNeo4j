@@ -19,8 +19,8 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
 public class DsmnInputPanel extends JPanel implements ActionListener {
 	
-	private static final String CANCEL_CMD = "cancel";
-	private static final String OK_CMD = "ok";
+	private static final String CANCEL_CMD = "Cancel job";
+	private static final String OK_CMD = "OK";
 	
 	private JDialog dialog = null;
 	private Plugin plugin = null;
@@ -31,7 +31,7 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 		this.dialog = dialog;
 		this.plugin = plugin;
 		
-		JLabel labelName = new JLabel("Network name: ");		
+		JLabel labelName = new JLabel("Provide a Network name: ");		
 		textField = new JTextField();
 
 	    GridBagConstraints gbc = new GridBagConstraints();
@@ -39,8 +39,9 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 	    gbc.gridy = GridBagConstraints.RELATIVE;
 	    gbc.anchor = GridBagConstraints.WEST;
 
-	    JLabel labelTextArea = new JLabel("<html>Type or Copy/Paste your ids below <br/>"
-	    		+ "Each id should be on a new line<br/>"
+	    JLabel labelTextArea = new JLabel("<html>Type or Copy/Paste your identifiers (IDs) below <br/>"
+	    		+ "Each ID should be on a new line<br/>"
+	    		+ "You can query for Wikidata, ChEBI or HMDB IDs<br/>"
 	    		+ "Suggestion below 100 ids</html>");
 	    
 	    textArea = new JTextArea();
