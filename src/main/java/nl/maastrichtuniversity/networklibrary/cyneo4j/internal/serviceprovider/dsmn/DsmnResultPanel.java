@@ -37,7 +37,7 @@ public class DsmnResultPanel extends JPanel implements CytoPanelComponent {
 
 	@Override
 	public String getTitle() {
-		return "DsmnResultPanel";
+		return "DSMNResultPanel";
 	}
 
 	public JTabbedPane getTabbedPane() {

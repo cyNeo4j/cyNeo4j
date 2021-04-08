@@ -41,11 +41,11 @@ public class SyncDsmnMenuResults extends AbstractCyAction {
 
 		if (plugin.getInteractor().getInstanceLocation()==null){
 			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
-					"Please connect to an instance first!");
+					"Please connect to a Neo4j instance first!");
 		}
 		else if (plugin.getIds().getPresentNames()==null){
 			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
-					"Run a query first!");
+					"Run a DSMN query first!");
 		}
 		else{
 			createPanel();
@@ -64,10 +64,10 @@ public class SyncDsmnMenuResults extends AbstractCyAction {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false); 
-        textArea.setText("Dmsn result analysis\n\n"
-        		+ "Present in the query: "+ ids.getPresentNames()+ "\n\n"
-				+ "Not In shortest path result: "+ ids.getNotInResult()+ "\n\n"
-				+ "Not in the database: "+ ids.getNotInDatabase()
+        textArea.setText("DSMN result analysis:\n\n"
+        		+ "IDs present in the query: "+ ids.getPresentNames()+ "\n\n"
+				+ "Not connected through shortest path: "+ ids.getNotInResult()+ "\n\n"
+				+ "IDs not in the database: "+ ids.getNotInDatabase()
 				); 
         
         layout.addLayoutComponent(textArea, BorderLayout.WEST);

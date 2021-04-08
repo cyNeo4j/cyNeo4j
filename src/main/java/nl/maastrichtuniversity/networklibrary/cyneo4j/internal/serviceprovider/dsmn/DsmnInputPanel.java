@@ -39,10 +39,10 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 	    gbc.gridy = GridBagConstraints.RELATIVE;
 	    gbc.anchor = GridBagConstraints.WEST;
 
-	    JLabel labelTextArea = new JLabel("<html>Type or Copy/Paste your identifiers (IDs) below <br/>"
-	    		+ "Each ID should be on a new line<br/>"
-	    		+ "You can query for Wikidata, ChEBI or HMDB IDs<br/>"
-	    		+ "Suggestion below 100 ids</html>");
+	    JLabel labelTextArea = new JLabel("<html>Type or Copy/Paste your identifiers (IDs) below. <br/>"
+	    		+ "Each ID should be on a new line. <br/>"
+	    		+ "You can query for Wikidata, ChEBI or HMDB IDs. <br/>"
+	    		+ "Suggestion to use less than 100 IDS. </html>");
 	    
 	    textArea = new JTextArea();
         textArea.setColumns(20);
