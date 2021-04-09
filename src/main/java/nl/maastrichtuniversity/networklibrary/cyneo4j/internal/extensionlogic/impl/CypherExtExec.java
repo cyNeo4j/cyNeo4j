@@ -26,7 +26,7 @@ public class CypherExtExec implements ExtensionExecutor {
 	@Override
 	public boolean collectParameters() {
 		
-		query = JOptionPane.showInputDialog(plugin.getCySwingApplication().getJFrame(),"Cypher Query","match (n)-[r]->(m) return n,r,m");
+		query = JOptionPane.showInputDialog(plugin.getCySwingApplication().getJFrame(),"Cypher Query","match (n)-[r]->(m) return n,r,m LIMIT 50");
 //		query = "match (n)-[r]->(m) return n,r,m";
 		
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
