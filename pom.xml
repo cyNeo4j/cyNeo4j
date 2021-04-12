@@ -45,8 +45,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<source>1.6</source> <!-- Update to 1.8 for source and target, to update to java version compatibility --> 
-					<target>1.6</target>
+					<source>1.8</source> <!-- java version compatibility --> 
+					<target>1.8</target>
 					<optimize>true</optimize>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
