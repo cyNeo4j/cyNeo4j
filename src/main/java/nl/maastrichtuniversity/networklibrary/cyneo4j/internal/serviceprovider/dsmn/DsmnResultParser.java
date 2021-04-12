@@ -67,7 +67,7 @@ public class DsmnResultParser {
 				Object item = row.get(i);
 				LinkedHashMap<Object,Object> map = (LinkedHashMap<Object,Object>)item;
 				ArrayList<String> nodes = (ArrayList<String>) map.get("relationships");
-				taskMonitor.setProgress( i );
+				taskMonitor.setProgress( 0.2); //Initiating progressBar at higher value to show something is happening.
 
 				for ( String s : nodes){					
 					Response responseObj = Request.Get(s).addHeader("Authorization:", auth).execute();
