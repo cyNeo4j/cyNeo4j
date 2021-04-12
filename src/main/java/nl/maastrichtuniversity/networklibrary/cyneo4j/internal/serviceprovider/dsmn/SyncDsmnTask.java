@@ -123,9 +123,11 @@ public class SyncDsmnTask extends AbstractTask{
 		else {
 //			double progress = 0.1;
 			taskMonitor.setTitle("Directed Small Molecules Network query");
-			taskMonitor.setProgress(0.0);
-			taskMonitor.setStatusMessage("Building query");
+			taskMonitor.setProgress(0.0); //progressBar is later overwritten when data is read in (DsmnResultsParser class, L70) with 0.2.
+			taskMonitor.setStatusMessage("Building query"); 
 			
+			
+			//Create list from input, compatible with Cypher.
 			String queryArray = "[";
 			boolean first = true;
 			for(String s : queryList) {
@@ -135,6 +137,7 @@ public class SyncDsmnTask extends AbstractTask{
 			}
 			queryArray = queryArray + "]";
 			
+			//Since Wikidata IDs start with a Q, execute shortest path algorithm without mapping approach:
 			if(new String(queryArray).contains("Q")) { 
 			
 			String neo4jQuery = "MATCH (n:Metabolite) where n.wdID IN  " + queryArray 
@@ -146,8 +149,6 @@ public class SyncDsmnTask extends AbstractTask{
 					+ " return p";
 			String payload = "{ \"query\" : \""+neo4jQuery+"\",\"params\" : {}}";
 			
-			
-			taskMonitor.setProgress(0.1);
 			taskMonitor.setStatusMessage("Downloading nodes");
 
 			DsmnResponseHandler passHandler = new DsmnResponseHandler();			
@@ -158,17 +159,16 @@ public class SyncDsmnTask extends AbstractTask{
 			
 			CyNetwork network = cyNetworkFactory.createNetwork();
 			network.getRow(network).set(CyNetwork.NAME,plugin.getNetworkName());
-			
-			
-			taskMonitor.setProgress(0.2);			
+					
 			taskMonitor.setStatusMessage("Building network (this might take some time)");
 			DsmnResultParser cypherParser = new DsmnResultParser(network,auth,taskMonitor);
 			cypherParser.parseRetVal(responseObj);
 			
 			cyNetworkMgr.addNetwork(network);
+			taskMonitor.setProgress(0.5);
 			
-			taskMonitor.setProgress(0.6);
 			taskMonitor.setStatusMessage("Creating View");
+			taskMonitor.setProgress(0.6);
 			
 			
 			Collection<CyNetworkView> views = cyNetworkViewMgr.getNetworkViews(network);
@@ -252,6 +252,7 @@ public class SyncDsmnTask extends AbstractTask{
 			view.updateView();
 			}
 			
+			//IDs which do not start with a Q (ChEBI and HMDB), execute shortest path algorithm WITH mapping approach:
 			else { 
 					
 					String neo4jQuery = " WITH " + queryArray + " AS coll " 
@@ -271,8 +272,6 @@ public class SyncDsmnTask extends AbstractTask{
 							+ " return p";
 					String payload = "{ \"query\" : \""+neo4jQuery+"\",\"params\" : {}}";
 					
-					
-					taskMonitor.setProgress(0.1);
 					taskMonitor.setStatusMessage("Downloading nodes");
 
 					DsmnResponseHandler passHandler = new DsmnResponseHandler();			
@@ -283,14 +282,13 @@ public class SyncDsmnTask extends AbstractTask{
 					
 					CyNetwork network = cyNetworkFactory.createNetwork();
 					network.getRow(network).set(CyNetwork.NAME,plugin.getNetworkName());
-					
-					
-					taskMonitor.setProgress(0.2);			
+	
 					taskMonitor.setStatusMessage("Building network (this might take some time)");
 					DsmnResultParser cypherParser = new DsmnResultParser(network,auth,taskMonitor);
 					cypherParser.parseRetVal(responseObj);
 					
 					cyNetworkMgr.addNetwork(network);
+					taskMonitor.setProgress(0.5);
 					
 					taskMonitor.setProgress(0.6);
 					taskMonitor.setStatusMessage("Creating View");
