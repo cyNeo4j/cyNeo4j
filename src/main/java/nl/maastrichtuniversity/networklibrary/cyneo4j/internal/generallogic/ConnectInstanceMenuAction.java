@@ -3,6 +3,7 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.generallogic;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -22,6 +23,10 @@ public class ConnectInstanceMenuAction extends AbstractCyAction {
 	public ConnectInstanceMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
+		
+		ImageIcon image = new ImageIcon(getClass().getResource("/images/CyNeoSync.png"));
+		putValue(SMALL_ICON, image); //Adds image to submenu
+		
 		setMenuGravity(0.0f);
 		this.plugin = plugin;
 	}
