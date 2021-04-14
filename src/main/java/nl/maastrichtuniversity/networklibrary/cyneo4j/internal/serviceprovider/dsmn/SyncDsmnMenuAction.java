@@ -3,6 +3,7 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,21 +17,26 @@ public class SyncDsmnMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Directed Small Molecules Network";
 	public final static String MENU_LOC = "Apps.cyNeo4j";
+  
 
 	private Plugin plugin;
+	//private ImageIcon icon = null;
 
 	public SyncDsmnMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
 		super(MENU_TITLE, cyApplicationManager, null, null);
+		ImageIcon icon = new ImageIcon(getClass().getResource("/images/shortestPath30.png"));
+		//putValue(LARGE_ICON_KEY, icon); //Adds icon directly to menu bar under toolbar, iso as a logo to App menu...
 		setPreferredMenu(MENU_LOC);
+		putValue(SMALL_ICON, icon); //Adds icon to submenu
 		setEnabled(false);
 		setMenuGravity(0.1f);
 		this.plugin = plugin;
 		
 	}
-
-	protected Plugin getPlugin() {
-		return plugin;
-	}
+	
+	public boolean isInToolBar() {
+	        return true;
+    }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -64,4 +70,9 @@ public class SyncDsmnMenuAction extends AbstractCyAction {
 
         dialog.setLocation(middle);
 	 }
+
+
+	protected Plugin getPlugin() {
+		return plugin;
+	}
 }
