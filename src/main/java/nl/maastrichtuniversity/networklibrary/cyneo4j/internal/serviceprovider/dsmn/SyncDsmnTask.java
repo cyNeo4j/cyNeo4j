@@ -1,5 +1,12 @@
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn;
 
+/**
+ * Definition of DSMN Cypher queries and handling ID input 
+ * @author jmelius
+ * @author dslenter
+ *
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Paint;
@@ -34,6 +41,7 @@ import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.model.View;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.presentation.property.NodeShapeVisualProperty; //Lib. used for shapes, e.g. diamond, hexagon, etc.
 import org.cytoscape.view.presentation.property.PaintVisualProperty;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
@@ -150,30 +158,35 @@ public class SyncDsmnTask extends AbstractTask{
 			String payload = "{ \"query\" : \""+neo4jQuery+"\",\"params\" : {}}";
 			
 			taskMonitor.setStatusMessage("Downloading nodes");
-
+			
+			//Send query to Neo4j
 			DsmnResponseHandler passHandler = new DsmnResponseHandler();			
 			Object responseObj = Request.Post(cypherURL).
 										addHeader("Authorization:", auth).
 										bodyString(payload, ContentType.APPLICATION_JSON).
 										execute().handleResponse(passHandler);
 			
+			//Create a new (empty) network in Cytoscape
 			CyNetwork network = cyNetworkFactory.createNetwork();
+			//Set name for network as provided in DsmnInputPanel as network title in Cytoscape. 
 			network.getRow(network).set(CyNetwork.NAME,plugin.getNetworkName());
 					
 			taskMonitor.setStatusMessage("Building network (this might take some time)");
 			DsmnResultParser cypherParser = new DsmnResultParser(network,auth,taskMonitor);
 			cypherParser.parseRetVal(responseObj);
 			
+			//Add data obtained from query to Cytoscape
 			cyNetworkMgr.addNetwork(network);
 			taskMonitor.setProgress(0.5);
 			
 			taskMonitor.setStatusMessage("Creating View");
 			taskMonitor.setProgress(0.6);
 			
-			
+			//Obtain view of network in Cytoscape
 			Collection<CyNetworkView> views = cyNetworkViewMgr.getNetworkViews(network);
-			CyNetworkView view = null;
+			CyNetworkView view = null; //empty view option, so "view" object is empty again.
 			
+			//Create basic view
 			if(!views.isEmpty()) {
 				view = views.iterator().next();
 			} else {
@@ -181,12 +194,17 @@ public class SyncDsmnTask extends AbstractTask{
 				cyNetworkViewMgr.addNetworkView(view);
 				
 			}	
+			
+			// //Bypass certain view elements with data from Neo4j:
+			
 			//Use count property for data visualisation on edges
 			int max = 0;
 			for ( View<CyEdge> v : view.getEdgeViews()){
+				v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); //Makes sure no label is visualised on interaction itself.
 				int occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count");
-				if (occ>max)max=occ;
-				v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, "");		
+				if (occ > max) max = occ; //Update value for max				
+				//v.setVisualProperty(BasicVisualLexicon.EDGE_WIDTH, occ);	//should be replaced with EDGE_WIDTH, column mapping iso bypass value (setLockedValue function).
+				
 			}
 			//Use wdID property for colouring queried IDs red, and keep track of which IDs are not part of shortest path.
 			Set<String> notInResultNames = new HashSet<String>();
@@ -196,13 +214,25 @@ public class SyncDsmnTask extends AbstractTask{
 			for ( View<CyNode> v : view.getNodeViews()){
 				String name = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
 				if (queryList.contains(name)){
-					v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red);
+					v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); //colour all queried marker red
+					v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.DIAMOND); //And set shape to diamond.
+					double num=75;  
+					v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make queried nodes larger
 					presentNames.add(name);
 				}
 				else{
 					notInResultNames.add(name);			//Not in shortest path result	
 				}
+				
 			}
+				/*
+				 * //Add visualisation for reaction nodes for ( View<CyNode> v :
+				 * view.getNodeViews()){ String reactions = (String)
+				 * network.getRow(v.getModel()).getAllValues().get("rwID"); if
+				 * (reactions.contains("ReactionID")) { double num=5;
+				 * v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes
+				 * very small } }
+				 */
 			
 			queryList.removeAll(presentNames);
 			//Query only wdIDs from querylist who are not in results (aka presentNames) to check if they're even present in Neo4j database
@@ -246,8 +276,10 @@ public class SyncDsmnTask extends AbstractTask{
 
 			CyUtils.updateDirectedVisualStyle(visualMappingMgr, view, network);
 			
+			//Obtain the current network style
 			VisualStyle currentVisualStyle = visualMappingMgr.getCurrentVisualStyle();
 			
+			//Apply the previously described visualisation styles (view) to the current network style.
 			currentVisualStyle.apply(view);
 			view.updateView();
 			}
