@@ -20,7 +20,7 @@ public class SyncUpMenuAction extends AbstractCyAction {
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
-		setMenuGravity(0.1f);
+		setMenuGravity(0.4f);
 		this.plugin = plugin;
 	}
 

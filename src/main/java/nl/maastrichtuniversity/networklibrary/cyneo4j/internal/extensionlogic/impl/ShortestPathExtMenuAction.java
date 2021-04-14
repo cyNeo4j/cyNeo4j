@@ -19,7 +19,7 @@ public class ShortestPathExtMenuAction extends AbstractCyAction {
 		super("Shortest path", cyApplicationManager,null,null);
 		setPreferredMenu(MENU_LOC);
 		this.plugin = plugin;
-//		setEnabled(false);
+		//setEnabled(false);
 	}
 	
 	@Override
