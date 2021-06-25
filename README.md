@@ -1,6 +1,8 @@
 cyNeo4j
 ============
 
+[![build](https://github.com/cyNeo4j/cyNeo4j/actions/workflows/maven.yml/badge.svg)](https://github.com/cyNeo4j/cyNeo4j/actions/workflows/maven.yml)
+
 A Cytoscape app to connect to a Neo4j database and execute extensions of the Neo4j database.
 This app is being extended to query the shortest path for metabolic conversions.
 
