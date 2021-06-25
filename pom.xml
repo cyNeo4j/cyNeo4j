@@ -91,16 +91,6 @@
 	<!-- Links to the Cytoscape Maven repositories. -->
 	<repositories>
 		<repository>
-			<id>cytoscape_snapshots</id>
-			<snapshots>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<name>Cytoscape Snapshots</name>
-			<url>http://code.cytoscape.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-		<repository>
 			<id>cytoscape_releases</id>
 			<snapshots>
 				<enabled>false</enabled>
@@ -108,7 +98,7 @@
 			<releases>
 			</releases>
 			<name>Cytoscape Releases</name>
-			<url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_releases/</url>
 		</repository>
 	</repositories>
 
