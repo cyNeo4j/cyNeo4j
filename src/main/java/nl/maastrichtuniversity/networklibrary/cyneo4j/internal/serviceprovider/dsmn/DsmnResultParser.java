@@ -26,12 +26,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyTable;
 import org.cytoscape.work.TaskMonitor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.NeoUtils;

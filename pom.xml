@@ -6,7 +6,7 @@
 	<properties>
 		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.symbolicName>
 		<bundle.namespace>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.namespace>
-		<cytoscape.version>3.1.1</cytoscape.version>
+		<cytoscape.version>3.9.0</cytoscape.version>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -68,7 +68,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.3.7</version>
+				<version>5.1.2</version>
 				<extensions>true</extensions>
 				<configuration>
 					<!-- MANIFEST.mf -->
@@ -79,9 +79,8 @@
 
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-						<Embed-Dependency>joda-time,jackson-mapper-asl,jackson-core-asl,fluent-hc,commons-codec,commons-validator,commons-beanutils,commons-digester,commons-io,httpclient;scope=compile|runtime</Embed-Dependency>
+						<Embed-Dependency>httpclient,fluent-hc,commons-codec,commons-validator,commons-io,commons-beanutils,commons-digester3,jackson-core,jackson-databind,jackson-annotations,joda-time</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
-
 					</instructions>
 				</configuration>
 			</plugin>
@@ -106,8 +105,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<version>4.2.0</version>
+			<artifactId>osgi.core</artifactId>
+			<version>8.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -155,56 +155,55 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.2.6</version>
+			<version>4.5.13</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>fluent-hc</artifactId>
-			<version>4.2.6</version>
+			<version>4.5.13</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.9</version>
+			<version>1.15</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
-			<version>1.4.0</version>
+			<version>1.7</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>2.11.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.8.3</version>
+			<version>1.9.4</version>
 		</dependency>
 
 		<dependency>
-			<groupId>commons-digester</groupId>
-			<artifactId>commons-digester</artifactId>
-			<version>1.8.1</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.13</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-digester3</artifactId>
+			<version>3.2</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.13</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.0</version>
 		</dependency>
 
 		<dependency>
@@ -219,6 +218,7 @@
 			<version>1.5.2</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId>

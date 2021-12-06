@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyIdentifiable;
@@ -36,6 +35,8 @@ import org.cytoscape.model.CyTable;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CyUtils {
 	public static Set<CyNode> getNodesWithValue(final CyNetwork net, final CyTable table, final String colname,
