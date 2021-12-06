@@ -66,7 +66,7 @@ public class CyActivator extends AbstractCyActivator {
 				vmfFactoryP, vmfFactoryC);
 
 		ConnectInstanceMenuAction connectAction = new ConnectInstanceMenuAction(cyApplicationManager, plugin);
-		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(cyApplicationManager, plugin);
+		SyncUpMenuAction syncUpAction = new SyncUpMenuAction(plugin);
 		SyncDownMenuAction syncDownAction = new SyncDownMenuAction(cyApplicationManager, plugin);
 		SyncDsmnMenuAction syncDsmnAction = new SyncDsmnMenuAction(cyApplicationManager, plugin);
 

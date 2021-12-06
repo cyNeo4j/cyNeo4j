@@ -17,11 +17,20 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 
 import java.awt.event.ActionEvent;
 
-import org.cytoscape.application.CyApplicationManager;
+import javax.swing.JOptionPane;
+
 import org.cytoscape.application.swing.AbstractCyAction;
+import org.cytoscape.model.CyNetwork;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
+/**
+ * Menu item to sync Cytoscape network to Neo4j database (up)
+ * 
+ * @author gsu
+ * @author mkutmon
+ *
+ */
 public class SyncUpMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Sync Up";
@@ -29,8 +38,8 @@ public class SyncUpMenuAction extends AbstractCyAction {
 
 	private Plugin plugin;
 
-	public SyncUpMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin) {
-		super(MENU_TITLE, cyApplicationManager, null, null);
+	public SyncUpMenuAction(Plugin plugin) {
+		super(MENU_TITLE, plugin.getCyApplicationManager(), null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		setMenuGravity(0.4f);
@@ -43,10 +52,23 @@ public class SyncUpMenuAction extends AbstractCyAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		if(!plugin.getInteractor().isConnected()){
-//			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
-//			return;
-//		}
-		getPlugin().getInteractor().syncUp(true, getPlugin().getCyApplicationManager().getCurrentNetwork());
+		if (plugin.getInteractor().getInstanceLocation() != null) {
+			CyNetwork currNet = plugin.getCyApplicationManager().getCurrentNetwork();
+
+			if (currNet == null) {
+				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "No network selected!");
+			} else {
+				int input = JOptionPane.showConfirmDialog(plugin.getCySwingApplication().getJFrame(),
+						"Are you sure that you want to sync the current network to Neo4j?\nThis will overwrite the content in the Neo4j database.",
+						"Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (input == 0) {
+					getPlugin().getInteractor().syncUp(true, getPlugin().getCyApplicationManager().getCurrentNetwork());
+				}
+			}
+		} else {
+			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
+					"No connection to Neo4j server!\nFirst connect to a Neo4j instance.", "No connection",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

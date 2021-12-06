@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<properties>
 		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.symbolicName>
 		<bundle.namespace>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.namespace>
-		<cytoscape.version>3.1.1</cytoscape.version>  
+		<cytoscape.version>3.1.1</cytoscape.version>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
 	<artifactId>cyneo4j</artifactId>
-	<version>1.4.7</version>
-
+	<version>2.0.0</version>
 	<name>cyNeo4j</name>
 
 	<packaging>bundle</packaging>
@@ -45,7 +45,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<source>1.8</source> <!-- java version compatibility --> 
+					<source>1.8</source> <!-- java version compatibility -->
 					<target>1.8</target>
 					<optimize>true</optimize>
 					<showWarnings>true</showWarnings>
@@ -219,30 +219,40 @@
 			<version>1.5.2</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.neo4j.driver</groupId>
+			<artifactId>neo4j-java-driver</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 	</dependencies>
 
-<developers>
-        <developer>
-            <name>Georg Summer</name>
-        </developer>
-        <developer>
-            <name>Barry Demchak</name>
-        </developer>
-        <developer>
-            <name>Thomas Kelder</name>
-        </developer>
-        <developer>
-            <name>Jonathan Mélius</name>
-        </developer>
-        <developer>
-            <name>Keiichiro Ono</name>
-        </developer>
-        <developer>
-            <name>Denise Slenter</name>
-        </developer>     
-        
-</developers>
+	<developers>
+		<developer>
+			<name>Georg Summer</name>
+		</developer>
+		<developer>
+			<name>Barry Demchak</name>
+		</developer>
+		<developer>
+			<name>Thomas Kelder</name>
+		</developer>
+		<developer>
+			<name>Jonathan Mélius</name>
+		</developer>
+		<developer>
+			<name>Keiichiro Ono</name>
+		</developer>
+		<developer>
+			<name>Denise Slenter</name>
+		</developer>
+		<developer>
+			<name>Jonathan Melius</name>
+		</developer>
+		<developer>
+			<name>Martina Kutmon</name>
+		</developer>
+	</developers>
 
 
 </project>

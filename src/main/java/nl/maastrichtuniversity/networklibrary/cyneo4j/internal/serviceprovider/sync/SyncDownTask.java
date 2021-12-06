@@ -42,6 +42,13 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.im
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.PassThroughResponseHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 
+/**
+ * Task syncing Neo4j database graph to Cytoscape (down)
+ * 
+ * @author gsu
+ * @author mkutmon
+ *
+ */
 public class SyncDownTask extends AbstractTask {
 
 	private boolean mergeInCurrent;
@@ -76,9 +83,6 @@ public class SyncDownTask extends AbstractTask {
 
 	@Override
 	public void run(TaskMonitor taskMonitor) throws Exception {
-//		System.out.println("instance: " + instanceLocation);
-//		System.out.println("cypher: " + cypherURL);
-//		System.out.println("auth: " + auth);
 		if (mergeInCurrent) {
 
 		} else {

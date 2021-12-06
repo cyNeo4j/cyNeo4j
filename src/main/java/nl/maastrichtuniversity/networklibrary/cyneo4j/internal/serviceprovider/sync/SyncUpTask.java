@@ -17,8 +17,6 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
@@ -32,6 +30,13 @@ import org.cytoscape.work.TaskMonitor;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.general.ReturnCodeResponseHandler;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 
+/**
+ * Task syncing Cytoscape network to Neo4j database (up)
+ * 
+ * @author gsu
+ * @author mkutmon
+ *
+ */
 public class SyncUpTask extends AbstractTask {
 
 	private boolean wipeRemote;
@@ -49,15 +54,6 @@ public class SyncUpTask extends AbstractTask {
 
 	@Override
 	public void run(TaskMonitor taskMonitor) throws Exception {
-
-		CyNetwork currNet = getCurrentNetwork();
-
-		if (currNet == null) {
-			JOptionPane.showMessageDialog(null, "No network selected!");
-			System.out.println("no network selected!");
-			return;
-		}
-
 		taskMonitor.setTitle("Synchronizing UP to the Server");
 		double progress = 0.0;
 
@@ -68,8 +64,6 @@ public class SyncUpTask extends AbstractTask {
 				String wipeQuery = "{ \"query\" : \"MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r\",\"params\" : {}}";
 				progress = 0.1;
 				taskMonitor.setProgress(progress);
-
-//				System.out.println(wipeQuery);
 
 				wiped = Request.Post(getCypherURL()).addHeader("Authorization:", auth)
 						.bodyString(wipeQuery, ContentType.APPLICATION_JSON).execute()
@@ -92,7 +86,6 @@ public class SyncUpTask extends AbstractTask {
 					String cypher = "{ \"query\" : \"CREATE (n { props }) return id(n)\", \"params\" : {   \"props\" : [ "
 							+ params + " ] } }";
 
-//					System.out.println("\n" + cypher);
 					Long neoid = Request.Post(getCypherURL()).addHeader("Authorization:", auth)
 							.bodyString(cypher, ContentType.APPLICATION_JSON).execute()
 							.handleResponse(new CreateIdReturnResponseHandler());
@@ -139,10 +132,6 @@ public class SyncUpTask extends AbstractTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected CyNetwork getCurrentNetwork() {
-		return currNet;
 	}
 
 	protected String getCypherURL() {

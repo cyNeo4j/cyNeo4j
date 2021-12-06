@@ -17,12 +17,20 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
-@SuppressWarnings("serial")
+/**
+ * Menu item to sync Neo4j database to Cytoscape (down)
+ * 
+ * @author gsu
+ * @author mkutmon
+ *
+ */
 public class SyncDownMenuAction extends AbstractCyAction {
 
 	public final static String MENU_TITLE = "Sync Down";
@@ -45,11 +53,18 @@ public class SyncDownMenuAction extends AbstractCyAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		if(!plugin.getInteractor().isConnected()){
-//			JOptionPane.showMessageDialog(null, "Not connected to any remote instance");
-//			return;
-//		}
-		getPlugin().getInteractor().syncDown(false);
+		if (plugin.getInteractor().getInstanceLocation() != null) {
+			int input = JOptionPane.showConfirmDialog(plugin.getCySwingApplication().getJFrame(),
+					"Are you sure that you want to sync the network in the Neo4j database to Cytoscape?\nMake sure the network in the Neo4j database is not too big!\nOtherwise, use the query option to extract subnetworks from the database.",
+					"Confirm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (input == 0) {
+				getPlugin().getInteractor().syncDown(false);
+			}
+		} else {
+			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
+					"No connection to Neo4j server!\nFirst connect to a Neo4j instance.", "No connection",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 }
