@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
 
 import java.io.IOException;
@@ -30,46 +45,45 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 
 	public static final int IterationStepSize = 10;
-	
+
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
-	
+
 	private boolean runIt = false;
 	private int numRuns = 0;
-	
-	
-	private Map<String,Object> params;
+
+	private Map<String, Object> params;
 
 	public ForceAtlas2LayoutExtExec() {
 		params = new HashMap<String, Object>();
-		
+
 		// default parameters
 		params.put("dissuadeHubs", false);
 		params.put("linLogMode", false);
 		params.put("preventOverlap", false);
 		params.put("edgeWeightInfluence", 1.0);
-		
+
 		params.put("scaling", 10.0);
 		params.put("strongGravityMode", false);
 		params.put("gravity", 1.0);
-		
+
 		params.put("tolerance", 0.1);
 		params.put("approxRepulsion", false);
 		params.put("approx", 1.2);
-		
+
 		params.put("saveInGraph", true);
 		params.put("numIterations", 1000);
 	}
 
 	@Override
-	public boolean collectParameters() {	
+	public boolean collectParameters() {
 		currNet = getPlugin().getCyApplicationManager().getCurrentNetwork();
 
 		JDialog dialog = new JDialog(plugin.getCySwingApplication().getJFrame());
 		dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		ForceAtlas2LayoutControlPanel controls = new ForceAtlas2LayoutControlPanel(dialog,params);
+		ForceAtlas2LayoutControlPanel controls = new ForceAtlas2LayoutControlPanel(dialog, params);
 		controls.setOpaque(true);
 		dialog.setModal(true);
 		dialog.setContentPane(controls);
@@ -79,11 +93,9 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 		dialog.setVisible(true);
 
 		runIt = controls.runIt();
-		
+
 		return true;
 	}
-
-	
 
 	private Plugin getPlugin() {
 		return plugin;
@@ -92,15 +104,15 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 
-		List<Double> values = (List<Double>)callRetValue;
+		List<Double> values = (List<Double>) callRetValue;
 
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
 		CyNetworkView networkView = getPlugin().getCyNetViewMgr().getNetworkViews(currNet).iterator().next();
 
-		for(int i = 0; i < (values.size() / 3); ++i){
-			Long neoid = values.get(i*3).longValue();
-			Double x = values.get(i*3+1);
-			Double y = values.get(i*3+2);
+		for (int i = 0; i < (values.size() / 3); ++i) {
+			Long neoid = values.get(i * 3).longValue();
+			Double x = values.get(i * 3 + 1);
+			Double y = values.get(i * 3 + 2);
 
 			Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 			CyNode n = nodeSet.iterator().next();
@@ -129,31 +141,31 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 	public List<ExtensionCall> buildExtensionCalls() {
 		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 
-		if(runIt){
-			
+		if (runIt) {
+
 			String urlFragment = extension.getEndpoint();
 
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
-			try {		
-				int numIterations = (Integer)params.get("numIterations");
-				
-				while(numIterations > 0){
-				
+			try {
+				int numIterations = (Integer) params.get("numIterations");
+
+				while (numIterations > 0) {
+
 					int itersToDo = IterationStepSize;
-					
-					if(numIterations < IterationStepSize)
+
+					if (numIterations < IterationStepSize)
 						itersToDo = numIterations;
-					
+
 					numIterations -= IterationStepSize;
-					
-					Map<String,Object> callParams = new HashMap<String,Object>(params);
+
+					Map<String, Object> callParams = new HashMap<String, Object>(params);
 
 					callParams.put("numIterations", itersToDo);
-					callParams.put("pickup",numRuns>0);
-				
+					callParams.put("pickup", numRuns > 0);
+
 					payload = mapper.writeValueAsString(callParams);
-					calls.add(new Neo4jCall(urlFragment,payload,false));
+					calls.add(new Neo4jCall(urlFragment, payload, false));
 					++numRuns;
 				}
 			} catch (JsonGenerationException e) {
@@ -167,7 +179,6 @@ public class ForceAtlas2LayoutExtExec implements ContinuiousExtensionExecutor {
 
 		return calls;
 	}
-	
 
 	@Override
 	public boolean doContinue() {

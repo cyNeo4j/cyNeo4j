@@ -1,18 +1,26 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.Extension;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.ExtensionCall;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.ExtensionExecutor;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.CypherExtExec;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
+
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
 @SuppressWarnings("serial")
 public class SyncDownMenuAction extends AbstractCyAction {
@@ -22,13 +30,13 @@ public class SyncDownMenuAction extends AbstractCyAction {
 
 	private Plugin plugin;
 
-	public SyncDownMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
+	public SyncDownMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin) {
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
 		setMenuGravity(0.3f);
 		this.plugin = plugin;
-		
+
 	}
 
 	protected Plugin getPlugin() {

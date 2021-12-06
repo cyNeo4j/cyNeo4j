@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
 
 import java.awt.event.ActionEvent;
@@ -20,7 +35,7 @@ public class CypherMenuAction extends AbstractCyAction {
 
 	private Plugin plugin;
 
-	public CypherMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
+	public CypherMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin) {
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
@@ -28,26 +43,27 @@ public class CypherMenuAction extends AbstractCyAction {
 		this.plugin = plugin;
 
 	}
-	
+
 	@Override
-	public void actionPerformed(ActionEvent e) {	
+	public void actionPerformed(ActionEvent e) {
 		Extension cypherExt = getPlugin().getInteractor().supportsExtension("cypher");
-		
+
 		ExtensionExecutor exec = new CypherExtExec();
-		
+
 		exec.setPlugin(plugin);
 		exec.setExtension(cypherExt);
-		
-		if(!exec.collectParameters()){
-			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + cypherExt.getName());
+
+		if (!exec.collectParameters()) {
+			JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
+					"Failed to collect parameters for " + cypherExt.getName());
 			return;
 		}
-		
+
 		List<ExtensionCall> calls = exec.buildExtensionCalls();
-		
-		for(ExtensionCall call : calls){
-			Object callRetValue = plugin.getInteractor().executeExtensionCall(call,false);
-			exec.processCallResponse(call,callRetValue);
+
+		for (ExtensionCall call : calls) {
+			Object callRetValue = plugin.getInteractor().executeExtensionCall(call, false);
+			exec.processCallResponse(call, callRetValue);
 		}
 	}
 
@@ -55,5 +71,4 @@ public class CypherMenuAction extends AbstractCyAction {
 		return plugin;
 	}
 
-	
 }

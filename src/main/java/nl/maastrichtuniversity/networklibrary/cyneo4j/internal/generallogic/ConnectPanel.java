@@ -1,10 +1,24 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.generallogic;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -12,16 +26,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+
+import org.cytoscape.application.swing.CySwingApplication;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.Neo4jServer;
 
-import org.apache.commons.validator.routines.UrlValidator;
-import org.cytoscape.application.swing.CySwingApplication;
-
-@SuppressWarnings("serial")
-public class ConnectPanel extends JPanel implements ActionListener { //, DocumentListener{
+public class ConnectPanel extends JPanel implements ActionListener {
 
 	private static final String CANCEL_CMD = "cancel";
 
@@ -30,25 +40,24 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 	private JDialog dialog = null;
 	private Neo4jServer interactor = null;
 	private CySwingApplication cySwingApp = null;
-	
+
 	private JTextField servURL = null;
-//	private JLabel status = null;
 	private JButton okButton = null;
-	
+
 	private JTextField user = null;
 	private JPasswordField pass = null;
-	
-	private ImageIcon green = null;
-	private ImageIcon red = null;
-	
+
+//	private ImageIcon green = null;
+//	private ImageIcon red = null;
+
 	public ConnectPanel(JDialog dialog, Neo4jServer neo4jInteractor, CySwingApplication cySwingApp) {
 		this.dialog = dialog;
 		this.interactor = neo4jInteractor;
 		this.cySwingApp = cySwingApp;
 
-		green = new ImageIcon(getClass().getResource("/images/tick30.png"));
-		red = new ImageIcon(getClass().getResource("/images/cross30.png"));
-		
+//		green = new ImageIcon(getClass().getResource("/images/tick30.png"));
+//		red = new ImageIcon(getClass().getResource("/images/cross30.png"));
+
 		GroupLayout layout = new GroupLayout(this);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
@@ -63,60 +72,36 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 //		user.getDocument().addDocumentListener(this);
 		pass = new JPasswordField();
 //		pass.getDocument().addDocumentListener(this);
-		
+
 //		status = new JLabel();
 //		status.setIcon(red);
-		
+
 		okButton = new JButton("Connect");
 		okButton.addActionListener(this);
 		okButton.setActionCommand(OK_CMD);
 //		okButton.setEnabled(false);
-		
+
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand(CANCEL_CMD);
-		
-		layout.setHorizontalGroup(
-				layout.createParallelGroup()
-					.addComponent(servURLLabel)
-					.addGroup(layout.createSequentialGroup()
-						.addComponent(servURL)
+
+		layout.setHorizontalGroup(layout.createParallelGroup().addComponent(servURLLabel)
+				.addGroup(layout.createSequentialGroup().addComponent(servURL)
 //						.addComponent(status))
-						)
-					.addGroup(layout.createParallelGroup()
-						.addComponent(userLabel)
-						.addComponent(passLabel)
-						)
-					.addGroup(layout.createParallelGroup()
-						.addComponent(user)
-						.addComponent(pass)
-						)
-					.addGroup(layout.createSequentialGroup()
-						.addComponent(okButton)
-						.addComponent(cancelButton))
-				);
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-					.addComponent(servURLLabel)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(servURL)
+				).addGroup(layout.createParallelGroup().addComponent(userLabel).addComponent(passLabel))
+				.addGroup(layout.createParallelGroup().addComponent(user).addComponent(pass))
+				.addGroup(layout.createSequentialGroup().addComponent(okButton).addComponent(cancelButton)));
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(servURLLabel)
+				.addGroup(layout.createParallelGroup().addComponent(servURL)
 //							.addComponent(status)
-							)
-					.addGroup(layout.createSequentialGroup()
-							.addComponent(userLabel)
-							.addComponent(user)
-							.addComponent(passLabel)
-							.addComponent(pass)
-							)
-					.addGroup(layout.createParallelGroup()
-							.addComponent(okButton)
-							.addComponent(cancelButton)
-							)
-				);
-	
+				)
+				.addGroup(layout.createSequentialGroup().addComponent(userLabel).addComponent(user)
+						.addComponent(passLabel).addComponent(pass))
+				.addGroup(layout.createParallelGroup().addComponent(okButton).addComponent(cancelButton)));
+
 		this.setLayout(layout);
-		
-		if(interactor.getInstanceLocation() != null){
+
+		if (interactor.getInstanceLocation() != null) {
 			servURL.setText(interactor.getInstanceLocation());
 		} else {
 			servURL.setText("http://localhost:7474");
@@ -125,30 +110,31 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals(CANCEL_CMD)){
+		if (e.getActionCommand().equals(CANCEL_CMD)) {
 			closeUp();
 		}
-		
-		if(e.getActionCommand().equals(OK_CMD)){
+
+		if (e.getActionCommand().equals(OK_CMD)) {
 //			if(validURL()){
-			switch(interactor.connect(getUrl(),getUser(),getPass())){
+			switch (interactor.connect(getUrl(), getUser(), getPass())) {
 			case CONNECT_SUCCESS:
 				JOptionPane.showMessageDialog(cySwingApp.getJFrame(), "Connected!");
 				closeUp();
 				break;
-				
+
 			case CONNECT_FAILED:
-				JOptionPane.showMessageDialog(cySwingApp.getJFrame(), "Connecting to Neo4j server failed! Check the URL");
+				JOptionPane.showMessageDialog(cySwingApp.getJFrame(),
+						"Connecting to Neo4j server failed! Check the URL");
 				break;
-				
+
 			case AUTH_FAILURE:
 				JOptionPane.showMessageDialog(cySwingApp.getJFrame(), "User and/or password are not valid!");
 				break;
-				
+
 			case AUTH_REQUIRED:
 				JOptionPane.showMessageDialog(cySwingApp.getJFrame(), "The Neo4j server requires authentication");
 				break;
-			
+
 //				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for ");
 			}
 //			}
@@ -159,15 +145,15 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 //		UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
 //		return (!getUrl().contains(" ")) && validator.isValid(getUrl()) && interactor.validateConnection(getUrl(),getUser(),getPass());
 //	}
-	
+
 	private String getUrl() {
 		return servURL.getText();
 	}
-	
+
 	private String getUser() {
 		return user.getText();
 	}
-	
+
 	private String getPass() {
 		String password = new String(pass.getPassword());
 		return password;
@@ -177,7 +163,7 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 		return dialog;
 	}
 
-	protected void closeUp(){
+	protected void closeUp() {
 		getDialog().setVisible(false);
 	}
 
@@ -195,7 +181,7 @@ public class ConnectPanel extends JPanel implements ActionListener { //, Documen
 //	public void changedUpdate(DocumentEvent e) {
 //		checkURLChange();
 //	}
-	
+
 //	protected void checkURLChange(){		
 //		if(validURL()){
 //			status.setIcon(green);

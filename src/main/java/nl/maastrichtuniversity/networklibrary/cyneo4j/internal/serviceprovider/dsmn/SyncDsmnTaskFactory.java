@@ -1,8 +1,21 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn;
 
 import java.util.Set;
-
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.model.CyNetworkFactory;
@@ -14,6 +27,8 @@ import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.AbstractTaskFactory;
 import org.cytoscape.work.TaskIterator;
+
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
 public class SyncDsmnTaskFactory extends AbstractTaskFactory {
 
@@ -32,10 +47,8 @@ public class SyncDsmnTaskFactory extends AbstractTaskFactory {
 	private VisualMappingFunctionFactory vmfFactoryC;
 	private Set<String> queryList;
 	private Plugin plugin;
-	
-	public SyncDsmnTaskFactory(
-			boolean mergeInCurrent, Plugin plugin,
-			String instanceLocation, String cypherURL,
+
+	public SyncDsmnTaskFactory(boolean mergeInCurrent, Plugin plugin, String instanceLocation, String cypherURL,
 			String auth) {
 		super();
 		this.cyNetworkMgr = plugin.getCyNetworkManager();
@@ -54,18 +67,12 @@ public class SyncDsmnTaskFactory extends AbstractTaskFactory {
 		this.cySwingApp = plugin.getCySwingApplication();
 		this.plugin = plugin;
 	}
-	
-	public SyncDsmnTaskFactory(CyNetworkManager cyNetworkMgr,
-			boolean mergeInCurrent, CyNetworkFactory cyNetworkFactory,
-			String instanceLocation, String cypherURL,
-			String auth,
-			CyNetworkViewManager cyNetworkViewMgr,
-			CyNetworkViewFactory cyNetworkViewFactory,
-			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
-			VisualMappingManager visualMappingMgr,
-			Set<String> queryList,
-			VisualMappingFunctionFactory vmfFactoryP,
-			VisualMappingFunctionFactory vmfFactoryC ) {
+
+	public SyncDsmnTaskFactory(CyNetworkManager cyNetworkMgr, boolean mergeInCurrent, CyNetworkFactory cyNetworkFactory,
+			String instanceLocation, String cypherURL, String auth, CyNetworkViewManager cyNetworkViewMgr,
+			CyNetworkViewFactory cyNetworkViewFactory, CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
+			VisualMappingManager visualMappingMgr, Set<String> queryList, VisualMappingFunctionFactory vmfFactoryP,
+			VisualMappingFunctionFactory vmfFactoryC) {
 		super();
 		this.cyNetworkMgr = cyNetworkMgr;
 		this.mergeInCurrent = mergeInCurrent;

@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
 
 import java.util.ArrayList;
@@ -23,7 +38,7 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 	private Plugin plugin;
 	private Extension extension;
 	private CyNetwork currNet;
-	
+
 	public SimpleLayoutExtExec() {
 	}
 
@@ -39,28 +54,26 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
-		
-		List<Double> values = (List<Double>)callRetValue;
-		
+
+		List<Double> values = (List<Double>) callRetValue;
+
 		CyTable defNodeTab = currNet.getDefaultNodeTable();
 		CyNetworkView networkView = getPlugin().getCyNetViewMgr().getNetworkViews(currNet).iterator().next();
-		
-		for(int i = 0; i < (values.size() / 3); ++i){
-			Long neoid = values.get(i*3).longValue();
-			Double x = values.get(i*3+1);
-			Double y = values.get(i*3+2);
-			
-			
+
+		for (int i = 0; i < (values.size() / 3); ++i) {
+			Long neoid = values.get(i * 3).longValue();
+			Double x = values.get(i * 3 + 1);
+			Double y = values.get(i * 3 + 2);
+
 			Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 			CyNode n = nodeSet.iterator().next();
-			
+
 			View<CyNode> nodeView = networkView.getNodeView(n);
 			nodeView.setVisualProperty(BasicVisualLexicon.NODE_X_LOCATION, x);
 			nodeView.setVisualProperty(BasicVisualLexicon.NODE_Y_LOCATION, y);
-			
+
 			CyUtils.updateVisualStyle(getPlugin().getVisualMappingManager(), networkView, currNet);
 		}
-		
 
 	}
 
@@ -79,12 +92,12 @@ public class SimpleLayoutExtExec implements ExtensionExecutor {
 	@Override
 	public List<ExtensionCall> buildExtensionCalls() {
 		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
-		
+
 		String urlFragment = extension.getEndpoint();
 		String payload = "{\"saveInGraph\":false}";
-		
-		calls.add(new Neo4jCall(urlFragment,payload));
-		
+
+		calls.add(new Neo4jCall(urlFragment, payload));
+
 		return calls;
 	}
 }

@@ -1,4 +1,20 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,18 +30,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.LayoutStyle;
 
-
 public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionListener {
 
 	private JCheckBox saveInGraph;
 	private JCheckBox doAsync;
-	
+
 	private JCheckBox betweennes;
 	private JCheckBox stress;
 	private JCheckBox eccentricity;
 	private JRadioButton undirButton;
 	private JRadioButton dirButton;
-	
+
 	private JDialog dialog = null;
 
 	private boolean runIt = false;
@@ -43,9 +58,8 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	private JCheckBox closeness;
 
 	private JCheckBox clustCoeff;
-	
 
-	public NeoNetworkAnalyzerControlPanel(JDialog dialog){
+	public NeoNetworkAnalyzerControlPanel(JDialog dialog) {
 		this.dialog = dialog;
 
 		JPanel directionalityPanel = buildDirectionalityPanel();
@@ -61,30 +75,15 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 
-		layout.setHorizontalGroup(
-				layout.createParallelGroup()
-				.addComponent(directionalityPanel)
-				.addComponent(sep1)
-				.addComponent(parameterPanel)
-				.addComponent(sep2)
-				.addComponent(savePanel)
-				.addComponent(sep3)
-				.addComponent(buttonPanel)
-				);
+		layout.setHorizontalGroup(layout.createParallelGroup().addComponent(directionalityPanel).addComponent(sep1)
+				.addComponent(parameterPanel).addComponent(sep2).addComponent(savePanel).addComponent(sep3)
+				.addComponent(buttonPanel));
 
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-				.addComponent(directionalityPanel)
-				.addComponent(sep1)
-				.addComponent(parameterPanel)
-				.addComponent(sep2)
-				.addComponent(savePanel)
-				.addComponent(sep3)
-				.addComponent(buttonPanel)
-				);
-		
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(directionalityPanel).addComponent(sep1)
+				.addComponent(parameterPanel).addComponent(sep2).addComponent(savePanel).addComponent(sep3)
+				.addComponent(buttonPanel));
+
 		this.setLayout(layout);
-
 
 	}
 
@@ -112,22 +111,15 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
-		
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(saveInGraph,GroupLayout.Alignment.LEADING)
-					.addComponent(doAsync)
-				);
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-					.addComponent(saveInGraph)
-					.addComponent(doAsync)
-					
-				);
-		
+
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(saveInGraph, GroupLayout.Alignment.LEADING).addComponent(doAsync));
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(saveInGraph).addComponent(doAsync)
+
+		);
+
 		res.setLayout(layout);
 
-		
 		return res;
 	}
 
@@ -136,92 +128,65 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 
 		betweennes = new JCheckBox("Betweenness");
 		betweennes.setSelected(true);
-		
+
 		eccentricity = new JCheckBox("Eccentricity");
 		eccentricity.setSelected(true);
-		
+
 		stress = new JCheckBox("Stress");
 		stress.setSelected(true);
-		
+
 		avgSP = new JCheckBox("Average Shortest Path Length");
 		avgSP.setSelected(true);
-		
+
 		radiality = new JCheckBox("Radiality");
 		radiality.setSelected(true);
-		
+
 		topoCoeff = new JCheckBox("Topological Coeffecient");
 		topoCoeff.setSelected(true);
-		
+
 		neighbourhoodConn = new JCheckBox("Neighbourhood Connectivity");
 		neighbourhoodConn.setSelected(true);
-		
+
 		multiEdgePairs = new JCheckBox("Multi Edge Pairs");
 		multiEdgePairs.setSelected(true);
-		
+
 		closeness = new JCheckBox("Closeness");
 		closeness.setSelected(true);
-		
+
 		clustCoeff = new JCheckBox("Clustering Coefficient");
 		clustCoeff.setSelected(true);
 		// ...
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
-		
-		layout.setHorizontalGroup(
-				layout.createSequentialGroup()
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(paramsLabel)
-						.addComponent(betweennes)
-						.addComponent(eccentricity)
-						.addComponent(radiality)
-						.addComponent(stress)
-						.addComponent(closeness)
-						)
-				.addGroup(layout.createParallelGroup()
-						.addComponent(neighbourhoodConn)
-						.addComponent(avgSP)
-						.addComponent(topoCoeff)
-						.addComponent(multiEdgePairs)
-						.addComponent(clustCoeff)
-						)
-				);
+		layout.setHorizontalGroup(layout.createSequentialGroup()
 
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-				.addComponent(paramsLabel)
+				.addGroup(layout.createParallelGroup().addComponent(paramsLabel).addComponent(betweennes)
+						.addComponent(eccentricity).addComponent(radiality).addComponent(stress)
+						.addComponent(closeness))
+				.addGroup(layout.createParallelGroup().addComponent(neighbourhoodConn).addComponent(avgSP)
+						.addComponent(topoCoeff).addComponent(multiEdgePairs).addComponent(clustCoeff)));
+
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(paramsLabel)
 				.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(betweennes)
-						
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER, false).addComponent(betweennes)
+
 						.addComponent(neighbourhoodConn)
-						
-						
-						)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(eccentricity)
+
+				).addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER, false).addComponent(eccentricity)
 						.addComponent(avgSP)
-						
-						
-						)
-				
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(radiality)
-						.addComponent(topoCoeff)
-						)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(stress)
-						.addComponent(multiEdgePairs)
-						)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER,false)
-						.addComponent(closeness)
-						.addComponent(clustCoeff)
-						)
-				);
-		
+
+				)
+
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER, false).addComponent(radiality)
+						.addComponent(topoCoeff))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER, false).addComponent(stress)
+						.addComponent(multiEdgePairs))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER, false).addComponent(closeness)
+						.addComponent(clustCoeff)));
+
 		res.setLayout(layout);
-		
 
 		return res;
 	}
@@ -235,72 +200,64 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 		ButtonGroup directionality = new ButtonGroup();
 		directionality.add(undirButton);
 		directionality.add(dirButton);
-		
+
 		undirButton.setSelected(true);
-		
-		
+
 		JPanel res = new JPanel();
 
 		GroupLayout layout = new GroupLayout(res);
-		
-		layout.setHorizontalGroup(
-				layout.createParallelGroup()
-					.addComponent(directionalityLabel)
-					.addComponent(undirButton)
-					.addComponent(dirButton)
-				);
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-					.addComponent(directionalityLabel)
-					.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-					.addComponent(undirButton)
-					.addComponent(dirButton)
-					
-				);
-		
+
+		layout.setHorizontalGroup(layout.createParallelGroup().addComponent(directionalityLabel)
+				.addComponent(undirButton).addComponent(dirButton));
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(directionalityLabel)
+				.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(undirButton)
+				.addComponent(dirButton)
+
+		);
+
 		res.setLayout(layout);
-		
+
 		return res;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("RUN_CMD")){
-			runIt  = true;
-		} else if(e.getActionCommand().equals("CANCEL_CMD")){
+		if (e.getActionCommand().equals("RUN_CMD")) {
+			runIt = true;
+		} else if (e.getActionCommand().equals("CANCEL_CMD")) {
 			runIt = false;
 		}
 		closeUp();
 	}
-	
-	protected boolean runIt(){
+
+	protected boolean runIt() {
 		return runIt;
 	}
-	
-	protected void closeUp(){
+
+	protected void closeUp() {
 		dialog.setVisible(false);
 	}
-	
-	public boolean isSaveInGraph(){
+
+	public boolean isSaveInGraph() {
 		return saveInGraph.isSelected();
 	}
-	
-	public boolean isDoAsync(){
+
+	public boolean isDoAsync() {
 		return doAsync.isSelected();
 	}
-	
-	public boolean isBetweenness(){
+
+	public boolean isBetweenness() {
 		return betweennes.isSelected();
 	}
-	
-	public boolean isStress(){
+
+	public boolean isStress() {
 		return stress.isSelected();
 	}
-	
+
 	public boolean isEccentricity() {
 		return eccentricity.isSelected();
 	}
-	
+
 	public boolean isUndirected() {
 		return undirButton.isSelected();
 	}
@@ -332,7 +289,5 @@ public class NeoNetworkAnalyzerControlPanel extends JPanel implements ActionList
 	public boolean isClustCoeff() {
 		return clustCoeff.isSelected();
 	}
-	
-	
-	
+
 }

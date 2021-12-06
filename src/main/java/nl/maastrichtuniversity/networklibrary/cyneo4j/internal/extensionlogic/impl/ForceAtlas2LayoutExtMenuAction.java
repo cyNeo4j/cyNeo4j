@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
 
 import java.awt.event.ActionEvent;
@@ -23,7 +38,7 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 
 	private Plugin plugin;
 
-	public ForceAtlas2LayoutExtMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin){
+	public ForceAtlas2LayoutExtMenuAction(CyApplicationManager cyApplicationManager, Plugin plugin) {
 		super(MENU_TITLE, cyApplicationManager, null, null);
 		setPreferredMenu(MENU_LOC);
 		setEnabled(false);
@@ -38,63 +53,64 @@ public class ForceAtlas2LayoutExtMenuAction extends AbstractCyAction {
 		ForceAtlas2LayoutExtExec exec = new ForceAtlas2LayoutExtExec();
 		exec.setPlugin(plugin);
 		exec.setExtension(forceAtlas2LayoutExt);
-		
+
 		ForceAtlas2ExecutionTaskFactory factory = new ForceAtlas2ExecutionTaskFactory(exec);
-		do{
-			if(!exec.collectParameters()){
-				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(), "Failed to collect parameters for " + forceAtlas2LayoutExt.getName());
+		do {
+			if (!exec.collectParameters()) {
+				JOptionPane.showMessageDialog(plugin.getCySwingApplication().getJFrame(),
+						"Failed to collect parameters for " + forceAtlas2LayoutExt.getName());
 				return;
 			}
-			
+
 			TaskIterator it = factory.createTaskIterator();
 			plugin.getDialogTaskManager().execute(it);
-			
-		} while(exec.doContinue());
+
+		} while (exec.doContinue());
 	}
 
 	protected Plugin getPlugin() {
 		return plugin;
 	}
-	
-	protected class ForceAtlas2ExecutionTask extends AbstractTask{
+
+	protected class ForceAtlas2ExecutionTask extends AbstractTask {
 
 		protected ForceAtlas2LayoutExtExec exec;
-		
-		public ForceAtlas2ExecutionTask(ForceAtlas2LayoutExtExec exec){
+
+		public ForceAtlas2ExecutionTask(ForceAtlas2LayoutExtExec exec) {
 			this.exec = exec;
 		}
-		
+
 		@Override
 		public void run(TaskMonitor monitor) throws Exception {
-			monitor.setStatusMessage("Executing ForceAtlas2 layout"); 
+			monitor.setStatusMessage("Executing ForceAtlas2 layout");
 
 			List<ExtensionCall> calls = exec.buildExtensionCalls();
 
 			double progress = 0.0;
-			for(ExtensionCall call : calls){
-				Object callRetValue = plugin.getInteractor().executeExtensionCall(call,false);
-				exec.processCallResponse(call,callRetValue);
+			for (ExtensionCall call : calls) {
+				Object callRetValue = plugin.getInteractor().executeExtensionCall(call, false);
+				exec.processCallResponse(call, callRetValue);
 				++progress;
-				monitor.setProgress(progress / ((double)calls.size()));
-				
+				monitor.setProgress(progress / ((double) calls.size()));
+
 			}
-			
+
 		}
-		
+
 	}
-	
-	protected class ForceAtlas2ExecutionTaskFactory extends AbstractTaskFactory{
+
+	protected class ForceAtlas2ExecutionTaskFactory extends AbstractTaskFactory {
 
 		protected ForceAtlas2LayoutExtExec exec;
-		
-		public ForceAtlas2ExecutionTaskFactory(ForceAtlas2LayoutExtExec exec){
+
+		public ForceAtlas2ExecutionTaskFactory(ForceAtlas2LayoutExtExec exec) {
 			this.exec = exec;
 		}
-		
+
 		@Override
 		public TaskIterator createTaskIterator() {
 			return new TaskIterator(new ForceAtlas2ExecutionTask(exec));
 		}
-		
+
 	}
 }

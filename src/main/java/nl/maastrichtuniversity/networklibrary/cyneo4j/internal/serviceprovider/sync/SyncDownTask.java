@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.sync;
 
 import java.io.IOException;
@@ -5,10 +20,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.CypherResultParser;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.PassThroughResponseHandler;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
@@ -27,7 +38,11 @@ import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.work.AbstractTask;
 import org.cytoscape.work.TaskMonitor;
 
-public class SyncDownTask extends AbstractTask{
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl.CypherResultParser;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.extension.PassThroughResponseHandler;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
+
+public class SyncDownTask extends AbstractTask {
 
 	private boolean mergeInCurrent;
 	private String cypherURL;
@@ -41,15 +56,10 @@ public class SyncDownTask extends AbstractTask{
 	private VisualMappingManager visualMappingMgr;
 
 	int chunkSize = 500;
-	
-	public SyncDownTask(boolean mergeInCurrent, String cypherURL,
-			String instanceLocation, 
-			String auth,
-			CyNetworkFactory cyNetworkFactory,
-			CyNetworkManager cyNetworkMgr,
-			CyNetworkViewManager cyNetworkViewMgr,
-			CyNetworkViewFactory cyNetworkViewFactory,
-			CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
+
+	public SyncDownTask(boolean mergeInCurrent, String cypherURL, String instanceLocation, String auth,
+			CyNetworkFactory cyNetworkFactory, CyNetworkManager cyNetworkMgr, CyNetworkViewManager cyNetworkViewMgr,
+			CyNetworkViewFactory cyNetworkViewFactory, CyLayoutAlgorithmManager cyLayoutAlgorithmMgr,
 			VisualMappingManager visualMappingMgr) {
 		super();
 		this.mergeInCurrent = mergeInCurrent;
@@ -69,7 +79,7 @@ public class SyncDownTask extends AbstractTask{
 //		System.out.println("instance: " + instanceLocation);
 //		System.out.println("cypher: " + cypherURL);
 //		System.out.println("auth: " + auth);
-		if(mergeInCurrent){
+		if (mergeInCurrent) {
 
 		} else {
 			try {
@@ -78,80 +88,86 @@ public class SyncDownTask extends AbstractTask{
 				String edgeIdQuery = "{ \"query\" : \"MATCH ()-[r]->() RETURN id(r)\",\"params\" : {}}";
 
 				IdListHandler idListHandler = new IdListHandler();
-				List<Long> nodeIds = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(nodeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
-				List<Long> edgeIds = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(edgeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
-				
+				List<Long> nodeIds = Request.Post(cypherURL).addHeader("Authorization:", auth)
+						.bodyString(nodeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
+				List<Long> edgeIds = Request.Post(cypherURL).addHeader("Authorization:", auth)
+						.bodyString(edgeIdQuery, ContentType.APPLICATION_JSON).execute().handleResponse(idListHandler);
+
 				int numQueries = nodeIds.size() + edgeIds.size();
-				
-				double progress_increment = (0.7 / (double)numQueries) * (double)chunkSize;				
+
+				double progress_increment = (0.7 / (double) numQueries) * (double) chunkSize;
 				double progress = 0.1;
 
 				taskMonitor.setProgress(progress);
-				
-				if(nodeIds.size() > 0){
+
+				if (nodeIds.size() > 0) {
 
 					taskMonitor.setTitle("Synchronizing the remote network DOWN");
-					
+
 					// setup network
 					CyNetwork network = cyNetworkFactory.createNetwork();
-					network.getRow(network).set(CyNetwork.NAME,instanceLocation);
+					network.getRow(network).set(CyNetwork.NAME, instanceLocation);
 
 					PassThroughResponseHandler passHandler = new PassThroughResponseHandler();
 					CypherResultParser cypherParser = new CypherResultParser(network);
 
 					taskMonitor.setStatusMessage("Downloading nodes");
-					for(int i = 0; i < nodeIds.size(); i+=chunkSize){
+					for (int i = 0; i < nodeIds.size(); i += chunkSize) {
 						int start = i;
 						int end = start + chunkSize;
 
-						if(end > nodeIds.size())
+						if (end > nodeIds.size())
 							end = nodeIds.size();
 						String array = toJSONArray(nodeIds.subList(start, end));
-						String query = "{\"query\" : \"MATCH (n) where id(n) in {toget} RETURN n\", \"params\" : { \"toget\" : " + array + "} }";
-						
-						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
-						
-						if(responseObj == null){
+						String query = "{\"query\" : \"MATCH (n) where id(n) in {toget} RETURN n\", \"params\" : { \"toget\" : "
+								+ array + "} }";
+
+						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth)
+								.bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
+
+						if (responseObj == null) {
 							throw new IllegalArgumentException("query failed! " + query);
 						}
-						
+
 						cypherParser.parseRetVal(responseObj);
-						
-						progress+=progress_increment;
+
+						progress += progress_increment;
 						taskMonitor.setProgress(progress);
 					}
-					
+
 					cyNetworkMgr.addNetwork(network);
 
 					cypherParser = new CypherResultParser(network);
 					taskMonitor.setStatusMessage("Downloading edges");
-					for(int i = 0; i < edgeIds.size(); i+=chunkSize){
+					for (int i = 0; i < edgeIds.size(); i += chunkSize) {
 						int start = i;
 						int end = start + chunkSize;
 
-						if(end > edgeIds.size())
+						if (end > edgeIds.size())
 							end = edgeIds.size();
-						
+
 						String array = toJSONArray(edgeIds.subList(start, end));
-						String query = "{\"query\" : \"MATCH ()-[r]->() where id(r) in {toget} RETURN r\", \"params\" : { \"toget\" : " + array + "} }";
-						
-						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth).bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
+						String query = "{\"query\" : \"MATCH ()-[r]->() where id(r) in {toget} RETURN r\", \"params\" : { \"toget\" : "
+								+ array + "} }";
+
+						Object responseObj = Request.Post(cypherURL).addHeader("Authorization:", auth)
+								.bodyString(query, ContentType.APPLICATION_JSON).execute().handleResponse(passHandler);
 						cypherParser.parseRetVal(responseObj);
-						
-						if(responseObj == null){
+
+						if (responseObj == null) {
 							throw new IllegalArgumentException("query failed! " + query);
 						}
-						
-						progress+=progress_increment;
+
+						progress += progress_increment;
 						taskMonitor.setProgress(progress);
 					}
-		
+
 					taskMonitor.setStatusMessage("Creating View");
 					taskMonitor.setProgress(0.8);
-					
+
 					Collection<CyNetworkView> views = cyNetworkViewMgr.getNetworkViews(network);
 					CyNetworkView view;
-					if(!views.isEmpty()) {
+					if (!views.isEmpty()) {
 						view = views.iterator().next();
 					} else {
 						view = cyNetworkViewFactory.createNetworkView(network);
@@ -160,15 +176,16 @@ public class SyncDownTask extends AbstractTask{
 
 					taskMonitor.setStatusMessage("Applying Layout");
 					taskMonitor.setProgress(0.9);
-					
+
 					Set<View<CyNode>> nodes = new HashSet<View<CyNode>>();
 					CyLayoutAlgorithm layout = cyLayoutAlgorithmMgr.getLayout("force-directed");
-					insertTasksAfterCurrentTask(layout.createTaskIterator(view, layout.createLayoutContext(), nodes, null));
+					insertTasksAfterCurrentTask(
+							layout.createTaskIterator(view, layout.createLayoutContext(), nodes, null));
 
 					CyUtils.updateVisualStyle(visualMappingMgr, view, network);
 				}
 
-			} catch (IllegalArgumentException e){
+			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();

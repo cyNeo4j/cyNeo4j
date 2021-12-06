@@ -1,3 +1,18 @@
+//	cyNeo4j - Cytoscape app connecting to Neo4j
+//
+//	Copyright 2014-2021 
+//
+//	Licensed under the Apache License, Version 2.0 (the "License");
+//	you may not use this file except in compliance with the License.
+//	You may obtain a copy of the License at
+//
+//		http://www.apache.org/licenses/LICENSE-2.0
+//
+//	Unless required by applicable law or agreed to in writing, software
+//	distributed under the License is distributed on an "AS IS" BASIS,
+//	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//	See the License for the specific language governing permissions and
+//	limitations under the License.
 package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.extensionlogic.impl;
 
 import java.io.IOException;
@@ -92,32 +107,32 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	@Override
 	public void processCallResponse(ExtensionCall call, Object callRetValue) {
 
-		if(currNet != null){
+		if (currNet != null) {
 
-			List<Object> allStats = (List<Object>)callRetValue;
+			List<Object> allStats = (List<Object>) callRetValue;
 
 			ObjectMapper mapper = new ObjectMapper();
 			CyTable defNodeTab = currNet.getDefaultNodeTable();
 
 			try {
-				for(Object obj : allStats){
-					Map<String, Object> stats = mapper.readValue((String)obj, Map.class);
-					Long neoid = ((Integer)stats.get("nodeid")).longValue();
+				for (Object obj : allStats) {
+					Map<String, Object> stats = mapper.readValue((String) obj, Map.class);
+					Long neoid = ((Integer) stats.get("nodeid")).longValue();
 
 					Set<CyNode> nodeSet = CyUtils.getNodesWithValue(currNet, defNodeTab, "neoid", neoid);
 
-					if(nodeSet != null && nodeSet.size() > 0){
+					if (nodeSet != null && nodeSet.size() > 0) {
 						CyNode n = nodeSet.iterator().next();
 
-						if(n != null){
+						if (n != null) {
 
-							for(Entry<String,Object> e : stats.entrySet()){
+							for (Entry<String, Object> e : stats.entrySet()) {
 
-								if(e.getKey().equals("nodeid")){
+								if (e.getKey().equals("nodeid")) {
 									continue;
 								}
 
-								addValue(n,defNodeTab,e.getKey(),e.getValue());
+								addValue(n, defNodeTab, e.getKey(), e.getValue());
 
 							}
 						}
@@ -135,13 +150,13 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	}
 
 	private void addValue(CyNode n, CyTable defNodeTab, String key, Object value) {
-		if(defNodeTab.getColumn(key) == null){
+		if (defNodeTab.getColumn(key) == null) {
 			defNodeTab.createColumn(key, value.getClass(), false);
 		}
 		Object val2 = value;
-		
+
 		CyColumn col = defNodeTab.getColumn(key);
-		if(!value.getClass().equals(col.getType())){
+		if (!value.getClass().equals(col.getType())) {
 			val2 = col.getType().cast(value);
 		}
 
@@ -162,27 +177,27 @@ public class NeoNetworkAnalyzerExec implements ExtensionExecutor {
 	public List<ExtensionCall> buildExtensionCalls() {
 		List<ExtensionCall> calls = new ArrayList<ExtensionCall>();
 
-		if(run){
+		if (run) {
 			String urlFragment = extension.getEndpoint();
 
-			Map<String,Object> params = new HashMap<String,Object>();
-			params.put("saveInGraph",saveInGraph);
-			params.put("eccentricity",eccentricity);
-			params.put("betweenness",betweenness);
-			params.put("stress",stress);
-			params.put("avgSP",avgSp);
-			params.put("radiality",radiality);
-			params.put("topoCoeff",topoCoeff);
-			params.put("neighbourhood",neighbourhood);
-			params.put("multiEdgePairs",multiEdgePairs);
-			params.put("closeness",closeness);
-			params.put("clustCoeff",clustCoeff);
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("saveInGraph", saveInGraph);
+			params.put("eccentricity", eccentricity);
+			params.put("betweenness", betweenness);
+			params.put("stress", stress);
+			params.put("avgSP", avgSp);
+			params.put("radiality", radiality);
+			params.put("topoCoeff", topoCoeff);
+			params.put("neighbourhood", neighbourhood);
+			params.put("multiEdgePairs", multiEdgePairs);
+			params.put("closeness", closeness);
+			params.put("clustCoeff", clustCoeff);
 
 			ObjectMapper mapper = new ObjectMapper();
 			String payload;
 			try {
 				payload = mapper.writeValueAsString(params);
-				calls.add(new Neo4jCall(urlFragment,payload,doAsync));
+				calls.add(new Neo4jCall(urlFragment, payload, doAsync));
 			} catch (JsonGenerationException e) {
 				System.out.println("payload generation failed");
 				e.printStackTrace();
