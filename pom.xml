@@ -81,8 +81,6 @@
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
 						<Embed-Dependency>*;scope=!provided|!test</Embed-Dependency>						
-					
-					<!--	<Embed-Dependency>httpclient,httpclient-osgi,org.apache.servicemix.bundles.ehcache,appengine-api-1.0-sdk,fluent-hc,commons-codec,commons-validator,commons-io,commons-beanutils,commons-digester,jackson-core,jackson-databind,jackson-annotations,joda-time,cglib</Embed-Dependency>   -->
 						<Embed-Transitive>true</Embed-Transitive>														
 						<Import-Package>*;resolution:=optional</Import-Package>	
 					</instructions>
