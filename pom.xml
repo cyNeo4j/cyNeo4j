@@ -164,74 +164,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
-		</dependency>
-		
-		<dependency>
-  			<groupId>org.apache.httpcomponents</groupId>
-  			<artifactId>httpclient-osgi</artifactId>
-  			<version>4.5.13</version>
-  			<!-- <type>bundle</type> -->
-		</dependency>
-		
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>fluent-hc</artifactId>
-			<version>4.5.13</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.15</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-validator</groupId>
-			<artifactId>commons-validator</artifactId>
-			<version>1.7</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.11.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
-		</dependency>
-
-		<dependency>
-  			<groupId>commons-digester</groupId>
- 			<artifactId>commons-digester</artifactId>
-  			<version>2.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.13.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.13.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.ops4j.pax.logging</groupId>
 			<artifactId>pax-logging-api</artifactId>
 			<version>2.1.2</version>
@@ -243,30 +175,30 @@
 			<artifactId>neo4j-java-driver</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/cglib/cglib -->
+		
 		<dependency>
-    		<groupId>cglib</groupId>
-    		<artifactId>cglib</artifactId>
-    		<version>3.3.0</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/org.apache.servicemix.bundles/org.apache.servicemix.bundles.ehcache -->
 		<dependency>
-    		<groupId>org.apache.servicemix.bundles</groupId>
-    		<artifactId>org.apache.servicemix.bundles.ehcache</artifactId>
-    		<version>2.6.11_1</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.5.13</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->
 		<dependency>
-    		<groupId>com.google.appengine</groupId>
-    		<artifactId>appengine-api-1.0-sdk</artifactId>
-    		<version>1.9.64</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.0</version>
 		</dependency>
-
-	
 		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.13.0</version>
+		</dependency>
 
 	</dependencies>
 
