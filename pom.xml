@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
 
 	<properties>
 		<bundle.symbolicName>nl.maastrichtuniversity.networklibrary.cyneo4j</bundle.symbolicName>
@@ -9,7 +10,7 @@
 		<cytoscape.version>3.9.0</cytoscape.version>
 	</properties>
 
-	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>nl.maastrichtuniversity.networklibrary</groupId>
 	<artifactId>cyneo4j</artifactId>
 	<version>2.0.0</version>
@@ -27,7 +28,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.10.1</version>
 				<executions>
 					<execution>
 						<id>default-testCompile</id>
@@ -59,7 +60,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.7.1</version>
+				<version>3.0.0-M6</version>
 				<configuration>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
@@ -68,7 +69,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>5.1.2</version>
+				<version>5.1.4</version>
 				<extensions>true</extensions>
 				<configuration>
 					<!-- MANIFEST.mf -->
@@ -79,8 +80,11 @@
 
 						<Private-Package>${bundle.namespace}.internal.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
-						<Embed-Dependency>httpclient,fluent-hc,commons-codec,commons-validator,commons-io,commons-beanutils,commons-digester3,jackson-core,jackson-databind,jackson-annotations,joda-time</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Dependency>*;scope=!provided|!test</Embed-Dependency>						
+					
+					<!--	<Embed-Dependency>httpclient,httpclient-osgi,org.apache.servicemix.bundles.ehcache,appengine-api-1.0-sdk,fluent-hc,commons-codec,commons-validator,commons-io,commons-beanutils,commons-digester,jackson-core,jackson-databind,jackson-annotations,joda-time,cglib</Embed-Dependency>   -->
+						<Embed-Transitive>true</Embed-Transitive>														
+						<Import-Package>*;resolution:=optional</Import-Package>	
 					</instructions>
 				</configuration>
 			</plugin>
@@ -114,42 +118,49 @@
 			<groupId>org.cytoscape</groupId>
 			<artifactId>service-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>swing-application-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>session-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>work-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>work-swing-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>viewmodel-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>layout-api</artifactId>
 			<version>${cytoscape.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -157,6 +168,14 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.13</version>
 		</dependency>
+		
+		<dependency>
+  			<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient-osgi</artifactId>
+  			<version>4.5.13</version>
+  			<!-- <type>bundle</type> -->
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -189,9 +208,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-digester3</artifactId>
-			<version>3.2</version>
+  			<groupId>commons-digester</groupId>
+ 			<artifactId>commons-digester</artifactId>
+  			<version>2.1</version>
 		</dependency>
 
 		<dependency>
@@ -215,7 +234,7 @@
 		<dependency>
 			<groupId>org.ops4j.pax.logging</groupId>
 			<artifactId>pax-logging-api</artifactId>
-			<version>1.5.2</version>
+			<version>2.1.2</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -224,6 +243,30 @@
 			<artifactId>neo4j-java-driver</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/cglib/cglib -->
+		<dependency>
+    		<groupId>cglib</groupId>
+    		<artifactId>cglib</artifactId>
+    		<version>3.3.0</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.servicemix.bundles/org.apache.servicemix.bundles.ehcache -->
+		<dependency>
+    		<groupId>org.apache.servicemix.bundles</groupId>
+    		<artifactId>org.apache.servicemix.bundles.ehcache</artifactId>
+    		<version>2.6.11_1</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.google.appengine/appengine-api-1.0-sdk -->
+		<dependency>
+    		<groupId>com.google.appengine</groupId>
+    		<artifactId>appengine-api-1.0-sdk</artifactId>
+    		<version>1.9.64</version>
+		</dependency>
+
+	
+		
 
 	</dependencies>
 
