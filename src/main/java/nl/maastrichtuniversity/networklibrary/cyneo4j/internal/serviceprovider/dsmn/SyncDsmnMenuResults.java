@@ -73,7 +73,7 @@ public class SyncDsmnMenuResults extends AbstractCyAction {
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
 		textArea.setText("DSMN result analysis:\n\n" + "IDs present in the query: " + ids.getPresentNames() + "\n\n"
-				+ "Not connected through shortest path: " + ids.getNotInResult() + "\n\n" + "IDs not in the database: "
+				+ "IDs not connected through shortest path: " + ids.getNotInResult() + "\n\n" + "IDs not in the graph database: "
 				+ ids.getNotInDatabase());
 
 		layout.addLayoutComponent(textArea, BorderLayout.WEST);
