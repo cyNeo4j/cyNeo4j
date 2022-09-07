@@ -27,6 +27,8 @@ Update the app through Eclipse:
 2. Import this project by clicking "Import projects..." in the package explorer, select Git > Projects from Git > Existing local repository.
 3. Add the folder where you cloned this repository, click Finish, Next, and Finish.
 4. Build this repository with the Maven dependancies using the pom.xml file; rightclick on file, select "Maven > Update Project"
+5. Create a launch configuration using the pom.xml file; rightclick on file, select "Run as > Run configurations...". Provide a name, and add as goal 'clean install'. Click Apply, click 'Run'
+6. Build the jar with existing launch configuration using the pom.xml file; rightclick on file, select "Run as > Maven Build".
 
 
 Icons from:
