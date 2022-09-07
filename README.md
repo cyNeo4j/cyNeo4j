@@ -9,7 +9,12 @@ This app is being extended to query the shortest path for metabolic conversions.
 Minimum System Requirements (for CyNeo4j 2.x):
 - Neo4j [3.5.x](https://neo4j.com/download-center/#community)
 - Cytoscape [3.9.x](https://cytoscape.org/download.html) (automatically comes with a Java 11 download)
+- Java 11 (Eclipse, Neo4j)
 
+
+Compiling the script
+The setup of this project in Eclipse has been tested with:
+- Eclipse IDE 2022-06 (Java and Web developers), OS Linux (Ubuntu 18.04.6 LTS)
 
 Find the app in the Cytoscape app store (http://apps.cytoscape.org/apps/cyneo4j) and on
 Github (https://github.com/cyneo4j/cyNeo4j).
