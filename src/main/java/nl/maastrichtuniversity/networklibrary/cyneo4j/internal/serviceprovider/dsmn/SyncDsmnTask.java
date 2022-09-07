@@ -62,6 +62,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 
+//Reaction visualization?
+import java.util.Arrays;
+
+//Import Viz Style Class + Cytoscape Registrar service
+import org.cytoscape.service.util.CyServiceRegistrar;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnVizStyle;
+
 public class SyncDsmnTask extends AbstractTask {
 
 	private boolean mergeInCurrent;
@@ -79,10 +86,14 @@ public class SyncDsmnTask extends AbstractTask {
 //	private VisualMappingFunctionFactory vmfFactoryC;
 	private Set<String> queryList;
 	private Plugin plugin;
+	
+	//Initial Viz Style:
+	CyServiceRegistrar registrar;
+	private DsmnVizStyle vizStyle;
 
 	int chunkSize = 500;
 
-	public SyncDsmnTask(boolean mergeInCurrent, Plugin plugin, String cypherURL, String instanceLocation, String auth) {
+	public SyncDsmnTask(boolean mergeInCurrent, Plugin plugin, String cypherURL, String instanceLocation, String auth) { //, CyServiceRegistrar vizStyle
 		super();
 		this.cyNetworkMgr = plugin.getCyNetworkManager();
 		this.mergeInCurrent = mergeInCurrent;
@@ -99,6 +110,7 @@ public class SyncDsmnTask extends AbstractTask {
 		this.queryList = plugin.getQueryList();
 		this.cySwingApp = plugin.getCySwingApplication();
 		this.plugin = plugin;
+		//this.vizStyle =  new DsmnVizStyle(registrar);
 	}
 
 	public SyncDsmnTask(boolean mergeInCurrent, String cypherURL, String instanceLocation, String auth,
@@ -130,8 +142,7 @@ public class SyncDsmnTask extends AbstractTask {
 		} else {
 //			double progress = 0.1;
 			taskMonitor.setTitle("Directed Small Molecules Network query");
-			taskMonitor.setProgress(0.0); // progressBar is later overwritten when data is read in (DsmnResultsParser
-											// class, L70) with 0.2.
+			taskMonitor.setProgress(0.0); // progressBar is later overwritten when data is read in (DsmnResultsParser class) with 0.2.
 			taskMonitor.setStatusMessage("Building query");
 
 			// Create list from input, compatible with Cypher.
@@ -146,7 +157,7 @@ public class SyncDsmnTask extends AbstractTask {
 			}
 			queryArray = queryArray + "]";
 
-			// Since Wikidata IDs start with a Q, execute shortest path algorithm without
+			// Since Wikidata IDs always start with a Q, execute shortest path algorithm without
 			// mapping approach:
 			if (new String(queryArray).contains("Q")) {
 
@@ -157,7 +168,7 @@ public class SyncDsmnTask extends AbstractTask {
 						+ " return p";
 				String payload = "{ \"query\" : \"" + neo4jQuery + "\",\"params\" : {}}";
 
-				taskMonitor.setStatusMessage("Downloading nodes");
+				taskMonitor.setStatusMessage("Downloading nodes and edges");
 
 				// Send query to Neo4j
 				DsmnResponseHandler passHandler = new DsmnResponseHandler();
@@ -199,7 +210,7 @@ public class SyncDsmnTask extends AbstractTask {
 				// Use count property for data visualisation on edges
 				int max = 0;
 				for (View<CyEdge> v : view.getEdgeViews()) {
-					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualised on
+					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
 																			// interaction itself.
 					int occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count");
 					if (occ > max)
@@ -208,17 +219,16 @@ public class SyncDsmnTask extends AbstractTask {
 					// with EDGE_WIDTH, column mapping iso bypass value (setLockedValue function).
 
 				}
-				// Use wdID property for colouring queried IDs red, and keep track of which IDs
+				// Use wdID property for coloring queried IDs red, and keep track of which IDs
 				// are not part of shortest path.
 				Set<String> notInResultNames = new HashSet<String>();
-				// TODO: add side metabolite set; also add in results panel.
 				Set<String> notInDataseNames = new HashSet<String>();
 				Set<String> presentNames = new HashSet<String>();
 				for (View<CyNode> v : view.getNodeViews()) {
-					String name = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
+					String name = (String)network.getRow(v.getModel()).getAllValues().get("wdID");
+					//System.out.print(name);
 					if (queryList.contains(name)) {
-						v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); // colour all queried marker
-																							// red
+						v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); // color all queried markers red
 						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.DIAMOND); // And set
 																											// shape to
 																											// diamond.
@@ -230,14 +240,19 @@ public class SyncDsmnTask extends AbstractTask {
 					}
 
 				}
-				/*
-				 * //Add visualisation for reaction nodes for ( View<CyNode> v :
-				 * view.getNodeViews()){ String reactions = (String)
-				 * network.getRow(v.getModel()).getAllValues().get("rwID"); if
-				 * (reactions.contains("ReactionID")) { double num=5;
-				 * v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes
-				 * very small } }
-				 */
+				
+				
+				 //Add visualization for reaction nodes 
+				for (View<CyNode> v : view.getNodeViews()) {
+					String reaction = (String)network.getRow(v.getModel()).getAllValues().get("rwID");
+					//System.out.print(reaction);
+					if (reaction != null) { //skip all entries which are null (Metabolites & Proteins do not have an rwID.
+						double num=5;
+						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes very small 
+					}
+					
+				}
+				 
 
 				queryList.removeAll(presentNames);
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
