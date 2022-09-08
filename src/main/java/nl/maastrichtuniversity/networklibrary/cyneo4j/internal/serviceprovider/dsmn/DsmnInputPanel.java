@@ -47,7 +47,7 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 		this.dialog = dialog;
 		this.plugin = plugin;
 
-		JLabel labelName = new JLabel("Provide a Network name: ");
+		JLabel labelName = new JLabel("Please provide a Network name: ");
 		textField = new JTextField();
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -57,7 +57,7 @@ public class DsmnInputPanel extends JPanel implements ActionListener {
 
 		JLabel labelTextArea = new JLabel("<html>Type or Copy/Paste your identifiers (IDs) below. <br/>"
 				+ "Each ID should be on a new line. <br/>" + "You can query for Wikidata, ChEBI or HMDB IDs. <br/>"
-				+ "Suggestion to use less than 100 IDS. </html>");
+				+ "We suggest to use less than 100 IDS. </html>");
 
 		textArea = new JTextArea();
 		textArea.setColumns(20);

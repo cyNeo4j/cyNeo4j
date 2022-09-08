@@ -66,8 +66,8 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
 import java.util.Arrays;
 
 //Import Viz Style Class + Cytoscape Registrar service
-import org.cytoscape.service.util.CyServiceRegistrar;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnVizStyle;
+//import org.cytoscape.service.util.CyServiceRegistrar;
+//import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnVizStyle;
 
 public class SyncDsmnTask extends AbstractTask {
 
@@ -88,8 +88,8 @@ public class SyncDsmnTask extends AbstractTask {
 	private Plugin plugin;
 	
 	//Initial Viz Style:
-	CyServiceRegistrar registrar;
-	private DsmnVizStyle vizStyle;
+//	CyServiceRegistrar registrar;
+//	private DsmnVizStyle vizStyle;
 
 	int chunkSize = 500;
 
