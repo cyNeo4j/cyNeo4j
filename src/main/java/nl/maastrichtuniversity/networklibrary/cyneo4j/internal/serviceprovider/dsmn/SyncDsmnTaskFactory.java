@@ -31,8 +31,8 @@ import org.cytoscape.work.TaskIterator;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
-import org.cytoscape.service.util.CyServiceRegistrar;
-import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnVizStyle;
+//import org.cytoscape.service.util.CyServiceRegistrar;
+//import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.dsmn.DsmnVizStyle;
 
 
 public class SyncDsmnTaskFactory extends AbstractTaskFactory {
