@@ -255,9 +255,11 @@ public class SyncDsmnTask extends AbstractTask {
 				 
 
 				queryList.removeAll(presentNames);
+				System.out.print(queryList);
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
+					System.out.print(name);
 					String query = "MATCH (n:Metabolite) where n.wdID = '" + name + "' RETURN n";
 					payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
 
@@ -415,33 +417,27 @@ public class SyncDsmnTask extends AbstractTask {
 		}
 	}
 
-	private void createDsmnResultPanel() {
-		DsmnResultPanel resultPanel = plugin.getResultPanel();
-		JTabbedPane tabPanel = resultPanel.getTabbedPane();
+	
+	  private void createDsmnResultPanel() { DsmnResultPanel resultPanel =
+	  plugin.getResultPanel(); JTabbedPane tabPanel = resultPanel.getTabbedPane();
+	  
+	  JPanel panel = new JPanel();
+	  
+	  BorderLayout layout = new BorderLayout(); DsmnResultsIds ids =
+	  plugin.getIds();
+	  
+	  JTextArea textArea = new JTextArea(); textArea.setColumns(20);
+	  textArea.setLineWrap(true); textArea.setRows(5);
+	  textArea.setWrapStyleWord(true); textArea.setEditable(false);
+	  textArea.setSize(600, 800); textArea.setText("Dmsn result analysis:\n\n" +
+	  "IDs present in the query: " + ids.getPresentNames() + "\n\n" +
+	  "IDs not connected through shortest path: " + ids.getNotInDatabase() + "\n\n" +
+	  "IDs not present in the graph database: " + ids.getNotInResult());
 
-		JPanel panel = new JPanel();
-
-		BorderLayout layout = new BorderLayout();
-		DsmnResultsIds ids = plugin.getIds();
-
-		JTextArea textArea = new JTextArea();
-		textArea.setColumns(20);
-		textArea.setLineWrap(true);
-		textArea.setRows(5);
-		textArea.setWrapStyleWord(true);
-		textArea.setEditable(false);
-		textArea.setSize(600, 800);
-		textArea.setText("Dmsn result analysis:\n\n" + "IDs present in the query: " + ids.getPresentNames() + "\n\n"
-				+ "Not connected through shortest path: " + ids.getNotInResult() + "\n\n" + "IDs not in the database: "
-				+ ids.getNotInDatabase());
-
-		layout.addLayoutComponent(textArea, BorderLayout.CENTER);
-
-		panel.add(textArea);
-		panel.setLayout(layout);
-		panel.setOpaque(true);
-
-		panel.setVisible(true);
-		tabPanel.addTab(plugin.getNetworkName(), panel);
-	}
+	  layout.addLayoutComponent(textArea, BorderLayout.CENTER);
+	  
+	  panel.add(textArea); panel.setLayout(layout); panel.setOpaque(true);
+	  
+	  panel.setVisible(true); tabPanel.addTab(plugin.getNetworkName(), panel); }
+	 
 }

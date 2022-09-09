@@ -30,6 +30,7 @@ import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 
 public class SyncDsmnMenuResults extends AbstractCyAction {
 
+	private static final long serialVersionUID = 1L;
 	public final static String MENU_TITLE = "Dmsn Result";
 	public final static String MENU_LOC = "Apps.cyNeo4j";
 
@@ -60,29 +61,9 @@ public class SyncDsmnMenuResults extends AbstractCyAction {
 		}
 	}
 
-	private void createPanel() {
-		JTabbedPane tabPanel = plugin.getResultPanel().getTabbedPane();
+	
+	  private void createPanel() {plugin.getResultPanel().getTabbedPane();
+	  
 
-		JPanel panel = new JPanel();
-
-		BorderLayout layout = new BorderLayout();
-		DsmnResultsIds ids = plugin.getIds();
-
-		JTextArea textArea = new JTextArea();
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.setEditable(false);
-		textArea.setText("DSMN result analysis:\n\n" + "IDs present in the query: " + ids.getPresentNames() + "\n\n"
-				+ "IDs not connected through shortest path: " + ids.getNotInResult() + "\n\n" + "IDs not in the graph database: "
-				+ ids.getNotInDatabase());
-
-		layout.addLayoutComponent(textArea, BorderLayout.WEST);
-
-		panel.add(textArea);
-		panel.setLayout(layout);
-		panel.setOpaque(true);
-
-		panel.setVisible(true);
-		tabPanel.addTab(plugin.getNetworkName(), panel);
-	}
+	  }
 }
