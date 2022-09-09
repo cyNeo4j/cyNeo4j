@@ -207,7 +207,7 @@ public class SyncDsmnTask extends AbstractTask {
 
 				// //Bypass certain view elements with data from Neo4j:
 
-				// Use count property for data visualisation on edges
+				// Use count property for data visualization on edges
 				int max = 0;
 				for (View<CyEdge> v : view.getEdgeViews()) {
 					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
@@ -258,7 +258,7 @@ public class SyncDsmnTask extends AbstractTask {
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
-					String query = "MATCH (n:Metabolite) where n.id = '" + name + "' RETURN n";
+					String query = "MATCH (n:Metabolite) where n.wdID = '" + name + "' RETURN n";
 					payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
 
 					Response response = Request.Post(cypherURL).addHeader("Authorization:", auth)
@@ -294,7 +294,7 @@ public class SyncDsmnTask extends AbstractTask {
 				// Obtain the current network style
 				VisualStyle currentVisualStyle = visualMappingMgr.getCurrentVisualStyle();
 
-				// Apply the previously described visualisation styles (view) to the current
+				// Apply the previously described visualization styles (view) to the current
 				// network style.
 				currentVisualStyle.apply(view);
 				view.updateView();
@@ -350,10 +350,13 @@ public class SyncDsmnTask extends AbstractTask {
 						max = occ;
 					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, "");
 				}
-				// Use wdID property for colouring queried IDs red, and keep track of which IDs
+				
+
+				
+				
+				// Use wdID property for coloring queried IDs red, and keep track of which IDs
 				// are not part of shortest path.
 				Set<String> notInResultNames = new HashSet<String>();
-				// TODO: add side metabolite set; also add in results panel.
 				Set<String> notInDataseNames = new HashSet<String>();
 				Set<String> presentNames = new HashSet<String>();
 				for (View<CyNode> v : view.getNodeViews()) {
