@@ -370,6 +370,17 @@ public class SyncDsmnTask extends AbstractTask {
 						notInResultNames.add(name); // Not in shortest path result
 					}
 				}
+				
+				 //Add visualization for reaction nodes 
+				for (View<CyNode> v : view.getNodeViews()) {
+					String reaction = (String)network.getRow(v.getModel()).getAllValues().get("rwID");
+					//System.out.print(reaction);
+					if (reaction != null) { //skip all entries which are null (Metabolites & Proteins do not have an rwID.
+						double num=5;
+						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes very small 
+					}
+					
+				}
 
 				queryList.removeAll(presentNames);
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
