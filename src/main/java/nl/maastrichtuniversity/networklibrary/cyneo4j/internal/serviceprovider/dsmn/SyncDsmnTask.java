@@ -419,7 +419,7 @@ public class SyncDsmnTask extends AbstractTask {
 					
 				}
 				
-				queryList.removeAll(presentNames);
+				
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
@@ -435,10 +435,11 @@ public class SyncDsmnTask extends AbstractTask {
 
 					List list = (List<List<Object>>) retVal.get("data");
 
-					if (list.isEmpty())
-						notInDataseNames.add(name);
+					if (list.isEmpty()){notInDataseNames.add(name);}
+					else{presentNames.add(name);}
 				}
 				queryList.removeAll(notInDataseNames);
+				queryList.removeAll(presentNames);
 
 				taskMonitor.setStatusMessage("Update Dsmn Result Panel");
 				taskMonitor.setProgress(0.8);
