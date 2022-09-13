@@ -349,65 +349,7 @@ public class SyncDsmnTask extends AbstractTask {
 						max = occ;
 					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, "");
 				}
-				
-				//Query ChEBI-Wikidata mappings for coloring and results panel
-				  ObjectMapper mapper = new ObjectMapper(); 
-				  List<String> mappingIDs = new ArrayList<String>(); 
-				//  Set<String> mappingIDs = new HashSet<String>();
-				  for (String name : queryList) { 
-					  String queryMappings =
-				  "WITH "+ queryArray + " AS coll UNWIND coll AS y " + 
-				  "MATCH (a:Mapping) " +
-				  "WHERE single(x IN a.mappingIDs WHERE x = y) " + 
-				  "WITH DISTINCT a, y " +
-				  "MATCH (a) " +
-				  "WITH [(a)-[:MappingInteractions*..1]->(b) WHERE b:Metabolite | b.wdID] AS MappedTo " + 
-				  "UNWIND MappedTo as c " + //+ "WITH collect(c) as List " //+ "RETURN List"; +
-				  "RETURN c"; 
-				  payload = "{ \"query\" : \"" + queryMappings + "\",\"params\" : {}}";
-				  
-				  Response response = Request.Post(cypherURL).addHeader("Authorization:", auth)
-				  .bodyString(payload, ContentType.APPLICATION_JSON).execute();
-				  
-				  Map<String, Object> retVal =  (Map<String, Object>) mapper.readValue(response.returnResponse().getEntity().getContent(), Map.class);
-				  mappingIDs = (List<String>) retVal.get("data"); 
-						
-				  }
-				  
-/*					for (String name : queryList) {
-						String query = "MATCH (n:Metabolite) where n.id = '" + name + "' RETURN n";
-						payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
-
-						Response response = Request.Post(cypherURL).addHeader("Authorization:", auth)
-								.bodyString(payload, ContentType.APPLICATION_JSON).execute();
-
-						ObjectMapper mapperMissing = new ObjectMapper();
-						Map<String, Object> retVal = (Map<String, Object>) mapperMissing
-								.readValue(response.returnResponse().getEntity().getContent(), Map.class);
-
-						List list = (List<List<Object>>) retVal.get("data");
-
-						if (list.isEmpty())
-							notInDataseNames.add(name);
-					}
-					*/
-			
-				// Use wdID property for coloring queried IDs red, and keep track of which IDs
-				// are not part of shortest path.
-				Set<String> notInResultNames = new HashSet<String>();
-				Set<String> notInDataseNames = new HashSet<String>();
-				Set<String> presentNames = new HashSet<String>();
-				Set<String> MappedIds = new HashSet<String>();
-				for (View<CyNode> v : view.getNodeViews()) {
-					String name = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
-					if (mappingIDs.contains(name)) {
-						v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red);
-						presentNames.add(name);
-					} else {
-						notInResultNames.add(name); // Not in shortest path result
-					}
-				}
-				
+								
 				 //Add visualization for reaction nodes 
 				for (View<CyNode> v : view.getNodeViews()) {
 					String reaction = (String)network.getRow(v.getModel()).getAllValues().get("rwID");
@@ -418,7 +360,12 @@ public class SyncDsmnTask extends AbstractTask {
 					}
 					
 				}
-				
+				//Query ChEBI-Wikidata mappings for coloring and results panel
+				// Use wdID property for coloring queried IDs red, and keep track of which IDs
+				// are not part of shortest path.
+				Set<String> notInResultNames = new HashSet<String>();
+				Set<String> notInDataseNames = new HashSet<String>();
+				Set<String> presentNames = new HashSet<String>();
 				
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
@@ -437,7 +384,22 @@ public class SyncDsmnTask extends AbstractTask {
 
 					if (list.isEmpty()){notInDataseNames.add(name);}
 					else{presentNames.add(name);}
+					//System.out.print(list);
+					//list.forEach(item -> System.out.println(item));
+					for(int i = 0; i < list.size(); i++)
+					{
+						for (View<CyNode> v : view.getNodeViews()) {
+							String id = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
+							if (list.get(i) != null && id != null && list.get(i).toString().contains(id)) {
+								v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); // color all queried markers red
+								v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.DIAMOND); // And set shape to diamond.
+								double num = 75;
+								v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); // Make queried nodes larger
+							} 
+						}
+					}
 				}
+				
 				queryList.removeAll(notInDataseNames);
 				queryList.removeAll(presentNames);
 
