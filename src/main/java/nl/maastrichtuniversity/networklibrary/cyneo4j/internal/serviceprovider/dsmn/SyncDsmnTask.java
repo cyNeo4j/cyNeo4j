@@ -44,6 +44,9 @@ import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNode;
+import org.cytoscape.model.CyTable;
+import org.cytoscape.model.CyColumn;
+import org.cytoscape.model.CyRow;
 import org.cytoscape.view.layout.CyLayoutAlgorithm;
 import org.cytoscape.view.layout.CyLayoutAlgorithmManager;
 import org.cytoscape.view.model.CyNetworkView;
@@ -62,6 +65,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.Plugin;
 import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.CyUtils;
+import nl.maastrichtuniversity.networklibrary.cyneo4j.internal.utils.NeoUtils;
 
 //Import Viz Style Class + Cytoscape Registrar service
 //import org.cytoscape.service.util.CyServiceRegistrar;
@@ -85,9 +89,8 @@ public class SyncDsmnTask extends AbstractTask {
 	private Set<String> queryList;
 	private Plugin plugin;
 	
-	//Initial Viz Style:
-//	CyServiceRegistrar registrar;
-//	private DsmnVizStyle vizStyle;
+	//Variable to add mapping values for ChEBI or HMDB queries:
+	 private CyTable table;
 
 	int chunkSize = 500;
 
@@ -256,7 +259,7 @@ public class SyncDsmnTask extends AbstractTask {
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
-					System.out.print(name);
+					//System.out.print(name);
 					String query = "MATCH (n:Metabolite) where n.wdID = '" + name + "' RETURN n";
 					payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
 
@@ -360,32 +363,39 @@ public class SyncDsmnTask extends AbstractTask {
 					}
 					
 				}
+				
+				//Add a column to store the mapped IDs, to be able to add data later:
+				CyTable defNodeTab = network.getDefaultNodeTable();
+				if (defNodeTab.getColumn("mappedID") == null) {
+					defNodeTab.createColumn("mappedID", Long.class, false);
+				}
+				
 				//Query ChEBI-Wikidata mappings for coloring and results panel
 				// Use wdID property for coloring queried IDs red, and keep track of which IDs
 				// are not part of shortest path.
+				// Match WD ID, add ChEBI ID in column "mappedID"
 				Set<String> notInResultNames = new HashSet<String>();
 				Set<String> notInDataseNames = new HashSet<String>();
 				Set<String> presentNames = new HashSet<String>();
-				
+				List list = new ArrayList<Object>();
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
-					String query = "MATCH (a:Mapping) where a.mappingIDs = '" + name + "' WITH [(a)-[:MappingInteractions*..1]->(b) WHERE b:Metabolite | b.wdID] AS MappedTo RETURN MappedTo";
+					String query = "MATCH (a:Mapping) where a.mappingIDs = '" + name + "' WITH [(a)-[:MappingInteractions*..1]->(b) WHERE b:Metabolite | b.wdID] AS MappedTo, a UNWIND MappedTo as c RETURN a.mappingIDs, c";
 					payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
 
 					Response response = Request.Post(cypherURL).addHeader("Authorization:", auth)
 							.bodyString(payload, ContentType.APPLICATION_JSON).execute();
 
 					ObjectMapper mapperMissing = new ObjectMapper();
-					Map<String, Object> retVal = (Map<String, Object>) mapperMissing
-							.readValue(response.returnResponse().getEntity().getContent(), Map.class);
-
-					List list = (List<List<Object>>) retVal.get("data");
-
+					Map<String, Object> retVal = (Map<String, Object>) mapperMissing.readValue(response.returnResponse().getEntity().getContent(), Map.class);
+											
+					//Store mapped values only
+					list = (List<Object>) retVal.get("data");
+					//list.forEach(item -> System.out.println(item));
 					if (list.isEmpty()){notInDataseNames.add(name);}
 					else{presentNames.add(name);}
-					//System.out.print(list);
-					//list.forEach(item -> System.out.println(item));
+
 					for(int i = 0; i < list.size(); i++)
 					{
 						for (View<CyNode> v : view.getNodeViews()) {
@@ -397,8 +407,20 @@ public class SyncDsmnTask extends AbstractTask {
 								v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); // Make queried nodes larger
 							} 
 						}
+					//	for (String column : table.getNamespaces()) {
+					//		if (column == null) continue;
+							//System.out.print(column);
+						//	String wd_id = column.getValues(String.class).toString() ; //getValues("wdID", String.class); //.get("wdID", String.class);
+							//if (wd_id == null) continue;
+							//if(wd_id != null) {
+								//System.out.print(wd_id);
+							//}
+							//}
+						}
 					}
-				}
+				
+				
+							
 				
 				queryList.removeAll(notInDataseNames);
 				queryList.removeAll(presentNames);
