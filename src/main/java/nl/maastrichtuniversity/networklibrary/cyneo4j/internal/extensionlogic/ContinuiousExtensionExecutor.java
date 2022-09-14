@@ -1,6 +1,6 @@
 //	cyNeo4j - Cytoscape app connecting to Neo4j
 //
-//	Copyright 2014-2021 
+//	Copyright 2014-2022 
 //
 //	Licensed under the Apache License, Version 2.0 (the "License");
 //	you may not use this file except in compliance with the License.
