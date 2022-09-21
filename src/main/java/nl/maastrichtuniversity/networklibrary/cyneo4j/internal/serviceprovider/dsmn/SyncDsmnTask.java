@@ -24,6 +24,7 @@ package nl.maastrichtuniversity.networklibrary.cyneo4j.internal.serviceprovider.
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Paint;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +59,8 @@ import org.cytoscape.view.presentation.property.NodeShapeVisualProperty; //Lib. 
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
 import org.cytoscape.view.vizmap.VisualMappingManager;
 import org.cytoscape.view.vizmap.VisualStyle;
+import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
+import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.work.AbstractTask;
 import org.cytoscape.work.TaskMonitor;
 
@@ -85,7 +88,7 @@ public class SyncDsmnTask extends AbstractTask {
 	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
 	private VisualMappingManager visualMappingMgr;
 //	private VisualMappingFunctionFactory vmfFactoryP;
-//	private VisualMappingFunctionFactory vmfFactoryC;
+	private VisualMappingFunctionFactory vmfFactoryC;
 	private Set<String> queryList;
 	private Plugin plugin;
 	
@@ -93,6 +96,7 @@ public class SyncDsmnTask extends AbstractTask {
 	 private CyTable table;
 
 	int chunkSize = 500;
+	private Object continuousMappingFactoryServiceRef;
 
 	public SyncDsmnTask(boolean mergeInCurrent, Plugin plugin, String cypherURL, String instanceLocation, String auth) { //, CyServiceRegistrar vizStyle
 		super();
@@ -207,19 +211,27 @@ public class SyncDsmnTask extends AbstractTask {
 				}
 
 				// //Bypass certain view elements with data from Neo4j:
-
-				// Use count property for data visualization on edges
-				int max = 0;
-				for (View<CyEdge> v : view.getEdgeViews()) {
-					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
-																			// interaction itself.
-					int occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count");
-					if (occ > max)
-						max = occ; // Update value for max
-					// v.setVisualProperty(BasicVisualLexicon.EDGE_WIDTH, occ); //should be replaced
-					// with EDGE_WIDTH, column mapping iso bypass value (setLockedValue function).
-
-				}
+					// Use count property for data visualization on edges
+				    int max = 15;
+					double min = 1.0;
+					for (View<CyEdge> v : view.getEdgeViews()) {
+						v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
+																				// interaction itself.
+						
+						Integer occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count"); 
+						//In case count is 0, or not available (both should not be the case!).
+						if (occ == 0 | occ == null ) {
+						v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, min); // Set default value of edge width to 1.0, if not present or not available/null
+						}
+						
+						//setLockedValue EDGE_WIDTH needs to be defined as a double, however count column is an integer.						
+						if (occ > max)
+							occ = max; // Update value for max, to not get to thick edges
+						double setting = occ * 2;
+						v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, setting); //replace EDGE_WIDTH with bypass value.
+						
+					}
+					
 				// Use wdID property for coloring queried IDs red, and keep track of which IDs
 				// are not part of shortest path.
 				Set<String> notInResultNames = new HashSet<String>();
@@ -229,13 +241,12 @@ public class SyncDsmnTask extends AbstractTask {
 					String name = (String)network.getRow(v.getModel()).getAllValues().get("wdID");
 					//System.out.print(name);
 					if (queryList.contains(name)) {
-						v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); // color all queried markers red
-						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.DIAMOND); // And set
-																											// shape to
-																											// diamond.
-						double num = 75;
+						v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.ORANGE); // color all queried markers red
+
+						double num = 100;
 						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); // Make queried nodes larger
 						presentNames.add(name);
+
 					} else {
 						notInResultNames.add(name); // Not in shortest path result
 					}
@@ -246,20 +257,18 @@ public class SyncDsmnTask extends AbstractTask {
 				 //Add visualization for reaction nodes 
 				for (View<CyNode> v : view.getNodeViews()) {
 					String reaction = (String)network.getRow(v.getModel()).getAllValues().get("rwID");
-					//System.out.print(reaction);
 					if (reaction != null) { //skip all entries which are null (Metabolites & Proteins do not have an rwID.
-						double num=5;
-						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes very small 
+						double num=15;
+						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes small 
+						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.RECTANGLE); //Set shape to rectangle
 					}
 					
 				}
 				 
-				//System.out.print(presentNames);
 				queryList.removeAll(presentNames);
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
-					//System.out.print(name);
 					String query = "MATCH (n:Metabolite) where n.wdID = '" + name + "' RETURN n";
 					payload = "{ \"query\" : \"" + query + "\",\"params\" : {}}";
 
@@ -344,22 +353,29 @@ public class SyncDsmnTask extends AbstractTask {
 					cyNetworkViewMgr.addNetworkView(view);
 
 				}
-				// Use count property for data visualisation on edges
-				int max = 0;
+				// Use count property for data visualization on edges
+				int max = 15;
 				for (View<CyEdge> v : view.getEdgeViews()) {
+					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
+																			// interaction itself.
+				
 					int occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count");
+					//setLockedValue EDGE_WIDTH needs to be defined as a double, however count column is an integer.
+					
 					if (occ > max)
-						max = occ;
-					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, "");
+						occ = max; // Update value for max, to not get to thick edges
+					double setting = occ * 2;
+					v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, setting); //replace EDGE_WIDTH with bypass value.
+					
 				}
 								
 				 //Add visualization for reaction nodes 
 				for (View<CyNode> v : view.getNodeViews()) {
 					String reaction = (String)network.getRow(v.getModel()).getAllValues().get("rwID");
-					//System.out.print(reaction);
 					if (reaction != null) { //skip all entries which are null (Metabolites & Proteins do not have an rwID.
-						double num=5;
-						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes very small 
+						double num=15;
+						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes small 
+						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.RECTANGLE); //Set shape to rectangle
 					}
 					
 				}
@@ -392,7 +408,6 @@ public class SyncDsmnTask extends AbstractTask {
 											
 					//Store mapped values only
 					list = (List<Object>) retVal.get("data");
-					//list.forEach(item -> System.out.println(item));
 					if (list.isEmpty()){notInDataseNames.add(name);}
 					else{presentNames.add(name);}
 
@@ -401,22 +416,13 @@ public class SyncDsmnTask extends AbstractTask {
 						for (View<CyNode> v : view.getNodeViews()) {
 							String id = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
 							if (list.get(i) != null && id != null && list.get(i).toString().contains(id)) {
-								v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.red); // color all queried markers red
-								v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.DIAMOND); // And set shape to diamond.
-								double num = 75;
+								v.setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.ORANGE); // color all queried markers red
+								double num = 100;
 								v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); // Make queried nodes larger
 							} 
 						}
-					//	for (String column : table.getNamespaces()) {
-					//		if (column == null) continue;
-							//System.out.print(column);
-						//	String wd_id = column.getValues(String.class).toString() ; //getValues("wdID", String.class); //.get("wdID", String.class);
-							//if (wd_id == null) continue;
-							//if(wd_id != null) {
-								//System.out.print(wd_id);
-							//}
-							//}
-						}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
+						
 					}
 				
 				
