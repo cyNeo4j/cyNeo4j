@@ -130,7 +130,9 @@ public class DsmnResultParser {
 			cyNode = currNet.addNode();
 			currNet.getRow(cyNode).set("neoid", self);
 			Map<String, String> data = (Map<String, String>) node.get("data");
-			name = data.get("id");
+			if(data.get("wdID") != null) {
+			name = data.get("wdID");
+			}else {name = data.get("rwID");}
 			currNet.getRow(cyNode).set("name", name);
 			++numNodes;
 		}
