@@ -26,10 +26,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Paint;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -88,15 +91,16 @@ public class SyncDsmnTask extends AbstractTask {
 	private CyLayoutAlgorithmManager cyLayoutAlgorithmMgr;
 	private VisualMappingManager visualMappingMgr;
 //	private VisualMappingFunctionFactory vmfFactoryP;
-	private VisualMappingFunctionFactory vmfFactoryC;
+//	private VisualMappingFunctionFactory vmfFactoryC;
 	private Set<String> queryList;
 	private Plugin plugin;
 	
 	//Variable to add mapping values for ChEBI or HMDB queries:
 	 private CyTable table;
+	 boolean verbose = true; //set to true when debugging, to false otherwise.
 
 	int chunkSize = 500;
-	private Object continuousMappingFactoryServiceRef;
+	//private Object continuousMappingFactoryServiceRef;
 
 	public SyncDsmnTask(boolean mergeInCurrent, Plugin plugin, String cypherURL, String instanceLocation, String auth) { //, CyServiceRegistrar vizStyle
 		super();
@@ -219,7 +223,7 @@ public class SyncDsmnTask extends AbstractTask {
 																				// interaction itself.
 						
 						Integer occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count"); 
-						//In case count is 0, or not available (both should not be the case!).
+						//In case count is 0, or not available (both should not be the case when only querying metabolic reactions!).
 						if (occ == 0 | occ == null ) {
 						v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, min); // Set default value of edge width to 1.0, if not present or not available/null
 						}
@@ -261,6 +265,8 @@ public class SyncDsmnTask extends AbstractTask {
 						double num=15;
 						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes small 
 						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.RECTANGLE); //Set shape to rectangle
+						v.setLockedValue(BasicVisualLexicon.NODE_LABEL, ""); // Makes sure no label is visualized on
+						// reaction Nodes itself.
 					}
 					
 				}
@@ -354,20 +360,25 @@ public class SyncDsmnTask extends AbstractTask {
 
 				}
 				// Use count property for data visualization on edges
-				int max = 15;
+			    int max = 15;
+				double min = 1.0;
 				for (View<CyEdge> v : view.getEdgeViews()) {
 					v.setLockedValue(BasicVisualLexicon.EDGE_LABEL, ""); // Makes sure no label is visualized on
-																			// interaction itself.
-				
-					int occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count");
-					//setLockedValue EDGE_WIDTH needs to be defined as a double, however count column is an integer.
-					
+																						// interaction itself.
+					//v.setLockedValue(BasicVisualLexicon.EDGE_LABEL_FONT_SIZE, 1);	//To surpass large labels, if byPass is not registered...		
+					Integer occ = (Integer) network.getRow(v.getModel()).getAllValues().get("count"); 
+					//In case count is 0, or not available (both should not be the case when only querying metabolic reactions!).
+					if (occ == 0 | occ == null ) {
+						v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, min); // Set default value of edge width to 1.0, if not present or not available/null
+						}
+								
+					//setLockedValue EDGE_WIDTH needs to be defined as a double, however count column is an integer.						
 					if (occ > max)
 						occ = max; // Update value for max, to not get to thick edges
 					double setting = occ * 2;
 					v.setLockedValue(BasicVisualLexicon.EDGE_WIDTH, setting); //replace EDGE_WIDTH with bypass value.
-					
-				}
+								
+					}
 								
 				 //Add visualization for reaction nodes 
 				for (View<CyNode> v : view.getNodeViews()) {
@@ -376,14 +387,10 @@ public class SyncDsmnTask extends AbstractTask {
 						double num=15;
 						v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); //Make reaction nodes small 
 						v.setLockedValue(BasicVisualLexicon.NODE_SHAPE, NodeShapeVisualProperty.RECTANGLE); //Set shape to rectangle
+						v.setLockedValue(BasicVisualLexicon.NODE_LABEL, ""); // Makes sure no label is visualized on
+						// reaction Nodes itself.
 					}
 					
-				}
-				
-				//Add a column to store the mapped IDs, to be able to add data later:
-				CyTable defNodeTab = network.getDefaultNodeTable();
-				if (defNodeTab.getColumn("mappedID") == null) {
-					defNodeTab.createColumn("mappedID", Long.class, false);
 				}
 				
 				//Query ChEBI-Wikidata mappings for coloring and results panel
@@ -394,6 +401,9 @@ public class SyncDsmnTask extends AbstractTask {
 				Set<String> notInDataseNames = new HashSet<String>();
 				Set<String> presentNames = new HashSet<String>();
 				List list = new ArrayList<Object>();
+				List<String> combinedList = new ArrayList<String>();
+				Map<String, String> result = new HashMap<String, String>();
+				
 				// Query only wdIDs from querylist who are not in results (aka presentNames) to
 				// check if they're even present in Neo4j database
 				for (String name : queryList) {
@@ -413,6 +423,7 @@ public class SyncDsmnTask extends AbstractTask {
 
 					for(int i = 0; i < list.size(); i++)
 					{
+						combinedList.add(list.get(i).toString());
 						for (View<CyNode> v : view.getNodeViews()) {
 							String id = (String) network.getRow(v.getModel()).getAllValues().get("wdID");
 							if (list.get(i) != null && id != null && list.get(i).toString().contains(id)) {
@@ -421,12 +432,49 @@ public class SyncDsmnTask extends AbstractTask {
 								v.setLockedValue(BasicVisualLexicon.NODE_SIZE, num); // Make queried nodes larger
 							} 
 						}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
-						
 					}
 				
+				}
+			
+				//For each value in the combined list, add the first entry (everything before the comma, without whitespaces) as a key, add the second entry (everything after the comma, without whitespaces) as a value.
+				for (int i = 0; i < combinedList.size(); ++i) { //loop over each value in the combined list
+					String last_entry = combinedList.set(i, combinedList.get(i)).substring(combinedList.set(i, combinedList.get(i)).lastIndexOf(',') + 1).replaceAll("\\]+", "").trim(); //Wikidata ID
+					String first_entry = combinedList.get(i).substring(0, combinedList.get(i).indexOf(",")).replaceAll("\\[+", "").trim(); //ChEBI ID
+					result.put(first_entry, last_entry); //Combine Wikidata and ChEBI IDs in hashMap, to add to new column in Cytoscape later on.
+		        }
+				//System.out.print(result);
+				for (String key: result.keySet()){
+		            if ((result.get(key)).equals(" Q4545703")){
+		            	System.out.println(key  +" :: "+ result.get(key));
+		            }
+				}
 				
-							
+				//Add a column to store the mapped IDs, to be able to add the mapped data later:
+				CyTable defNodeTab = network.getDefaultNodeTable();
+				if (defNodeTab.getColumn("mappedID") == null) {
+					defNodeTab.createColumn("mappedID", Long.class, false);
+				}
+
+				//	CyRow row = table.getRow("Q2629377"); //->TODO nullPointerException
+			//		if (verbose) System.out.println("Testing matching against wdID: Q2629377, found in row: " + row);		
+				
+	
+			//	if (verbose) System.out.println( "Adding Wikidata-ChEBI IDs: " + result);
+			//	if (result.size() > 0)
+			//	{
+					//for(View<CyNode> v : view.getNodeViews()) //->TODO works, but cannot update Table
+				//	for (CyRow row : table.getAllRows()) //->TODO nullPointerException
+				//	{
+						
+						//String id = (String) network.getRow(v.getModel()).getAllValues().get("wdID"); //->TODO works, but cannot update Table
+						/*
+						 * String id = row.get("name", String.class); //get("wdID"); if (id == null) //->TODO nullPointerException
+						 * continue; for (String key: result.keySet()){ if
+						 * ((result.get(key)).equals(id)){ //row.set("mappedID", key);
+						 * System.out.println(key +" :: "+ result.get(key)); } }
+						 */
+				//	}
+			//	}
 				
 				queryList.removeAll(notInDataseNames);
 				queryList.removeAll(presentNames);
