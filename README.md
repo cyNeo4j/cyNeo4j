@@ -19,7 +19,7 @@ Find the app in the Cytoscape app store (http://apps.cytoscape.org/apps/cyneo4j)
 Github (https://github.com/cyneo4j/cyNeo4j).
 
 For a tutorial and installation guide for the server side component checkout
-https://cyneo4j.wordpress.com/ !
+https://cyneo4j.github.io/DSMN/ !
 
 Build this project from the command line:
 ```
