@@ -4,7 +4,7 @@ cyNeo4j
 [![build](https://github.com/cyNeo4j/cyNeo4j/actions/workflows/maven.yml/badge.svg)](https://github.com/cyNeo4j/cyNeo4j/actions/workflows/maven.yml)
 
 A Cytoscape app to connect to a Neo4j database and execute extensions of the Neo4j database.
-This app is being extended to query the shortest path for metabolic conversions.
+This app has been extended to query the shortest path for metabolic conversions.
 
 Minimum System Requirements (for CyNeo4j 2.x):
 - Neo4j [3.5.x](https://neo4j.com/download-center/#community) (requires Java 8 but can run with Java 11 as well)
