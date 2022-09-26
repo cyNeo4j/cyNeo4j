@@ -440,41 +440,25 @@ public class SyncDsmnTask extends AbstractTask {
 				for (int i = 0; i < combinedList.size(); ++i) { //loop over each value in the combined list
 					String last_entry = combinedList.set(i, combinedList.get(i)).substring(combinedList.set(i, combinedList.get(i)).lastIndexOf(',') + 1).replaceAll("\\]+", "").trim(); //Wikidata ID
 					String first_entry = combinedList.get(i).substring(0, combinedList.get(i).indexOf(",")).replaceAll("\\[+", "").trim(); //ChEBI ID
-					result.put(first_entry, last_entry); //Combine Wikidata and ChEBI IDs in hashMap, to add to new column in Cytoscape later on.
+					result.put(last_entry, first_entry); //Combine Wikidata and ChEBI IDs in hashMap, to add to new column in Cytoscape later on.
 		        }
-				//System.out.print(result);
-				for (String key: result.keySet()){
-		            if ((result.get(key)).equals(" Q4545703")){
-		            	System.out.println(key  +" :: "+ result.get(key));
-		            }
-				}
 				
 				//Add a column to store the mapped IDs, to be able to add the mapped data later:
-				CyTable defNodeTab = network.getDefaultNodeTable();
-				if (defNodeTab.getColumn("mappedID") == null) {
-					defNodeTab.createColumn("mappedID", Long.class, false);
+				table = network.getDefaultNodeTable();
+				if (table.getColumn("mappedID") == null) {
+					table.createColumn("mappedID", String.class, true);
 				}
 
-				//	CyRow row = table.getRow("Q2629377"); //->TODO nullPointerException
-			//		if (verbose) System.out.println("Testing matching against wdID: Q2629377, found in row: " + row);		
-				
-	
-			//	if (verbose) System.out.println( "Adding Wikidata-ChEBI IDs: " + result);
-			//	if (result.size() > 0)
-			//	{
-					//for(View<CyNode> v : view.getNodeViews()) //->TODO works, but cannot update Table
-				//	for (CyRow row : table.getAllRows()) //->TODO nullPointerException
-				//	{
-						
-						//String id = (String) network.getRow(v.getModel()).getAllValues().get("wdID"); //->TODO works, but cannot update Table
-						/*
-						 * String id = row.get("name", String.class); //get("wdID"); if (id == null) //->TODO nullPointerException
-						 * continue; for (String key: result.keySet()){ if
-						 * ((result.get(key)).equals(id)){ //row.set("mappedID", key);
-						 * System.out.println(key +" :: "+ result.get(key)); } }
-						 */
-				//	}
-			//	}
+				for (CyRow row : table.getAllRows()) {
+					String id = row.get("wdID", String.class); 
+					if(id != "") {
+						String mapped = result.get(id);
+						if(mapped != null) {
+							row.set("mappedID", mapped);
+						}
+					}
+				}
+
 				
 				queryList.removeAll(notInDataseNames);
 				queryList.removeAll(presentNames);
